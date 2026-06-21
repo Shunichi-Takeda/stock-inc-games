@@ -1,9 +1,9 @@
 // ══════════════════════════════════════════════════════
 //  🥦🏰 Broccoli Tower Defense — Game Engine
-//  Version 0.3.0 (Phase 3)
+//  Version 0.4.0 (Phase 3 + EXTRA Stage)
 // ══════════════════════════════════════════════════════
 
-const VERSION = '0.3.1';
+const VERSION = '0.4.0';
 
 // ═══════════════════════════
 //  CONSTANTS
@@ -128,11 +128,26 @@ const ENEMY_DEFS = {
     emoji: '👑', name: 'おおかみ大王',
     hp: 500, speed: 0.5, reward: 100,
     summonInterval: 30 // 30秒ごとにウサちゃんを2体召喚
+  },
+  dragon: {
+    emoji: '🐉', name: 'ドラゴン',
+    hp: 800, speed: 0.7, reward: 80,
+    flying: true // 空を飛ぶ
+  },
+  gorilla: {
+    emoji: '🦍', name: 'ゴリラ将軍',
+    hp: 1500, speed: 0.4, reward: 120,
+    healAura: 10 // 周囲の敵を毎秒10HP回復
+  },
+  snake: {
+    emoji: '🐍', name: '毒ヘビ',
+    hp: 50, speed: 3.5, reward: 5,
+    slowImmune: true // 超高速・スロー無効
   }
 };
 
 // ═══════════════════════════
-//  STAGE DATA (5 stages)
+//  STAGE DATA (5 stages + EX)
 // ═══════════════════════════
 const STAGES = [
   // ── Stage 1: 🌱 王国のはずれ ──
@@ -467,6 +482,166 @@ const STAGES = [
         { type: 'fox', count: 10, interval: 0.8, delay: 5, entrance: 2 },
         { type: 'bird', count: 12, interval: 0.6, delay: 6, entrance: 3 },
         { type: 'hedgehog', count: 8, interval: 0.8, delay: 8, entrance: 0 }
+      ]}
+    ]
+  },
+
+  // ── Stage EX: 💀 絶望の大侵攻 ──
+  {
+    name: '💀 絶望の大侵攻',
+    entrances: [
+      { col: 0, row: 5 },   // 左
+      { col: 15, row: 5 },  // 右
+      { col: 8, row: 0 },   // 上
+      { col: 8, row: 9 }    // 下
+    ],
+    exit: { col: 8, row: 5 },
+    startCoins: 600,
+    lives: 5,
+    blocked: [
+      // 中央付近の壁 (出口周囲の防壁)
+      { col: 7, row: 4 }, { col: 9, row: 4 },
+      { col: 7, row: 6 }, { col: 9, row: 6 },
+      // 左側回廊
+      { col: 2, row: 1 }, { col: 2, row: 2 }, { col: 3, row: 1 },
+      { col: 2, row: 7 }, { col: 2, row: 8 }, { col: 3, row: 8 },
+      { col: 4, row: 4 }, { col: 4, row: 5 }, { col: 4, row: 6 },
+      // 右側回廊
+      { col: 12, row: 1 }, { col: 13, row: 1 }, { col: 13, row: 2 },
+      { col: 12, row: 8 }, { col: 13, row: 8 }, { col: 13, row: 7 },
+      { col: 11, row: 4 }, { col: 11, row: 5 }, { col: 11, row: 6 },
+      // 上下通路の障害物
+      { col: 6, row: 2 }, { col: 10, row: 2 },
+      { col: 6, row: 7 }, { col: 10, row: 7 },
+      // 四隅
+      { col: 0, row: 0 }, { col: 1, row: 0 }, { col: 0, row: 1 },
+      { col: 14, row: 0 }, { col: 15, row: 0 }, { col: 15, row: 1 },
+      { col: 0, row: 8 }, { col: 0, row: 9 }, { col: 1, row: 9 },
+      { col: 14, row: 9 }, { col: 15, row: 9 }, { col: 15, row: 8 },
+    ],
+    iceZones: [
+      // 左回廊の氷ゾーン
+      { col: 3, row: 4 }, { col: 3, row: 5 }, { col: 3, row: 6 },
+      // 右回廊の氷ゾーン
+      { col: 12, row: 4 }, { col: 12, row: 5 }, { col: 12, row: 6 },
+      // 中央上下の氷ゾーン
+      { col: 7, row: 2 }, { col: 8, row: 2 }, { col: 9, row: 2 },
+      { col: 7, row: 7 }, { col: 8, row: 7 }, { col: 9, row: 7 },
+    ],
+    waves: [
+      // Wave 1: 既存強敵の大群 - キツネ+ハリネズミ四方向から
+      { groups: [
+        { type: 'fox', count: 6, interval: 1.2, delay: 0, entrance: 0 },
+        { type: 'hedgehog', count: 6, interval: 1.2, delay: 1, entrance: 1 },
+        { type: 'fox', count: 6, interval: 1.2, delay: 2, entrance: 2 },
+        { type: 'hedgehog', count: 6, interval: 1.2, delay: 3, entrance: 3 }
+      ]},
+      // Wave 2: クマ+ハムスター護衛
+      { groups: [
+        { type: 'bear', count: 3, interval: 3.0, delay: 0, entrance: 0 },
+        { type: 'hamster', count: 10, interval: 0.6, delay: 2, entrance: 1 },
+        { type: 'bear', count: 3, interval: 3.0, delay: 3, entrance: 2 },
+        { type: 'hamster', count: 10, interval: 0.6, delay: 5, entrance: 3 }
+      ]},
+      // Wave 3: キツネ+クマ+ことり混成
+      { groups: [
+        { type: 'fox', count: 8, interval: 1.0, delay: 0, entrance: 0 },
+        { type: 'bear', count: 4, interval: 2.5, delay: 2, entrance: 1 },
+        { type: 'bird', count: 10, interval: 0.8, delay: 3, entrance: 2 },
+        { type: 'hedgehog', count: 8, interval: 1.0, delay: 5, entrance: 3 }
+      ]},
+      // Wave 4: 毒ヘビ大量ラッシュ + ドラゴン初登場
+      { groups: [
+        { type: 'snake', count: 20, interval: 0.3, delay: 0, entrance: 0 },
+        { type: 'snake', count: 20, interval: 0.3, delay: 1, entrance: 1 },
+        { type: 'dragon', count: 2, interval: 4.0, delay: 5, entrance: 2 }
+      ]},
+      // Wave 5: ドラゴン飛来 + ヘビ波状攻撃
+      { groups: [
+        { type: 'dragon', count: 3, interval: 3.0, delay: 0, entrance: 0 },
+        { type: 'snake', count: 15, interval: 0.25, delay: 2, entrance: 1 },
+        { type: 'dragon', count: 3, interval: 3.0, delay: 4, entrance: 2 },
+        { type: 'snake', count: 15, interval: 0.25, delay: 6, entrance: 3 }
+      ]},
+      // Wave 6: ドラゴン+キツネの空陸連合
+      { groups: [
+        { type: 'dragon', count: 4, interval: 2.5, delay: 0, entrance: 0 },
+        { type: 'fox', count: 10, interval: 0.8, delay: 2, entrance: 1 },
+        { type: 'dragon', count: 4, interval: 2.5, delay: 3, entrance: 2 },
+        { type: 'fox', count: 10, interval: 0.8, delay: 5, entrance: 3 }
+      ]},
+      // Wave 7: ゴリラ将軍初登場 + クマ護衛
+      { groups: [
+        { type: 'gorilla', count: 2, interval: 5.0, delay: 0, entrance: 0 },
+        { type: 'bear', count: 4, interval: 2.0, delay: 2, entrance: 1 },
+        { type: 'snake', count: 20, interval: 0.2, delay: 4, entrance: 2 },
+        { type: 'hedgehog', count: 8, interval: 1.0, delay: 6, entrance: 3 }
+      ]},
+      // Wave 8: ゴリラ+ドラゴン+ヘビ多方面同時攻撃
+      { groups: [
+        { type: 'gorilla', count: 2, interval: 4.0, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 4, interval: 2.5, delay: 1, entrance: 1 },
+        { type: 'snake', count: 25, interval: 0.2, delay: 3, entrance: 2 },
+        { type: 'bear', count: 4, interval: 2.0, delay: 5, entrance: 3 }
+      ]},
+      // Wave 9: ゴリラ+ヘビ大群
+      { groups: [
+        { type: 'gorilla', count: 3, interval: 4.0, delay: 0, entrance: 0 },
+        { type: 'snake', count: 25, interval: 0.2, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 3, interval: 4.0, delay: 2, entrance: 2 },
+        { type: 'snake', count: 25, interval: 0.2, delay: 3, entrance: 3 }
+      ]},
+      // Wave 10: ドラゴン+ゴリラ+おおかみ大王
+      { groups: [
+        { type: 'dragon', count: 6, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'gorilla', count: 3, interval: 3.5, delay: 2, entrance: 1 },
+        { type: 'wolf', count: 1, interval: 5.0, delay: 4, entrance: 2 },
+        { type: 'bear', count: 5, interval: 2.0, delay: 5, entrance: 3 }
+      ]},
+      // Wave 11: 全方位大量投入
+      { groups: [
+        { type: 'dragon', count: 5, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'wolf', count: 1, interval: 5.0, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 3, interval: 3.0, delay: 2, entrance: 2 },
+        { type: 'fox', count: 12, interval: 0.7, delay: 4, entrance: 3 },
+        { type: 'snake', count: 20, interval: 0.2, delay: 7, entrance: 0 }
+      ]},
+      // Wave 12: おおかみ複数+ドラゴン+ゴリラ
+      { groups: [
+        { type: 'wolf', count: 2, interval: 4.0, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 6, interval: 1.8, delay: 2, entrance: 1 },
+        { type: 'gorilla', count: 4, interval: 3.0, delay: 3, entrance: 2 },
+        { type: 'bear', count: 6, interval: 1.5, delay: 5, entrance: 3 }
+      ]},
+      // Wave 13: 超大量ヘビラッシュ（四方向から50匹超）
+      { groups: [
+        { type: 'snake', count: 15, interval: 0.15, delay: 0, entrance: 0 },
+        { type: 'snake', count: 15, interval: 0.15, delay: 0.5, entrance: 1 },
+        { type: 'snake', count: 15, interval: 0.15, delay: 1, entrance: 2 },
+        { type: 'snake', count: 15, interval: 0.15, delay: 1.5, entrance: 3 }
+      ]},
+      // Wave 14: ドラゴン8+ゴリラ4+おおかみ3
+      { groups: [
+        { type: 'dragon', count: 4, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 4, interval: 2.0, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 2, interval: 3.0, delay: 2, entrance: 2 },
+        { type: 'gorilla', count: 2, interval: 3.0, delay: 3, entrance: 3 },
+        { type: 'wolf', count: 2, interval: 4.0, delay: 5, entrance: 0 },
+        { type: 'wolf', count: 1, interval: 5.0, delay: 7, entrance: 2 }
+      ]},
+      // Wave 15 (FINAL): 全種族全方位同時総攻撃
+      { groups: [
+        { type: 'wolf', count: 2, interval: 3.0, delay: 0, entrance: 0 },
+        { type: 'gorilla', count: 3, interval: 2.5, delay: 1, entrance: 1 },
+        { type: 'dragon', count: 5, interval: 1.5, delay: 2, entrance: 2 },
+        { type: 'bear', count: 5, interval: 1.5, delay: 3, entrance: 3 },
+        { type: 'fox', count: 10, interval: 0.6, delay: 4, entrance: 0 },
+        { type: 'snake', count: 20, interval: 0.15, delay: 5, entrance: 1 },
+        { type: 'hedgehog', count: 8, interval: 0.8, delay: 6, entrance: 2 },
+        { type: 'dragon', count: 4, interval: 1.5, delay: 8, entrance: 3 },
+        { type: 'gorilla', count: 2, interval: 3.0, delay: 9, entrance: 0 },
+        { type: 'snake', count: 20, interval: 0.15, delay: 10, entrance: 2 },
+        { type: 'wolf', count: 1, interval: 5.0, delay: 12, entrance: 1 }
       ]}
     ]
   }
@@ -2217,7 +2392,9 @@ function showStageSelect() {
 
   container.innerHTML = '';
 
-  for (let i = 0; i < STAGES.length; i++) {
+  // Normal stages (0-4)
+  const normalStageCount = 5;
+  for (let i = 0; i < normalStageCount; i++) {
     const s = STAGES[i];
     const unlocked = stageProgress.unlocked[i];
     const starsEarned = stageProgress.stars[i];
@@ -2246,6 +2423,37 @@ function showStageSelect() {
         startGame();
       });
     }
+
+    container.appendChild(card);
+  }
+
+  // EXTRA stage (index 5) — only shown if all 5 normal stages cleared
+  const allCleared = stageProgress.stars.slice(0, 5).every(s => s > 0);
+  if (allCleared && STAGES.length > 5) {
+    const i = 5;
+    const s = STAGES[i];
+    const starsEarned = stageProgress.stars[i] || 0;
+    const bestScore = stageProgress.scores[i] || 0;
+
+    const card = document.createElement('button');
+    card.className = 'stage-card extra';
+
+    let starsHtml = '';
+    for (let j = 0; j < 3; j++) {
+      starsHtml += j < starsEarned ? '⭐' : '☆';
+    }
+
+    card.innerHTML = `
+      <div class="stage-number">EXTRA</div>
+      <div class="stage-name">${s.name}</div>
+      <div class="stage-stars">${starsHtml}</div>
+      ${bestScore > 0 ? `<div class="stage-score">🏆 ${bestScore.toLocaleString()}</div>` : ''}
+    `;
+
+    card.addEventListener('click', () => {
+      currentStageIndex = i;
+      startGame();
+    });
 
     container.appendChild(card);
   }

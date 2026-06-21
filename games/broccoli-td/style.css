@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════
    Broccoli Tower Defense — Style
-   Phase 3 — v0.3.0
+   Phase 3 — v0.4.0
    ═══════════════════════════════════════ */
 
 /* ── Reset ── */
@@ -899,6 +899,49 @@ body {
   font-size: 1.1rem;
   font-weight: 900;
   color: #fbbf24;
+}
+
+/* ── EXTRA Stage Card ── */
+.stage-card.extra {
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.4), rgba(88, 28, 135, 0.4));
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(127, 29, 29, 0.15);
+  animation: extraPulse 2s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.stage-card.extra::before {
+  content: '💀';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 2.5rem;
+  opacity: 0.12;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+
+.stage-card.extra:hover {
+  background: linear-gradient(135deg, rgba(153, 27, 27, 0.5), rgba(107, 33, 168, 0.5));
+  border-color: rgba(248, 113, 113, 0.7);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.35), inset 0 0 24px rgba(127, 29, 29, 0.2);
+}
+
+.stage-card.extra .stage-number {
+  color: #f87171;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.stage-card.extra .stage-name {
+  color: #fca5a5;
+}
+
+@keyframes extraPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(127, 29, 29, 0.15); }
+  50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.35), inset 0 0 24px rgba(127, 29, 29, 0.2); }
 }
 
 /* ── Responsive ── */
