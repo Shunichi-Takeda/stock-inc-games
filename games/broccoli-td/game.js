@@ -2651,8 +2651,8 @@ function stopBGM() {
 // ═══════════════════════════
 function generateScoreIssueURL(playerName, stageIndex, score, stars, kills) {
   const stageName = STAGES[stageIndex].name;
-  // Empty name → use {{github}} placeholder, will be replaced with GitHub login in ranking display
-  const displayName = playerName || '{{github}}';
+  // Empty name → use '-' in title; ranking display will replace with GitHub login
+  const displayName = playerName || '-';
   const title = `🏆 ${score} pts | ${displayName} | ${stageName} | ⭐${stars}`;
   const body = [
     '<!-- 🥦 ブロッコリーTD スコア登録 -->',
@@ -2735,7 +2735,7 @@ function loadRanking() {
         if (!match) continue;
         entries.push({
           score: parseInt(match[1], 10),
-          name: match[2].trim() === '{{github}}' ? (issue.user ? issue.user.login : '匿名') : match[2].trim(),
+          name: (match[2].trim() === '-' || match[2].trim() === '{{github}}') ? (issue.user ? issue.user.login : '匿名') : match[2].trim(),
           stage: match[3].trim(),
           stars: parseInt(match[4], 10),
           avatar: issue.user ? issue.user.avatar_url : '',
