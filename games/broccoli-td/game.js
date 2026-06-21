@@ -865,7 +865,10 @@ class Projectile {
     const dx = this.target.x - this.x;
     const dy = this.target.y - this.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 8) {
+    const moveAmount = this.speed * dt;
+
+    // Hit if close enough OR if move would overshoot target
+    if (dist < 8 || moveAmount >= dist) {
       // Hit!
       this.target.takeDamage(this.damage);
       if (this.slow > 0) {
@@ -894,12 +897,12 @@ class Projectile {
       this.dead = true;
       // Spawn hit particle
       for (let i = 0; i < 4; i++) {
-        particles.push(new Particle(this.x, this.y, this.color));
+        particles.push(new Particle(this.target.x, this.target.y, this.color));
       }
       return;
     }
-    const vx = (dx / dist) * this.speed * dt;
-    const vy = (dy / dist) * this.speed * dt;
+    const vx = (dx / dist) * moveAmount;
+    const vy = (dy / dist) * moveAmount;
     this.trail.push({ x: this.x, y: this.y });
     if (this.trail.length > 4) this.trail.shift();
     this.x += vx;
