@@ -543,6 +543,7 @@ let bgmInterval = null;
 // Ranking state
 const REPO_OWNER = 'Shunichi-Takeda';
 const REPO_NAME = 'stock-inc-games';
+const GAME_LABEL = 'broccoli-td';
 let rankingCache = null;
 let rankingCacheTime = 0;
 const RANKING_CACHE_TTL = 60000; // 60秒
@@ -2668,7 +2669,7 @@ function generateScoreIssueURL(playerName, stageIndex, score, stars, kills) {
   ].join('\n');
 
   const params = new URLSearchParams({
-    labels: 'score',
+    labels: `score,${GAME_LABEL}`,
     title: title,
     body: body,
   });
@@ -2719,8 +2720,8 @@ function loadRanking() {
 
   content.innerHTML = '<div class="ranking-loading">読み込み中...</div>';
 
-  // Fetch all open issues (no label filter — title pattern match is used to identify score entries)
-  const apiURL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=open&per_page=100&sort=created&direction=desc`;
+  // Filter by game-specific label for this game's rankings
+  const apiURL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=${GAME_LABEL}&state=open&per_page=100&sort=created&direction=desc`;
 
   fetch(apiURL)
     .then(res => {
