@@ -538,119 +538,119 @@ const STAGES = [
       { col: 7, row: 7 }, { col: 8, row: 7 }, { col: 9, row: 7 },
     ],
     waves: [
-      // Wave 1: 既存強敵の大群 - キツネ+ハリネズミ四方向から
+      // Wave 1: キツネ+ハリネズミ四方向 (比率~1.2)
       { groups: [
         { type: 'fox', count: 6, interval: 1.2, delay: 0, entrance: 0 },
         { type: 'hedgehog', count: 6, interval: 1.2, delay: 1, entrance: 1 },
         { type: 'fox', count: 6, interval: 1.2, delay: 2, entrance: 2 },
         { type: 'hedgehog', count: 6, interval: 1.2, delay: 3, entrance: 3 }
       ]},
-      // Wave 2: クマ+ハムスター護衛
+      // Wave 2: クマ+ハムスター護衛 (比率~1.2)
       { groups: [
-        { type: 'bear', count: 3, interval: 3.0, delay: 0, entrance: 0 },
-        { type: 'hamster', count: 10, interval: 0.6, delay: 2, entrance: 1 },
-        { type: 'bear', count: 3, interval: 3.0, delay: 3, entrance: 2 },
-        { type: 'hamster', count: 10, interval: 0.6, delay: 5, entrance: 3 }
+        { type: 'bear', count: 6, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'hamster', count: 20, interval: 0.45, delay: 2, entrance: 1 },
+        { type: 'bear', count: 6, interval: 2.0, delay: 3, entrance: 2 },
+        { type: 'hamster', count: 20, interval: 0.45, delay: 5, entrance: 3 }
       ]},
-      // Wave 3: キツネ+クマ+ことり混成
+      // Wave 3: キツネ+クマ+ことり混成 (比率~1.2)
       { groups: [
-        { type: 'fox', count: 8, interval: 1.0, delay: 0, entrance: 0 },
-        { type: 'bear', count: 4, interval: 2.5, delay: 2, entrance: 1 },
-        { type: 'bird', count: 10, interval: 0.8, delay: 3, entrance: 2 },
-        { type: 'hedgehog', count: 8, interval: 1.0, delay: 5, entrance: 3 }
+        { type: 'fox', count: 30, interval: 0.5, delay: 0, entrance: 0 },
+        { type: 'bear', count: 15, interval: 1.2, delay: 2, entrance: 1 },
+        { type: 'bird', count: 40, interval: 0.35, delay: 3, entrance: 2 },
+        { type: 'hedgehog', count: 30, interval: 0.5, delay: 5, entrance: 3 }
       ]},
-      // Wave 4: 毒ヘビ大量ラッシュ + ドラゴン初登場
+      // Wave 4: 毒ヘビ大量ラッシュ + ドラゴン初登場 (比率~1.2)
       { groups: [
-        { type: 'snake', count: 20, interval: 0.3, delay: 0, entrance: 0 },
-        { type: 'snake', count: 20, interval: 0.3, delay: 1, entrance: 1 },
-        { type: 'dragon', count: 2, interval: 4.0, delay: 5, entrance: 2 }
+        { type: 'snake', count: 30, interval: 0.2, delay: 0, entrance: 0 },
+        { type: 'snake', count: 30, interval: 0.2, delay: 1, entrance: 1 },
+        { type: 'dragon', count: 4, interval: 3.0, delay: 5, entrance: 2 }
       ]},
-      // Wave 5: ドラゴン飛来 + ヘビ波状攻撃
+      // ★ Wave 5: ドラゴン飛来 + ヘビ波状攻撃 (比率~0.9 王の力必須)
       { groups: [
-        { type: 'dragon', count: 3, interval: 3.0, delay: 0, entrance: 0 },
-        { type: 'snake', count: 15, interval: 0.25, delay: 2, entrance: 1 },
-        { type: 'dragon', count: 3, interval: 3.0, delay: 4, entrance: 2 },
-        { type: 'snake', count: 15, interval: 0.25, delay: 6, entrance: 3 }
+        { type: 'dragon', count: 5, interval: 2.5, delay: 0, entrance: 0 },
+        { type: 'snake', count: 25, interval: 0.2, delay: 2, entrance: 1 },
+        { type: 'dragon', count: 5, interval: 2.5, delay: 4, entrance: 2 },
+        { type: 'snake', count: 25, interval: 0.2, delay: 6, entrance: 3 }
       ]},
-      // Wave 6: ドラゴン+キツネの空陸連合
-      { groups: [
-        { type: 'dragon', count: 4, interval: 2.5, delay: 0, entrance: 0 },
-        { type: 'fox', count: 10, interval: 0.8, delay: 2, entrance: 1 },
-        { type: 'dragon', count: 4, interval: 2.5, delay: 3, entrance: 2 },
-        { type: 'fox', count: 10, interval: 0.8, delay: 5, entrance: 3 }
-      ]},
-      // Wave 7: ゴリラ将軍初登場 + クマ護衛
-      { groups: [
-        { type: 'gorilla', count: 2, interval: 5.0, delay: 0, entrance: 0 },
-        { type: 'bear', count: 4, interval: 2.0, delay: 2, entrance: 1 },
-        { type: 'snake', count: 20, interval: 0.2, delay: 4, entrance: 2 },
-        { type: 'hedgehog', count: 8, interval: 1.0, delay: 6, entrance: 3 }
-      ]},
-      // Wave 8: ゴリラ+ドラゴン+ヘビ多方面同時攻撃
-      { groups: [
-        { type: 'gorilla', count: 2, interval: 4.0, delay: 0, entrance: 0 },
-        { type: 'dragon', count: 4, interval: 2.5, delay: 1, entrance: 1 },
-        { type: 'snake', count: 25, interval: 0.2, delay: 3, entrance: 2 },
-        { type: 'bear', count: 4, interval: 2.0, delay: 5, entrance: 3 }
-      ]},
-      // Wave 9: ゴリラ+ヘビ大群
-      { groups: [
-        { type: 'gorilla', count: 3, interval: 4.0, delay: 0, entrance: 0 },
-        { type: 'snake', count: 25, interval: 0.2, delay: 1, entrance: 1 },
-        { type: 'gorilla', count: 3, interval: 4.0, delay: 2, entrance: 2 },
-        { type: 'snake', count: 25, interval: 0.2, delay: 3, entrance: 3 }
-      ]},
-      // Wave 10: ドラゴン+ゴリラ+おおかみ大王
-      { groups: [
-        { type: 'dragon', count: 6, interval: 2.0, delay: 0, entrance: 0 },
-        { type: 'gorilla', count: 3, interval: 3.5, delay: 2, entrance: 1 },
-        { type: 'wolf', count: 1, interval: 5.0, delay: 4, entrance: 2 },
-        { type: 'bear', count: 5, interval: 2.0, delay: 5, entrance: 3 }
-      ]},
-      // Wave 11: 全方位大量投入
+      // Wave 6: ドラゴン+キツネの空陸連合 (比率~1.2)
       { groups: [
         { type: 'dragon', count: 5, interval: 2.0, delay: 0, entrance: 0 },
-        { type: 'wolf', count: 1, interval: 5.0, delay: 1, entrance: 1 },
-        { type: 'gorilla', count: 3, interval: 3.0, delay: 2, entrance: 2 },
-        { type: 'fox', count: 12, interval: 0.7, delay: 4, entrance: 3 },
-        { type: 'snake', count: 20, interval: 0.2, delay: 7, entrance: 0 }
+        { type: 'fox', count: 12, interval: 0.7, delay: 2, entrance: 1 },
+        { type: 'dragon', count: 5, interval: 2.0, delay: 3, entrance: 2 },
+        { type: 'fox', count: 12, interval: 0.7, delay: 5, entrance: 3 }
       ]},
-      // Wave 12: おおかみ複数+ドラゴン+ゴリラ
+      // Wave 7: ゴリラ将軍初登場 + クマ+ヘビ大群 (比率~1.2)
       { groups: [
-        { type: 'wolf', count: 2, interval: 4.0, delay: 0, entrance: 0 },
-        { type: 'dragon', count: 6, interval: 1.8, delay: 2, entrance: 1 },
-        { type: 'gorilla', count: 4, interval: 3.0, delay: 3, entrance: 2 },
-        { type: 'bear', count: 6, interval: 1.5, delay: 5, entrance: 3 }
+        { type: 'gorilla', count: 9, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'bear', count: 20, interval: 0.8, delay: 2, entrance: 1 },
+        { type: 'snake', count: 80, interval: 0.1, delay: 4, entrance: 2 },
+        { type: 'hedgehog', count: 35, interval: 0.45, delay: 6, entrance: 3 }
       ]},
-      // Wave 13: 超大量ヘビラッシュ（四方向から50匹超）
+      // Wave 8: ゴリラ+ドラゴン+ヘビ多方面同時攻撃 (比率~1.2)
       { groups: [
-        { type: 'snake', count: 15, interval: 0.15, delay: 0, entrance: 0 },
-        { type: 'snake', count: 15, interval: 0.15, delay: 0.5, entrance: 1 },
-        { type: 'snake', count: 15, interval: 0.15, delay: 1, entrance: 2 },
-        { type: 'snake', count: 15, interval: 0.15, delay: 1.5, entrance: 3 }
+        { type: 'gorilla', count: 6, interval: 2.5, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 12, interval: 1.2, delay: 1, entrance: 1 },
+        { type: 'snake', count: 70, interval: 0.1, delay: 3, entrance: 2 },
+        { type: 'bear', count: 12, interval: 1.0, delay: 5, entrance: 3 }
       ]},
-      // Wave 14: ドラゴン8+ゴリラ4+おおかみ3
+      // Wave 9: ゴリラ+ヘビ大群 (比率~1.2)
       { groups: [
-        { type: 'dragon', count: 4, interval: 2.0, delay: 0, entrance: 0 },
-        { type: 'dragon', count: 4, interval: 2.0, delay: 1, entrance: 1 },
-        { type: 'gorilla', count: 2, interval: 3.0, delay: 2, entrance: 2 },
-        { type: 'gorilla', count: 2, interval: 3.0, delay: 3, entrance: 3 },
-        { type: 'wolf', count: 2, interval: 4.0, delay: 5, entrance: 0 },
-        { type: 'wolf', count: 1, interval: 5.0, delay: 7, entrance: 2 }
+        { type: 'gorilla', count: 10, interval: 2.0, delay: 0, entrance: 0 },
+        { type: 'snake', count: 70, interval: 0.1, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 10, interval: 2.0, delay: 2, entrance: 2 },
+        { type: 'snake', count: 70, interval: 0.1, delay: 3, entrance: 3 }
       ]},
-      // Wave 15 (FINAL): 全種族全方位同時総攻撃
+      // ★ Wave 10: ドラゴン+ゴリラ+おおかみ (比率~0.9 王の力必須)
       { groups: [
-        { type: 'wolf', count: 2, interval: 3.0, delay: 0, entrance: 0 },
-        { type: 'gorilla', count: 3, interval: 2.5, delay: 1, entrance: 1 },
-        { type: 'dragon', count: 5, interval: 1.5, delay: 2, entrance: 2 },
-        { type: 'bear', count: 5, interval: 1.5, delay: 3, entrance: 3 },
-        { type: 'fox', count: 10, interval: 0.6, delay: 4, entrance: 0 },
-        { type: 'snake', count: 20, interval: 0.15, delay: 5, entrance: 1 },
-        { type: 'hedgehog', count: 8, interval: 0.8, delay: 6, entrance: 2 },
-        { type: 'dragon', count: 4, interval: 1.5, delay: 8, entrance: 3 },
-        { type: 'gorilla', count: 2, interval: 3.0, delay: 9, entrance: 0 },
-        { type: 'snake', count: 20, interval: 0.15, delay: 10, entrance: 2 },
-        { type: 'wolf', count: 1, interval: 5.0, delay: 12, entrance: 1 }
+        { type: 'dragon', count: 20, interval: 1.0, delay: 0, entrance: 0 },
+        { type: 'gorilla', count: 10, interval: 2.0, delay: 2, entrance: 1 },
+        { type: 'wolf', count: 5, interval: 2.5, delay: 4, entrance: 2 },
+        { type: 'bear', count: 18, interval: 1.0, delay: 5, entrance: 3 }
+      ]},
+      // Wave 11: 全方位大量投入 (比率~1.2)
+      { groups: [
+        { type: 'dragon', count: 18, interval: 1.0, delay: 0, entrance: 0 },
+        { type: 'wolf', count: 4, interval: 2.5, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 12, interval: 1.8, delay: 2, entrance: 2 },
+        { type: 'fox', count: 50, interval: 0.3, delay: 4, entrance: 3 },
+        { type: 'snake', count: 70, interval: 0.1, delay: 7, entrance: 0 }
+      ]},
+      // Wave 12: おおかみ複数+ドラゴン+ゴリラ (比率~1.2)
+      { groups: [
+        { type: 'wolf', count: 6, interval: 2.5, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 20, interval: 1.0, delay: 2, entrance: 1 },
+        { type: 'gorilla', count: 14, interval: 1.5, delay: 3, entrance: 2 },
+        { type: 'bear', count: 20, interval: 0.8, delay: 5, entrance: 3 }
+      ]},
+      // Wave 13: 超大量ヘビラッシュ四方向 (比率~1.2)
+      { groups: [
+        { type: 'snake', count: 100, interval: 0.06, delay: 0, entrance: 0 },
+        { type: 'snake', count: 100, interval: 0.06, delay: 0.5, entrance: 1 },
+        { type: 'snake', count: 100, interval: 0.06, delay: 1, entrance: 2 },
+        { type: 'snake', count: 100, interval: 0.06, delay: 1.5, entrance: 3 }
+      ]},
+      // Wave 14: ドラゴン+ゴリラ+おおかみ (比率~1.2)
+      { groups: [
+        { type: 'dragon', count: 15, interval: 1.2, delay: 0, entrance: 0 },
+        { type: 'dragon', count: 15, interval: 1.2, delay: 1, entrance: 1 },
+        { type: 'gorilla', count: 8, interval: 2.0, delay: 2, entrance: 2 },
+        { type: 'gorilla', count: 8, interval: 2.0, delay: 3, entrance: 3 },
+        { type: 'wolf', count: 8, interval: 2.0, delay: 5, entrance: 0 },
+        { type: 'wolf', count: 3, interval: 3.0, delay: 7, entrance: 2 }
+      ]},
+      // ★ Wave 15 (FINAL): 全種族全方位同時総攻撃 (比率~0.9 王の力必須)
+      { groups: [
+        { type: 'wolf', count: 8, interval: 1.5, delay: 0, entrance: 0 },
+        { type: 'gorilla', count: 12, interval: 1.5, delay: 1, entrance: 1 },
+        { type: 'dragon', count: 20, interval: 0.8, delay: 2, entrance: 2 },
+        { type: 'bear', count: 20, interval: 0.8, delay: 3, entrance: 3 },
+        { type: 'fox', count: 40, interval: 0.3, delay: 4, entrance: 0 },
+        { type: 'snake', count: 80, interval: 0.08, delay: 5, entrance: 1 },
+        { type: 'hedgehog', count: 30, interval: 0.4, delay: 6, entrance: 2 },
+        { type: 'dragon', count: 15, interval: 0.8, delay: 8, entrance: 3 },
+        { type: 'gorilla', count: 8, interval: 1.5, delay: 9, entrance: 0 },
+        { type: 'snake', count: 80, interval: 0.08, delay: 10, entrance: 2 },
+        { type: 'wolf', count: 4, interval: 2.5, delay: 12, entrance: 1 }
       ]}
     ]
   }
