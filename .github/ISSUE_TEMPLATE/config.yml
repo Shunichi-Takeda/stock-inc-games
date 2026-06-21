@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "❓ ヘルプ — ゲームの登録・管理方法"
+    url: "https://shunichi-takeda.github.io/stock-inc-games/help.html"
+    about: "ゲームの登録・編集・削除の方法はこちらをご覧ください"
+  - name: "🌐 ポータルサイトを見る"
+    url: "https://shunichi-takeda.github.io/stock-inc-games/"
+    about: "ゲーム一覧ポータルサイト"

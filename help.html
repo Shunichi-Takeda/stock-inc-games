@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stock Inc. Games へのゲーム登録・編集・削除の方法を説明するヘルプページ">
+  <title>❓ ヘルプ — ゲームの登録・管理方法 | Stock Inc. Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background: #0a0a14;
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: #818cf8; }
+    a:hover { text-decoration: underline; }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-size: 0.85rem;
+      color: #64748b;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: #818cf8; text-decoration: none; }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+
+    .page-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #a78bfa, #818cf8, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-desc {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Sections ── */
+    .help-section {
+      margin-bottom: 3.5rem;
+    }
+
+    .help-section h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #c4b5fd;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .help-section h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #a78bfa;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step {
+      background: rgba(20, 20, 40, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.1);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      position: relative;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .step p, .step li {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .step ul, .step ol {
+      margin-left: 1.5rem;
+      margin-top: 0.3rem;
+    }
+
+    .step li { margin-bottom: 0.3rem; }
+
+    .step code {
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #c4b5fd;
+      font-family: 'SF Mono', 'Consolas', monospace;
+    }
+
+    /* CTA Buttons */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: all 0.25s ease;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff !important;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    .cta-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #a5b4fc !important;
+    }
+
+    .cta-secondary:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .info-box strong {
+      color: #c4b5fd;
+    }
+
+    .warn-box {
+      background: rgba(251, 191, 36, 0.06);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .warn-box strong {
+      color: #fbbf24;
+    }
+
+    /* Category Table */
+    .category-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .category-table th,
+    .category-table td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .category-table th {
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .category-table td { color: #94a3b8; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+      color: #334155;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .footer a { color: #6366f1; }
+
+    @media (max-width: 640px) {
+      .container { padding: 1.5rem 1rem 4rem; }
+      .step { padding: 1rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="./" class="back-link">← ゲーム一覧に戻る</a>
+  </div>
+
+  <main class="container">
+
+    <h1 class="page-title">❓ ゲームの登録・管理ヘルプ</h1>
+    <p class="page-desc">
+      Stock Inc. Games ポータルでは、<strong>GitHub Issue</strong> を使ってゲームを管理しています。<br>
+      誰でも簡単にゲームの登録・編集・削除ができます。
+    </p>
+
+    <!-- ── 1. ゲームを登録する ── -->
+    <section class="help-section">
+      <h2><span class="num">1</span> ゲームを登録する</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">Issue 作成ページを開く</span>
+          </div>
+          <p>下の「ゲームを登録する」ボタンをクリックすると、GitHub の Issue 作成フォームが開きます。</p>
+          <p style="margin-top:0.3rem; font-size:0.82rem; color:#64748b;">※ GitHub アカウントが必要です（無料で作成できます）</p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">フォームに情報を入力する</span>
+          </div>
+          <p>以下の項目を入力してください:</p>
+          <ul>
+            <li><strong>Issue タイトル</strong> — ゲーム名（例: 🥦 ブロッコリーシューター）</li>
+            <li><strong>ゲームURL</strong> — ゲームの公開URL</li>
+            <li><strong>サムネイル画像URL</strong> — サムネイル画像の直リンクURL</li>
+            <li><strong>紹介テキスト</strong> — 1〜3文程度の説明</li>
+            <li><strong>カテゴリ</strong> — ドロップダウンから選択</li>
+            <li><strong>タグ</strong>（任意） — カンマ区切りでタグを入力</li>
+          </ul>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-title">Submit new issue をクリック</span>
+          </div>
+          <p>Issue が作成されると、ポータルサイトに自動的にゲームが表示されます。<br>
+             反映にはキャッシュの関係で最大5分かかる場合があります。</p>
+        </div>
+      </div>
+
+      <div class="cta-group">
+        <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues/new?template=add-game.yml"
+           target="_blank" rel="noopener" class="cta cta-primary">＋ ゲームを登録する</a>
+      </div>
+    </section>
+
+    <!-- ── 2. 登録内容を修正する ── -->
+    <section class="help-section">
+      <h2><span class="num">2</span> 登録内容を修正する</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">対象の Issue を開く</span>
+          </div>
+          <p>下のリンクから登録済みゲームの Issue 一覧を確認し、修正したいゲームの Issue を開きます。</p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">Issue の本文を編集する</span>
+          </div>
+          <p>Issue 本文の右上にある <code>…</code> メニューから「<strong>Edit</strong>」を選択し、<br>
+             ゲームURL、サムネイル、紹介テキスト等を修正して保存してください。</p>
+          <div class="warn-box">
+            <strong>⚠️ 注意:</strong> <code>### ゲームURL</code> や <code>### カテゴリ</code> などのヘッダー行は変更・削除しないでください。ポータルが正しくデータを読み取れなくなります。
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-group">
+        <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues?q=is%3Aissue+is%3Aopen+label%3Agame"
+           target="_blank" rel="noopener" class="cta cta-secondary">📋 登録ゲーム一覧を見る</a>
+      </div>
+    </section>
+
+    <!-- ── 3. ゲームを削除する ── -->
+    <section class="help-section">
+      <h2><span class="num">3</span> ゲームを削除（非表示に）する</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">対象の Issue を Close する</span>
+          </div>
+          <p>ポータルから削除したいゲームの Issue を開き、画面下部の「<strong>Close issue</strong>」ボタンをクリックします。</p>
+          <p style="margin-top:0.5rem;">Issue を Close するとポータルから非表示になります。再度 Open すれば復活します。</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>💡 ヒント:</strong> Issue は削除されるわけではなく「Close」されるだけなので、いつでも元に戻せます。
+      </div>
+    </section>
+
+    <!-- ── 4. サムネイル画像について ── -->
+    <section class="help-section">
+      <h2><span class="num">4</span> サムネイル画像について</h2>
+
+      <div class="steps">
+        <div class="step">
+          <p>サムネイル画像のURLを取得する方法はいくつかあります:</p>
+          <ul>
+            <li><strong>GitHub Issue にアップロード</strong> — 任意の Issue のコメント欄に画像をドラッグ&ドロップし、生成されたURLをコピー</li>
+            <li><strong>リポジトリ内の画像を使用</strong> — <code>https://raw.githubusercontent.com/ユーザー名/リポジトリ/main/画像パス</code> の形式</li>
+            <li><strong>外部 URL を使用</strong> — 直リンク可能な画像URLならどこでもOK</li>
+          </ul>
+
+          <div class="info-box">
+            <strong>📐 推奨サイズ:</strong> アスペクト比 16:10 の PNG または JPG。ポータルのカードでは 16:10 の領域にクロップされて表示されます。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. カテゴリ一覧 ── -->
+    <section class="help-section">
+      <h2><span class="num">5</span> カテゴリ一覧</h2>
+
+      <table class="category-table">
+        <thead>
+          <tr>
+            <th>カテゴリ</th>
+            <th>説明</th>
+            <th>例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🔫 シューティング</td>
+            <td>シューティング全般</td>
+            <td>ブロッコリーシューター</td>
+          </tr>
+          <tr>
+            <td>📖 ノベル</td>
+            <td>ビジュアルノベル、ストーリー系</td>
+            <td>ベジタブルキングダム</td>
+          </tr>
+          <tr>
+            <td>🏰 ストラテジー</td>
+            <td>タワーディフェンス、戦略系</td>
+            <td>ブロッコリーTD</td>
+          </tr>
+          <tr>
+            <td>📚 学習</td>
+            <td>学習・教育・オンボーディング</td>
+            <td>Stock Philosophy</td>
+          </tr>
+          <tr>
+            <td>🎮 その他</td>
+            <td>上記に当てはまらないゲーム</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── 6. FAQ ── -->
+    <section class="help-section">
+      <h2><span class="num">?</span> よくある質問</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-header">
+            <span class="step-title">Q. GitHub アカウントがないと登録できませんか？</span>
+          </div>
+          <p>はい、GitHub Issue を使うため、<a href="https://github.com/signup" target="_blank" rel="noopener">GitHub アカウント（無料）</a>が必要です。</p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-title">Q. 自分で作ったゲームでなくても登録できますか？</span>
+          </div>
+          <p>はい！公開されている HTML ゲームであれば、どなたが作成したものでも登録できます。ただし、著作権やライセンスにはご注意ください。</p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-title">Q. 登録したのにポータルに表示されません</span>
+          </div>
+          <p>キャッシュの関係で反映まで最大5分かかります。ブラウザをハードリロード（<code>Cmd+Shift+R</code> / <code>Ctrl+Shift+R</code>）してみてください。</p>
+        </div>
+
+        <div class="step">
+          <div class="step-header">
+            <span class="step-title">Q. Issue のラベルは何のためにありますか？</span>
+          </div>
+          <p><code>game</code> ラベルが付いた Issue がポータルに表示されます。テンプレートから作成すると自動で付与されます。</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-group" style="justify-content: center;">
+      <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues/new?template=add-game.yml"
+         target="_blank" rel="noopener" class="cta cta-primary">＋ ゲームを登録する</a>
+      <a href="./" class="cta cta-secondary">← ゲーム一覧に戻る</a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Stock Inc. · <a href="https://github.com/Shunichi-Takeda/stock-inc-games">GitHub</a></p>
+  </footer>
+
+</body>
+</html>

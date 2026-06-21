@@ -5,116 +5,56 @@
 
 🌐 **ポータルサイト**: [https://shunichi-takeda.github.io/stock-inc-games/](https://shunichi-takeda.github.io/stock-inc-games/)
 
-## 🕹️ ゲーム一覧
+## 🕹️ ゲームの登録・管理
 
-### 外部リポジトリのゲーム
+ゲームの登録・管理は **GitHub Issue** ベースで行います。  
+誰でも簡単にゲームを追加・編集・削除できます。
 
-| ゲーム | ジャンル | プレイ |
-|--------|----------|--------|
-| 🥦 ブロッコリーシューター | シューティング | [▶ Play](https://shunichi-takeda.github.io/narekan-shooting/) |
-| 📖 ベジタブルキングダム ～最後の収穫祭～ | ノベル | [▶ Play](https://shunichi-takeda.github.io/narekan-shooting/novel.html) |
-| 💼 Stock Philosophy ～ふたつの世界線～ | 学習 | [▶ Play](https://shunichi-takeda.github.io/stock-philosophy-game/) |
+| 操作 | 方法 |
+|------|------|
+| **ゲームを登録する** | [Issue を作成する](https://github.com/Shunichi-Takeda/stock-inc-games/issues/new?template=add-game.yml) |
+| **登録内容を修正する** | 該当の Issue を編集する |
+| **ゲームを削除する** | 該当の Issue を Close する |
 
-### このリポジトリ内のゲーム
-
-| ゲーム | ジャンル | 状態 |
-|--------|----------|------|
-| 🥦🏰 ブロッコリー・タワーディフェンス | タワーディフェンス | 🚧 開発中 |
-
-> ゲームは随時追加されます！自社メンバーだけでなく、他の人が作成したゲームも掲載していきます。
+> 詳しい手順は [ヘルプページ](https://shunichi-takeda.github.io/stock-inc-games/help.html) をご覧ください。
 
 ## 📁 ディレクトリ構成
 
 ```
 stock-inc-games/
-├── README.md
-├── .agents/
-│   └── AGENTS.md           # AI エージェント向けプロジェクトルール
-├── index.html              # ゲーム一覧ポータル（GitHub Pages トップ）
-├── assets/
-│   └── thumbnails/         # ゲームのサムネイル画像
+├── index.html              # ゲーム一覧ポータル（GitHub Issues API から動的生成）
+├── help.html               # ゲーム登録・管理ヘルプページ
+├── .github/
+│   └── ISSUE_TEMPLATE/     # Issue テンプレート
+│       ├── add-game.yml    # ゲーム登録フォーム
+│       └── config.yml
+├── assets/thumbnails/      # サムネイル画像（任意）
 ├── shared/                 # ゲーム間で共有するアセット
 │   ├── css/common.css
 │   └── js/utils.js
-└── games/                  # このリポジトリ内のゲーム
-    └── broccoli-td/        # ブロッコリー・タワーディフェンス
+└── games/                  # このリポジトリ内のゲーム（任意）
+    └── broccoli-td/
         ├── index.html
         ├── style.css
         └── game.js
 ```
 
+## 🏗️ 仕組み
+
+```
+Issue 作成/編集/Close  →  GitHub Issues API  →  index.html が動的にカード生成
+```
+
+- `game` ラベル付きの **Open** な Issue がポータルに表示される
+- Issue テンプレート（フォーム形式）で構造化されたデータを収集
+- `index.html` がクライアントサイドで GitHub API を呼び出してカードを生成
+- レスポンスは `localStorage` に5分間キャッシュ
+
 ## 🛠️ 技術スタック
 
 - **HTML / CSS / JavaScript** のみ（フレームワーク不使用）
-- **GitHub Pages** でホスティング（`main` ブランチの `/` をソースとして使用）
-- 外部ライブラリは極力使わないシンプル構成
-
-## 📝 ゲームの追加方法
-
-### このリポジトリ内にゲームを追加する場合
-
-1. `games/` 配下に新しいフォルダを作成（例: `games/my-new-game/`）
-2. `index.html`, `style.css`, `game.js` を配置
-3. `assets/thumbnails/` にサムネイル画像（PNG、16:10 推奨）を追加
-4. ルートの `index.html` にゲームカードを追加し、適切な `data-category` を設定
-5. `README.md` のゲーム一覧テーブルを更新
-6. `main` ブランチに push → 自動で GitHub Pages に反映
-
-### 外部 URL のゲームを一覧に追加する場合
-
-外部リポジトリや他の人が作成したゲームも、ポータルに掲載できます。
-
-1. `assets/thumbnails/` にサムネイル画像を追加
-2. ルートの `index.html` に `<a>` タグのゲームカードを追加（`target="_blank"` で外部リンク）
-3. `README.md` の「外部リポジトリのゲーム」テーブルを更新
-
-### ゲームカードの HTML テンプレート
-
-```html
-<!-- 外部リンクのゲーム -->
-<a href="https://example.github.io/game/" target="_blank" rel="noopener"
-   class="game-card" data-category="shooting">
-  <div class="card-thumb">
-    <img src="assets/thumbnails/game-thumb.png" alt="ゲーム名" loading="lazy">
-    <span class="badge badge-status badge--playable">▶ Play</span>
-  </div>
-  <div class="card-body">
-    <h2>🎮 ゲーム名</h2>
-    <p>ゲームの説明文。</p>
-    <div class="card-tags">
-      <span class="tag">ジャンル</span>
-    </div>
-    <span class="card-play">プレイする <span class="arrow">→</span></span>
-  </div>
-</a>
-
-<!-- Coming Soon のゲーム -->
-<div class="game-card coming-soon" data-category="strategy">
-  <div class="card-thumb">
-    <img src="assets/thumbnails/game-thumb.png" alt="ゲーム名" loading="lazy">
-    <span class="badge badge-status badge--coming-soon">Coming Soon</span>
-  </div>
-  <div class="card-body">
-    <h2>🎮 ゲーム名</h2>
-    <p>ゲームの説明文。</p>
-    <div class="card-tags">
-      <span class="tag">ジャンル</span>
-    </div>
-    <span class="card-play" style="color: #64748b;">開発中…</span>
-  </div>
-</div>
-```
-
-### カテゴリ一覧（`data-category`）
-
-| カテゴリ | フィルターボタン |
-|----------|------------------|
-| `shooting` | 🔫 シューティング |
-| `novel` | 📖 ノベル |
-| `strategy` | 🏰 ストラテジー |
-| `learning` | 📚 学習 |
-
-> 新しいカテゴリを追加する場合は `index.html` の `<nav class="filter-bar">` にボタンも追加してください。
+- **GitHub Pages** でホスティング
+- **GitHub Issues API** でゲームデータを管理（CMS として利用）
 
 ## 📜 ライセンス
 

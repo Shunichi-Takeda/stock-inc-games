@@ -1,0 +1,60 @@
+name: "🎮 ゲームを登録する"
+description: "ポータルに新しいゲームを追加します"
+title: ""
+labels: ["game"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ゲームの登録
+        以下のフォームに情報を入力してください。Issueを作成すると、ポータルサイトに自動的にゲームが掲載されます。
+
+  - type: input
+    id: game-url
+    attributes:
+      label: "ゲームURL"
+      description: "ゲームのURL（GitHub Pages 等）"
+      placeholder: "https://example.github.io/my-game/"
+    validations:
+      required: true
+
+  - type: input
+    id: thumbnail-url
+    attributes:
+      label: "サムネイル画像URL"
+      description: "サムネイル画像の直リンクURL。GitHub Issue のコメント欄に画像をドラッグ&ドロップしてアップロードし、そのURLをここに貼り付けることもできます。"
+      placeholder: "https://example.com/thumbnail.png"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "紹介テキスト"
+      description: "ゲームの簡単な説明（1〜3文程度）"
+      placeholder: "迫りくるブロッコリーを撃ち落とせ！ウェーブ制のシューティングゲーム。"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "カテゴリ"
+      description: "ゲームのジャンルを選択してください"
+      options:
+        - シューティング
+        - ノベル
+        - ストラテジー
+        - 学習
+        - その他
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: "タグ（任意）"
+      description: "カンマ区切りでタグを入力"
+      placeholder: "ランキング対応, マルチエンディング"
+    validations:
+      required: false

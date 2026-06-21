@@ -7,12 +7,49 @@
 - GitHub Pages URL: `https://shunichi-takeda.github.io/stock-inc-games/`
 - GitHub リポジトリへの push は `Shunichi-Takeda` アカウントで行う（`gh auth switch --user Shunichi-Takeda`）
 
+## アーキテクチャ
+
+ゲーム情報は **GitHub Issues** で管理される（Issues as CMS）。
+
+```
+Issue 作成/編集/Close  →  GitHub Issues API  →  index.html が動的にカード生成
+```
+
+- `game` ラベル付きの **Open** な Issue がポータルに表示される
+- Issue テンプレート（`.github/ISSUE_TEMPLATE/add-game.yml`）で構造化データを収集
+- `index.html` がクライアントサイドで GitHub API を呼び出してカードを動的生成
+- レスポンスは `localStorage` に5分間キャッシュ
+
+### Issue Body のフォーマット（GitHub Issue Forms が生成）
+
+```markdown
+### ゲームURL
+
+https://example.github.io/game/
+
+### サムネイル画像URL
+
+https://example.com/thumbnail.png
+
+### 紹介テキスト
+
+ゲームの説明文
+
+### カテゴリ
+
+シューティング
+
+### タグ（任意）
+
+タグ1, タグ2
+```
+
 ## ゲームの種類
 
 このポータルには **2種類のゲーム** が掲載される:
 
-1. **内部ゲーム**: `games/` ディレクトリ内に直接格納されたゲーム
-2. **外部ゲーム**: 別リポジトリの GitHub Pages URL にリンクするゲーム（自社・他の人が作成したものを含む）
+1. **外部ゲーム**: 別リポジトリの GitHub Pages URL にリンクするゲーム（自社・他の人が作成したものを含む）
+2. **内部ゲーム**: `games/` ディレクトリ内に直接格納されたゲーム（これも Issue で登録する）
 
 ## 技術スタック
 
@@ -20,13 +57,19 @@
 - 外部ライブラリは極力使わない
 - ゲームは単一 HTML ファイルまたは `index.html` + `style.css` + `game.js` の構成
 - `shared/css/common.css` と `shared/js/utils.js` に共通コードを配置
+- **GitHub Issues API** をクライアントサイドから呼び出してゲームデータを取得
 
 ## ディレクトリ構成ルール
 
 ```
 stock-inc-games/
-├── index.html              # ポータル一覧ページ（GitHub Pages トップ）
-├── assets/thumbnails/      # サムネイル画像（PNG、16:10 推奨）
+├── index.html              # ポータル（GitHub Issues API から動的生成）
+├── help.html               # ゲーム登録・管理ヘルプページ
+├── .github/
+│   └── ISSUE_TEMPLATE/     # Issue テンプレート
+│       ├── add-game.yml    # ゲーム登録フォーム
+│       └── config.yml
+├── assets/thumbnails/      # サムネイル画像（任意）
 ├── shared/                 # 共通アセット
 │   ├── css/common.css
 │   └── js/utils.js
@@ -37,61 +80,42 @@ stock-inc-games/
         └── game.js
 ```
 
-## ゲームの追加手順
+## ゲームの追加・管理
+
+### ゲームを登録する場合
+
+1. GitHub Issue テンプレート（`add-game.yml`）を使って Issue を作成
+2. `game` ラベルが自動付与される
+3. ポータルに自動表示される（最大5分のキャッシュ遅延あり）
+
+### ゲームを修正する場合
+
+- 該当の Issue を編集する（`### ヘッダー` 行は変更しないこと）
+
+### ゲームを削除する場合
+
+- 該当の Issue を Close する
 
 ### 内部ゲームを追加する場合
 
-1. `games/<game-name>/` ディレクトリを作成
-2. `index.html`, `style.css`, `game.js` を配置
-3. `assets/thumbnails/<game-name>.png` にサムネイル画像を追加
-4. ルート `index.html` の `.games-grid` 内にゲームカードを追加
-5. `README.md` の「このリポジトリ内のゲーム」テーブルを更新
-6. ゲーム内に `← ゲーム一覧に戻る` リンク（`../../` へ）を設置
+1. Issue でゲームを登録（URL は GitHub Pages の URL を使用）
+2. `games/<game-name>/` ディレクトリに `index.html`, `style.css`, `game.js` を配置
+3. ゲーム内に `← ゲーム一覧に戻る` リンク（`../../` へ）を設置
 
-### 外部ゲームを追加する場合
+## カテゴリ一覧
 
-1. `assets/thumbnails/<game-name>.png` にサムネイル画像を追加
-2. ルート `index.html` の `.games-grid` 内に `<a>` タグでカードを追加（`target="_blank"`）
-3. `README.md` の「外部リポジトリのゲーム」テーブルを更新
+| カテゴリ値（Issue Body） | フィルターID | 説明 |
+|--------------------------|-------------|------|
+| シューティング | `shooting` | シューティング |
+| ノベル | `novel` | ノベル |
+| ストラテジー | `strategy` | ストラテジー（タワーディフェンス等） |
+| 学習 | `learning` | 学習・教育 |
+| その他 | `other` | その他 |
 
-## index.html のゲームカード構造
-
-ゲームカードには以下の `data-category` 属性を設定する:
-
-| カテゴリ値 | 説明 |
-|-----------|------|
-| `shooting` | シューティング |
-| `novel` | ノベル |
-| `strategy` | ストラテジー（タワーディフェンス等） |
-| `learning` | 学習・教育 |
-
-新しいカテゴリを追加する場合は `<nav class="filter-bar">` にフィルターボタンも追加すること。
-
-### プレイ可能なゲームのカード
-
-```html
-<a href="URL" target="_blank" rel="noopener"
-   class="game-card" data-category="カテゴリ">
-  <div class="card-thumb">
-    <img src="assets/thumbnails/xxx.png" alt="名前" loading="lazy">
-    <span class="badge badge-status badge--playable">▶ Play</span>
-  </div>
-  <div class="card-body">
-    <h2>🎮 ゲーム名</h2>
-    <p>説明文</p>
-    <div class="card-tags"><span class="tag">タグ</span></div>
-    <span class="card-play">プレイする <span class="arrow">→</span></span>
-  </div>
-</a>
-```
-
-### Coming Soon のカード
-
-```html
-<div class="game-card coming-soon" data-category="カテゴリ">
-  <!-- badge--coming-soon を使用、<div> タグ（リンクなし） -->
-</div>
-```
+新しいカテゴリを追加する場合:
+1. `.github/ISSUE_TEMPLATE/add-game.yml` のドロップダウンに選択肢を追加
+2. `index.html` の `CATEGORY_MAP` と `CATEGORY_LABELS` にエントリを追加
+3. `index.html` の `<nav class="filter-bar">` にフィルターボタンを追加
 
 ## コミットルール
 

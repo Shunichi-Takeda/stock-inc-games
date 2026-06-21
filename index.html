@@ -20,10 +20,13 @@
       overflow-x: hidden;
     }
 
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
     /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 5rem 1.5rem 3.5rem;
+      padding: 4rem 1.5rem 3.5rem;
       position: relative;
       overflow: hidden;
       background: linear-gradient(160deg, #0d0d1f 0%, #111130 40%, #0d1b2e 70%, #0a0a14 100%);
@@ -55,7 +58,6 @@
       background-clip: text;
       animation: gradientShift 6s ease-in-out infinite;
       position: relative;
-      letter-spacing: -0.02em;
     }
 
     @keyframes gradientShift {
@@ -72,7 +74,7 @@
     }
 
     .hero .desc {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.9rem;
       color: #475569;
       position: relative;
@@ -80,6 +82,58 @@
       margin-left: auto;
       margin-right: auto;
       line-height: 1.7;
+    }
+
+    /* Hero Actions */
+    .hero-actions {
+      margin-top: 2rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-register {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff !important;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+      letter-spacing: 0.02em;
+    }
+
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45);
+    }
+
+    .btn-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8 !important;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none !important;
+      transition: all 0.25s ease;
+    }
+
+    .btn-help:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #c4b5fd !important;
     }
 
     /* ── Filter Tabs ── */
@@ -106,7 +160,6 @@
       cursor: pointer;
       transition: all 0.25s ease;
       backdrop-filter: blur(8px);
-      letter-spacing: 0.02em;
     }
 
     .filter-btn:hover {
@@ -128,14 +181,6 @@
       padding: 3rem 1.5rem 5rem;
     }
 
-    .section-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: #94a3b8;
-      letter-spacing: 0.03em;
-    }
-
     /* ── Games Grid ── */
     .games-grid {
       display: grid;
@@ -149,7 +194,7 @@
       border: 1px solid rgba(99, 102, 241, 0.1);
       border-radius: 16px;
       overflow: hidden;
-      text-decoration: none;
+      text-decoration: none !important;
       color: inherit;
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       display: flex;
@@ -161,14 +206,6 @@
       transform: translateY(-6px);
       box-shadow: 0 16px 48px rgba(99, 102, 241, 0.12), 0 4px 16px rgba(0, 0, 0, 0.3);
       border-color: rgba(99, 102, 241, 0.3);
-    }
-
-    .game-card.coming-soon {
-      opacity: 0.7;
-    }
-
-    .game-card.coming-soon:hover {
-      opacity: 0.85;
     }
 
     /* Thumbnail */
@@ -199,6 +236,17 @@
       pointer-events: none;
     }
 
+    /* Thumb placeholder */
+    .card-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      background: linear-gradient(135deg, #111122, #1a1a35);
+    }
+
     /* Badges */
     .badge {
       position: absolute;
@@ -213,13 +261,7 @@
       backdrop-filter: blur(6px);
     }
 
-    .badge-status {
-      right: 12px;
-    }
-
-    .badge-author {
-      left: 12px;
-    }
+    .badge-status { right: 12px; }
 
     .badge--playable {
       background: rgba(52, 211, 153, 0.2);
@@ -233,16 +275,11 @@
       border: 1px solid rgba(251, 191, 36, 0.3);
     }
 
-    .badge--author {
+    .badge-category {
+      left: 12px;
       background: rgba(99, 102, 241, 0.2);
       color: #a5b4fc;
       border: 1px solid rgba(99, 102, 241, 0.3);
-    }
-
-    .badge--external {
-      background: rgba(244, 114, 182, 0.2);
-      color: #f9a8d4;
-      border: 1px solid rgba(244, 114, 182, 0.3);
     }
 
     /* Card Body */
@@ -268,11 +305,17 @@
       flex: 1;
     }
 
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
     .card-tags {
       display: flex;
       gap: 0.4rem;
       flex-wrap: wrap;
-      margin-top: 0.25rem;
     }
 
     .tag {
@@ -283,7 +326,21 @@
       background: rgba(99, 102, 241, 0.08);
       color: #818cf8;
       border: 1px solid rgba(99, 102, 241, 0.12);
-      letter-spacing: 0.02em;
+    }
+
+    .card-author {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: #475569;
+    }
+
+    .card-author img {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .card-play {
@@ -297,16 +354,60 @@
       transition: color 0.2s;
     }
 
-    .game-card:hover .card-play {
-      color: #a5b4fc;
+    .game-card:hover .card-play { color: #a5b4fc; }
+
+    .card-play .arrow { transition: transform 0.2s; }
+    .game-card:hover .card-play .arrow { transform: translateX(4px); }
+
+    /* ── States ── */
+    .state-message {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      color: #64748b;
     }
 
-    .card-play .arrow {
-      transition: transform 0.2s;
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(99, 102, 241, 0.15);
+      border-top-color: #818cf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.5rem;
     }
 
-    .game-card:hover .card-play .arrow {
-      transform: translateX(4px);
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .state-message p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .state-message .sub {
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .btn-retry {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      background: rgba(99, 102, 241, 0.1);
+      color: #818cf8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-retry:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
     }
 
     /* ── Footer ── */
@@ -318,30 +419,23 @@
       border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .footer a {
-      color: #6366f1;
-      text-decoration: none;
-      transition: color 0.2s;
+    .footer a { color: #6366f1; }
+
+    /* ── Fade In ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .footer a:hover {
-      color: #818cf8;
-      text-decoration: underline;
+    .fade-in {
+      animation: fadeIn 0.35s ease both;
     }
 
     /* ── Responsive ── */
     @media (max-width: 640px) {
-      .games-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 3.5rem 1rem 2.5rem;
-      }
-
-      .filter-bar {
-        margin-top: -1rem;
-      }
+      .games-grid { grid-template-columns: 1fr; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .filter-bar { margin-top: -1rem; }
     }
   </style>
 </head>
@@ -350,10 +444,15 @@
   <header class="hero">
     <h1>🎮 Stock Inc. Games</h1>
     <p class="subtitle">適当に作った HTML ゲームたち</p>
-    <p class="desc">ブラウザからすぐに遊べるカジュアルゲームコレクション。<br>社内メンバーが気まぐれに作ったゲームを公開しています。</p>
+    <p class="desc">ブラウザからすぐに遊べるカジュアルゲームコレクション。<br>誰でもゲームを登録できます。</p>
+    <div class="hero-actions">
+      <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues/new?template=add-game.yml"
+         target="_blank" rel="noopener" class="btn-register">＋ ゲームを登録する</a>
+      <a href="help.html" class="btn-help">❓ 登録・管理ヘルプ</a>
+    </div>
   </header>
 
-  <nav class="filter-bar">
+  <nav class="filter-bar" id="filterBar">
     <button class="filter-btn active" data-filter="all">🎮 すべて</button>
     <button class="filter-btn" data-filter="shooting">🔫 シューティング</button>
     <button class="filter-btn" data-filter="novel">📖 ノベル</button>
@@ -363,120 +462,273 @@
 
   <main class="container">
 
-    <div class="games-grid" id="gamesGrid">
-
-      <!-- ブロッコリーシューター (外部) -->
-      <a href="https://shunichi-takeda.github.io/narekan-shooting/" target="_blank" rel="noopener"
-         class="game-card" data-category="shooting">
-        <div class="card-thumb">
-          <img src="assets/thumbnails/broccoli-shooter.png" alt="ブロッコリーシューター" loading="lazy">
-          <span class="badge badge-status badge--playable">▶ Play</span>
-        </div>
-        <div class="card-body">
-          <h2>🥦 ブロッコリーシューター</h2>
-          <p>迫りくるブロッコリーを撃ち落とせ！ウェーブ制のシューティングゲーム。コンボを繋いでハイスコアを目指そう。</p>
-          <div class="card-tags">
-            <span class="tag">シューティング</span>
-            <span class="tag">ランキング対応</span>
-          </div>
-          <span class="card-play">プレイする <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <!-- ベジタブルキングダム (外部) -->
-      <a href="https://shunichi-takeda.github.io/narekan-shooting/novel.html" target="_blank" rel="noopener"
-         class="game-card" data-category="novel">
-        <div class="card-thumb">
-          <img src="assets/thumbnails/vegetable-kingdom.png" alt="ベジタブルキングダム" loading="lazy">
-          <span class="badge badge-status badge--playable">▶ Play</span>
-        </div>
-        <div class="card-body">
-          <h2>📖 ベジタブルキングダム ～最後の収穫祭～</h2>
-          <p>野菜たちの王国で繰り広げられる壮大な物語。選択肢によって結末が変わるビジュアルノベル。</p>
-          <div class="card-tags">
-            <span class="tag">ノベル</span>
-            <span class="tag">マルチエンディング</span>
-          </div>
-          <span class="card-play">プレイする <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <!-- Stock Philosophy (外部) -->
-      <a href="https://shunichi-takeda.github.io/stock-philosophy-game/" target="_blank" rel="noopener"
-         class="game-card" data-category="learning">
-        <div class="card-thumb">
-          <img src="assets/thumbnails/stock-philosophy.png" alt="Stock Philosophy" loading="lazy">
-          <span class="badge badge-status badge--playable">▶ Play</span>
-        </div>
-        <div class="card-body">
-          <h2>💼 Stock Philosophy ～ふたつの世界線～</h2>
-          <p>株式会社Stockの10の考え方を、パラレルワールドの探索を通じて学ぶインタラクティブ教材。</p>
-          <div class="card-tags">
-            <span class="tag">学習</span>
-            <span class="tag">企業理念</span>
-          </div>
-          <span class="card-play">プレイする <span class="arrow">→</span></span>
-        </div>
-      </a>
-
-      <!-- ブロッコリー・タワーディフェンス (内部・Coming Soon) -->
-      <div class="game-card coming-soon" data-category="strategy">
-        <div class="card-thumb">
-          <img src="assets/thumbnails/broccoli-td.png" alt="ブロッコリー・タワーディフェンス" loading="lazy">
-          <span class="badge badge-status badge--coming-soon">Coming Soon</span>
-        </div>
-        <div class="card-body">
-          <h2>🥦🏰 ブロッコリー・タワーディフェンス</h2>
-          <p>ブロッコリー王国を守れ！迫りくる敵野菜たちをタワーで迎撃する本格タワーディフェンス。</p>
-          <div class="card-tags">
-            <span class="tag">タワーディフェンス</span>
-            <span class="tag">ストラテジー</span>
-          </div>
-          <span class="card-play" style="color: #64748b;">開発中…</span>
-        </div>
-      </div>
-
+    <!-- Loading State -->
+    <div id="loadingState" class="state-message">
+      <div class="spinner"></div>
+      <p>ゲーム一覧を読み込み中…</p>
     </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="state-message" style="display:none;">
+      <p>😕 データの読み込みに失敗しました</p>
+      <p class="sub">しばらく待ってから再試行してください</p>
+      <button class="btn-retry" onclick="loadGames(true)">🔄 再試行</button>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="state-message" style="display:none;">
+      <p>🎮 まだゲームが登録されていません</p>
+      <p class="sub">最初のゲームを登録してみましょう！</p>
+      <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues/new?template=add-game.yml"
+         target="_blank" rel="noopener" class="btn-retry" style="margin-top:1rem; display:inline-block;">
+        ＋ ゲームを登録する
+      </a>
+    </div>
+
+    <!-- Games Grid (populated by JS) -->
+    <div class="games-grid" id="gamesGrid" style="display:none;"></div>
 
   </main>
 
   <footer class="footer">
-    <p>© 2026 Stock Inc. · <a href="https://github.com/Shunichi-Takeda/stock-inc-games">GitHub</a></p>
+    <p>© 2026 Stock Inc. ·
+      <a href="https://github.com/Shunichi-Takeda/stock-inc-games">GitHub</a> ·
+      <a href="https://github.com/Shunichi-Takeda/stock-inc-games/issues?q=is%3Aissue+is%3Aopen+label%3Agame">登録ゲーム一覧 (Issues)</a>
+    </p>
   </footer>
 
   <script>
-    // ── Filter Logic ──
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.game-card');
+    // ══════════════════════════════════════════
+    //  CONFIG
+    // ══════════════════════════════════════════
+    const CONFIG = {
+      owner: 'Shunichi-Takeda',
+      repo: 'stock-inc-games',
+      cacheKey: 'sig-games-v1',
+      cacheTTL: 5 * 60 * 1000  // 5分
+    };
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Update active state
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    const CATEGORY_MAP = {
+      'シューティング': 'shooting',
+      'ノベル':         'novel',
+      'ストラテジー':   'strategy',
+      '学習':           'learning',
+      'その他':         'other'
+    };
 
-        const filter = btn.dataset.filter;
+    const CATEGORY_LABELS = {
+      'shooting': '🔫 シューティング',
+      'novel':    '📖 ノベル',
+      'strategy': '🏰 ストラテジー',
+      'learning': '📚 学習',
+      'other':    '🎮 その他'
+    };
 
-        cards.forEach(card => {
-          if (filter === 'all' || card.dataset.category === filter) {
-            card.style.display = '';
-            card.style.animation = 'fadeIn 0.35s ease';
-          } else {
-            card.style.display = 'none';
+    // ══════════════════════════════════════════
+    //  PARSER
+    // ══════════════════════════════════════════
+    function parseIssueBody(body) {
+      if (!body) return null;
+
+      const sections = {};
+      const parts = body.split(/^### /m).filter(Boolean);
+      for (const part of parts) {
+        const nl = part.indexOf('\n');
+        if (nl === -1) continue;
+        const key = part.substring(0, nl).trim();
+        const val = part.substring(nl).trim();
+        sections[key] = val;
+      }
+
+      const url = sections['ゲームURL'];
+      const thumbnailRaw = sections['サムネイル画像URL'] || '';
+      const description = sections['紹介テキスト'] || '';
+      const categoryName = sections['カテゴリ'] || 'その他';
+      const tagsRaw = sections['タグ（任意）'] || sections['タグ'] || '';
+
+      if (!url) return null;
+
+      // サムネイルURL: Markdown画像記法にも対応
+      let thumbnail = thumbnailRaw;
+      const mdMatch = thumbnailRaw.match(/!\[.*?\]\((.*?)\)/);
+      if (mdMatch) thumbnail = mdMatch[1];
+      else {
+        const urlMatch = thumbnailRaw.match(/https?:\/\/\S+/);
+        if (urlMatch) thumbnail = urlMatch[0];
+      }
+
+      const category = CATEGORY_MAP[categoryName] || 'other';
+      const tags = (!tagsRaw || tagsRaw === '_No response_')
+        ? []
+        : tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+      return { url: url.trim(), thumbnail: thumbnail.trim(), description, category, tags };
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ══════════════════════════════════════════
+    //  API & CACHE
+    // ══════════════════════════════════════════
+    async function fetchGames(skipCache) {
+      // キャッシュ確認
+      if (!skipCache) {
+        try {
+          const cached = localStorage.getItem(CONFIG.cacheKey);
+          if (cached) {
+            const { data, ts } = JSON.parse(cached);
+            if (Date.now() - ts < CONFIG.cacheTTL) return data;
           }
+        } catch (e) { /* ignore */ }
+      }
+
+      const apiUrl = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues`
+        + `?labels=game&state=open&per_page=100&sort=created&direction=asc`;
+
+      const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+      const issues = await res.json();
+      const games = [];
+
+      for (const issue of issues) {
+        const parsed = parseIssueBody(issue.body);
+        if (!parsed) continue;
+        games.push({
+          title: issue.title,
+          ...parsed,
+          author: issue.user ? issue.user.login : '',
+          authorAvatar: issue.user ? issue.user.avatar_url : '',
+          issueNumber: issue.number,
+          issueUrl: issue.html_url
+        });
+      }
+
+      // キャッシュ保存
+      try {
+        localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ data: games, ts: Date.now() }));
+      } catch (e) { /* ignore */ }
+
+      return games;
+    }
+
+    // ══════════════════════════════════════════
+    //  RENDER
+    // ══════════════════════════════════════════
+    function createGameCard(game, index) {
+      const card = document.createElement('a');
+      card.href = game.url;
+      card.target = '_blank';
+      card.rel = 'noopener';
+      card.className = 'game-card fade-in';
+      card.dataset.category = game.category;
+      card.style.animationDelay = `${index * 0.06}s`;
+
+      const categoryLabel = CATEGORY_LABELS[game.category] || CATEGORY_LABELS['other'];
+
+      const thumbHtml = game.thumbnail
+        ? `<img src="${escapeHtml(game.thumbnail)}" alt="${escapeHtml(game.title)}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+           <div class="card-thumb-placeholder" style="display:none;">🎮</div>`
+        : `<div class="card-thumb-placeholder">🎮</div>`;
+
+      const tagsHtml = game.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+
+      const authorHtml = game.author
+        ? `<span class="card-author">
+             <img src="${escapeHtml(game.authorAvatar)}" alt="${escapeHtml(game.author)}" loading="lazy">
+             ${escapeHtml(game.author)}
+           </span>`
+        : '';
+
+      card.innerHTML = `
+        <div class="card-thumb">
+          ${thumbHtml}
+          <span class="badge badge-status badge--playable">▶ Play</span>
+          <span class="badge badge-category">${categoryLabel}</span>
+        </div>
+        <div class="card-body">
+          <h2>${escapeHtml(game.title)}</h2>
+          <p>${escapeHtml(game.description)}</p>
+          <div class="card-meta">
+            <div class="card-tags">${tagsHtml}</div>
+            ${authorHtml}
+          </div>
+          <span class="card-play">プレイする <span class="arrow">→</span></span>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function renderGames(games) {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = '';
+      games.forEach((game, i) => grid.appendChild(createGameCard(game, i)));
+    }
+
+    // ══════════════════════════════════════════
+    //  FILTER
+    // ══════════════════════════════════════════
+    function setupFilter() {
+      const btns = document.querySelectorAll('.filter-btn');
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const filter = btn.dataset.filter;
+          const cards = document.querySelectorAll('.game-card');
+          cards.forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+              card.style.display = '';
+              card.style.animation = 'fadeIn 0.3s ease both';
+            } else {
+              card.style.display = 'none';
+            }
+          });
         });
       });
-    });
+    }
 
-    // Fade-in animation for cards
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0); }
+    // ══════════════════════════════════════════
+    //  MAIN
+    // ══════════════════════════════════════════
+    async function loadGames(skipCache) {
+      const loadingEl = document.getElementById('loadingState');
+      const errorEl   = document.getElementById('errorState');
+      const emptyEl   = document.getElementById('emptyState');
+      const gridEl    = document.getElementById('gamesGrid');
+
+      loadingEl.style.display = '';
+      errorEl.style.display   = 'none';
+      emptyEl.style.display   = 'none';
+      gridEl.style.display    = 'none';
+
+      try {
+        const games = await fetchGames(skipCache);
+        loadingEl.style.display = 'none';
+
+        if (games.length === 0) {
+          emptyEl.style.display = '';
+        } else {
+          renderGames(games);
+          gridEl.style.display = '';
+        }
+      } catch (err) {
+        console.error('Failed to load games:', err);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = '';
       }
-    `;
-    document.head.appendChild(style);
+    }
+
+    // Init
+    setupFilter();
+    loadGames();
   </script>
 
 </body>
