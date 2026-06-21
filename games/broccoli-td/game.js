@@ -864,43 +864,39 @@ function renderTowers() {
     const x = t.col * CELL;
     const y = t.row * CELL;
 
-    // Tower background tile (bright, distinct from grass)
-    ctx.fillStyle = 'rgba(20, 40, 20, 0.7)';
-    ctx.fillRect(x + 1, y + 1, CELL - 2, CELL - 2);
+    // Tower background tile — bright beige so emoji pops
+    ctx.fillStyle = '#3a3520';
+    ctx.fillRect(x, y, CELL, CELL);
+    // Inner lighter fill
+    ctx.fillStyle = t.type === 'tomato' ? '#4a2828' : '#2a3a22';
+    ctx.fillRect(x + 2, y + 2, CELL - 4, CELL - 4);
 
-    // Tower base glow
-    const color = t.type === 'tomato' ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)';
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(t.x, t.y, CELL * 0.4, 0, Math.PI * 2);
-    ctx.fill();
+    // Bold border
+    const borderColor = t.type === 'tomato' ? '#ef4444' : '#22c55e';
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x + 1, y + 1, CELL - 2, CELL - 2);
+    ctx.lineWidth = 1;
 
     // Level indicator
     if (t.level > 1) {
       ctx.fillStyle = t.level === 3 ? '#fbbf24' : '#a3e635';
       ctx.beginPath();
-      ctx.arc(t.x + CELL * 0.35, t.y - CELL * 0.35, 7, 0, Math.PI * 2);
+      ctx.arc(x + CELL - 8, y + 8, 8, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#000';
-      ctx.font = 'bold 9px sans-serif';
+      ctx.font = 'bold 10px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(t.level, t.x + CELL * 0.35, t.y - CELL * 0.35);
+      ctx.fillText(t.level, x + CELL - 8, y + 8);
     }
 
-    // Emoji (large and clear)
-    const size = t.level === 3 ? CELL * 0.85 : CELL * 0.75;
+    // Emoji — large and fully opaque
+    const size = t.level === 3 ? CELL * 0.85 : CELL * 0.78;
     ctx.font = `${size}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(t.emoji, t.x, t.y + 2);
-
-    // Border to make it stand out
-    const borderColor = t.type === 'tomato' ? 'rgba(239,68,68,0.4)' : 'rgba(34,197,94,0.4)';
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(x + 1, y + 1, CELL - 2, CELL - 2);
-    ctx.lineWidth = 1;
   }
 }
 
