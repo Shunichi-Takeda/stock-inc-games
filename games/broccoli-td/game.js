@@ -2719,7 +2719,8 @@ function loadRanking() {
 
   content.innerHTML = '<div class="ranking-loading">読み込み中...</div>';
 
-  const apiURL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=score&state=open&per_page=100&sort=created&direction=desc`;
+  // Fetch all open issues (no label filter — title pattern match is used to identify score entries)
+  const apiURL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=open&per_page=100&sort=created&direction=desc`;
 
   fetch(apiURL)
     .then(res => {
