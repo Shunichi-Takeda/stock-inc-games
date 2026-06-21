@@ -1779,14 +1779,38 @@ function renderGrid() {
 }
 
 function renderPath() {
-  // Show faint path from all entrances to exit
+  // Show clear dirt path from all entrances to exit
   for (let i = 0; i < currentStage.entrances.length; i++) {
     const path = getPathFromEntrance(i);
     if (!path) continue;
 
-    ctx.fillStyle = 'rgba(255, 255, 200, 0.06)';
+    // Dirt/sand colored path tiles
     for (const p of path) {
-      ctx.fillRect(p.col * CELL, p.row * CELL, CELL, CELL);
+      const px = p.col * CELL;
+      const py = p.row * CELL;
+
+      // Brown dirt background
+      ctx.fillStyle = 'rgba(139, 90, 43, 0.18)';
+      ctx.fillRect(px, py, CELL, CELL);
+
+      // Subtle inner highlight
+      ctx.fillStyle = 'rgba(194, 148, 80, 0.08)';
+      ctx.fillRect(px + 2, py + 2, CELL - 4, CELL - 4);
+    }
+
+    // Draw path direction dots (connect centers)
+    if (path.length > 1) {
+      ctx.strokeStyle = 'rgba(194, 148, 80, 0.2)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 6]);
+      ctx.beginPath();
+      ctx.moveTo((path[0].col + 0.5) * CELL, (path[0].row + 0.5) * CELL);
+      for (let j = 1; j < path.length; j++) {
+        ctx.lineTo((path[j].col + 0.5) * CELL, (path[j].row + 0.5) * CELL);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.lineWidth = 1;
     }
   }
 }
