@@ -1219,25 +1219,33 @@ class Enemy {
 
     ctx.globalAlpha = alpha;
 
+    // Dark circle background so emoji pops against green grass
+    if (!this.dead) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, CELL * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     // Shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
     ctx.beginPath();
-    ctx.ellipse(this.x, this.y + CELL * 0.3, 10, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(this.x, this.y + CELL * 0.32, 12, 5, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Flying indicator
     if (this.flying && !this.dead) {
       const bobY = Math.sin(Date.now() / 200) * 3;
-      ctx.font = `${CELL * 0.6}px sans-serif`;
+      ctx.font = `${CELL * 0.72}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(this.emoji, this.x, this.y - 6 + bobY);
+      ctx.fillText(this.emoji, this.x, this.y - 4 + bobY);
     } else {
-      // Emoji
-      ctx.font = `${CELL * 0.6}px sans-serif`;
+      // Emoji — large
+      ctx.font = `${CELL * 0.72}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(this.emoji, this.x, this.y - 2);
+      ctx.fillText(this.emoji, this.x, this.y);
     }
 
     // HP bar
