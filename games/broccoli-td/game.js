@@ -3,7 +3,7 @@
 //  Version 0.3.0 (Phase 3)
 // ══════════════════════════════════════════════════════
 
-const VERSION = '0.3.0';
+const VERSION = '0.3.1';
 
 // ═══════════════════════════
 //  CONSTANTS
@@ -858,9 +858,12 @@ class Projectile {
     this.splashRadius = splashRadius || 0;
     this.dead = false;
     this.trail = [];
+    this.lifetime = 5; // Max 5 seconds alive (safety)
   }
 
   update(dt) {
+    this.lifetime -= dt;
+    if (this.lifetime <= 0) { this.dead = true; return; }
     if (this.target.dead) { this.dead = true; return; }
     const dx = this.target.x - this.x;
     const dy = this.target.y - this.y;
