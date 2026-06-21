@@ -1739,39 +1739,43 @@ function renderGrid() {
     ctx.fillText('🚪', x + CELL / 2, y + CELL / 2);
   }
 
-  // Exit marker (Broccoli King!) — very visible
+  // Exit marker (Broccoli King!)
   const ex = currentStage.exit.col * CELL;
   const ey = currentStage.exit.row * CELL;
   const pulse = 0.6 + Math.sin(Date.now() / 400) * 0.4;
 
-  // Bright background tile (light gold, high contrast)
-  ctx.fillStyle = '#5c4a1e';
+  // Dark purple background (high contrast with gold crown + green broccoli)
+  ctx.fillStyle = '#1a0a2e';
   ctx.fillRect(ex, ey, CELL, CELL);
-  ctx.fillStyle = '#8b6914';
-  ctx.fillRect(ex + 2, ey + 2, CELL - 4, CELL - 4);
+  ctx.fillStyle = '#2d1b4e';
+  ctx.fillRect(ex + 3, ey + 3, CELL - 6, CELL - 6);
 
-  // Bright inner area
-  ctx.fillStyle = `rgba(251, 191, 36, ${0.25 + pulse * 0.15})`;
-  ctx.fillRect(ex + 4, ey + 4, CELL - 8, CELL - 8);
-
-  // Thick golden pulsing border
-  ctx.strokeStyle = `rgba(251, 191, 36, ${0.8 + pulse * 0.2})`;
+  // Thick bright golden border (pulsing)
+  ctx.strokeStyle = `rgba(251, 191, 36, ${0.85 + pulse * 0.15})`;
   ctx.lineWidth = 4;
-  ctx.strokeRect(ex, ey, CELL, CELL);
+  ctx.strokeRect(ex + 1, ey + 1, CELL - 2, CELL - 2);
   ctx.lineWidth = 1;
 
-  // King emoji — BIG with very strong white glow
+  // Corner sparkles
+  const sp = 6;
+  ctx.fillStyle = `rgba(251, 191, 36, ${0.5 + pulse * 0.5})`;
+  ctx.fillRect(ex + 2, ey + 2, sp, sp);
+  ctx.fillRect(ex + CELL - sp - 2, ey + 2, sp, sp);
+  ctx.fillRect(ex + 2, ey + CELL - sp - 2, sp, sp);
+  ctx.fillRect(ex + CELL - sp - 2, ey + CELL - sp - 2, sp, sp);
+
+  // King emoji — VERY BIG with bright glow
   ctx.save();
-  ctx.shadowColor = '#ffffff';
-  ctx.shadowBlur = 12 + 8 * pulse;
-  ctx.font = `bold ${CELL * 0.5}px sans-serif`;
+  ctx.shadowColor = '#fbbf24';
+  ctx.shadowBlur = 15 + 10 * pulse;
+  ctx.font = `${CELL * 0.55}px sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('👑', ex + CELL / 2, ey + CELL * 0.25);
-  ctx.shadowColor = '#fbbf24';
-  ctx.shadowBlur = 15 * pulse;
-  ctx.font = `bold ${CELL * 0.6}px sans-serif`;
-  ctx.fillText('🥦', ex + CELL / 2, ey + CELL * 0.68);
+  ctx.fillText('👑', ex + CELL / 2, ey + CELL * 0.28);
+  ctx.shadowColor = '#4ade80';
+  ctx.shadowBlur = 12 * pulse;
+  ctx.font = `${CELL * 0.65}px sans-serif`;
+  ctx.fillText('🥦', ex + CELL / 2, ey + CELL * 0.7);
   ctx.restore();
 }
 
