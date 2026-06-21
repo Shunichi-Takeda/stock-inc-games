@@ -1,16 +1,137 @@
-<!-- ブロッコリー・タワーディフェンス：準備中 -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🥦 ブロッコリー・タワーディフェンス | Stock Inc. Games</title>
-  <link rel="stylesheet" href="../../shared/css/common.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="ブロッコリー王を守れ！かわいい動物たちからブロッコリー王国を防衛するタワーディフェンスゲーム">
+  <title>🥦🏰 ブロッコリー・タワーディフェンス</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <a href="../../" class="back-link">← ゲーム一覧に戻る</a>
-  <h1>🥦 ブロッコリー・タワーディフェンス</h1>
-  <p>Coming Soon...</p>
+
+  <div id="gameContainer">
+
+    <!-- ══ Title Screen ══ -->
+    <div id="titleScreen" class="screen">
+      <div class="title-content">
+        <div class="title-logo">🥦👑</div>
+        <h1 class="title-text">ブロッコリー<br>タワーディフェンス</h1>
+        <p class="title-sub">～王を守り抜け！～</p>
+        <button id="btnStart" class="btn btn-primary">▶ はじめる</button>
+        <button id="btnHowTo" class="btn btn-secondary">📖 あそびかた</button>
+        <a href="../../" class="back-link">← ゲーム一覧に戻る</a>
+      </div>
+    </div>
+
+    <!-- ══ How To Play ══ -->
+    <div id="howToScreen" class="screen" style="display:none;">
+      <div class="howto-content">
+        <h2>📖 あそびかた</h2>
+        <div class="howto-section">
+          <h3>🎯 目的</h3>
+          <p>ブロッコリー王 🥦👑 を守れ！<br>
+             お腹を空かせた動物たちが王を食べに来るので、<br>
+             野菜の仲間をタワーとして配置して撃退しよう。</p>
+        </div>
+        <div class="howto-section">
+          <h3>🏗️ タワー配置</h3>
+          <p>画面下のパレットからタワーを選び、<br>
+             マップの空きマスに配置。<br>
+             タワーで迷路を作って敵の経路を長くしよう！<br>
+             ⚠️ 入口からゴールへの道は塞がないように。</p>
+        </div>
+        <div class="howto-section">
+          <h3>⬆️ アップグレード＆売却</h3>
+          <p>配置済みタワーをクリック/タップすると<br>
+             アップグレード（⬆️）や売却（💰 50%返還）ができます。</p>
+        </div>
+        <div class="howto-section">
+          <h3>🐰 敵について</h3>
+          <p>敵は悪者じゃなく「お腹が空いた動物たち」。<br>
+             倒されると「おなかすいた〜😵💫」と退場します。</p>
+        </div>
+        <button id="btnBackTitle" class="btn btn-secondary">← もどる</button>
+      </div>
+    </div>
+
+    <!-- ══ Game Screen ══ -->
+    <div id="gameScreen" class="screen" style="display:none;">
+      <!-- Status Bar -->
+      <div id="statusBar">
+        <div class="status-left">
+          <span id="livesDisplay">❤️ 10</span>
+          <span id="coinsDisplay">🪙 200</span>
+        </div>
+        <div class="status-center">
+          <span id="waveDisplay">Wave 0 / 5</span>
+        </div>
+        <div class="status-right">
+          <button id="btnSpeed" class="btn-icon" title="倍速">×1</button>
+          <button id="btnPause" class="btn-icon" title="一時停止">⏸</button>
+          <button id="btnSound" class="btn-icon" title="サウンド">🔇</button>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div id="canvasWrapper">
+        <canvas id="gameCanvas"></canvas>
+        <!-- Tower selection popup -->
+        <div id="towerPopup" style="display:none;">
+          <div id="popupInfo"></div>
+          <div class="popup-actions">
+            <button id="btnUpgrade" class="popup-btn upgrade" title="アップグレード">⬆️</button>
+            <button id="btnSell" class="popup-btn sell" title="売却">💰</button>
+            <button id="btnClosePopup" class="popup-btn close" title="閉じる">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tower Palette -->
+      <div id="towerPalette">
+        <div class="palette-label">タワー配置:</div>
+        <button class="tower-btn" data-tower="broccoli" title="ブロッコリー兵 (50🪙)">
+          <span class="tower-emoji">🥦</span>
+          <span class="tower-cost">50</span>
+        </button>
+        <button class="tower-btn" data-tower="tomato" title="トマトスプラッシュ (80🪙)">
+          <span class="tower-emoji">🍅</span>
+          <span class="tower-cost">80</span>
+        </button>
+        <div class="palette-spacer"></div>
+        <button id="btnNextWave" class="btn btn-wave">▶ 次のWave</button>
+      </div>
+
+      <!-- Version -->
+      <div id="versionDisplay"></div>
+    </div>
+
+    <!-- ══ Result Screen ══ -->
+    <div id="resultScreen" class="screen" style="display:none;">
+      <div class="result-content">
+        <h2 id="resultTitle"></h2>
+        <div id="resultStars" class="result-stars"></div>
+        <div id="resultStats" class="result-stats"></div>
+        <div class="result-actions">
+          <button id="btnRetry" class="btn btn-primary">🔄 リトライ</button>
+          <button id="btnToTitle" class="btn btn-secondary">🏠 タイトルへ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Pause Overlay ══ -->
+    <div id="pauseOverlay" style="display:none;">
+      <div class="pause-content">
+        <h2>⏸ 一時停止</h2>
+        <button id="btnResume" class="btn btn-primary">▶ つづける</button>
+        <button id="btnQuit" class="btn btn-secondary">🏠 タイトルへ</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="game.js"></script>
 </body>
 </html>
