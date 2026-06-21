@@ -1197,21 +1197,38 @@ class Enemy {
       }
     }
 
-    const target = this.path[this.pathIndex + 1];
-    const tx = (target.col + 0.5) * CELL;
-    const ty = (target.row + 0.5) * CELL;
-    const dx = tx - this.x;
-    const dy = ty - this.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    let remaining = moveSpeed * CELL * dt;
 
-    if (dist < 2) {
-      this.pathIndex++;
-      this.pathProgress = this.pathIndex / (this.path.length - 1);
-    } else {
-      const move = moveSpeed * CELL * dt;
-      this.x += (dx / dist) * move;
-      this.y += (dy / dist) * move;
-      this.pathProgress = (this.pathIndex + (1 - dist / CELL)) / (this.path.length - 1);
+    // Consume movement across multiple waypoints if needed (prevents overshoot at high speed)
+    while (remaining > 0 && this.pathIndex < this.path.length - 1) {
+      const target = this.path[this.pathIndex + 1];
+      const tx = (target.col + 0.5) * CELL;
+      const ty = (target.row + 0.5) * CELL;
+      const dx = tx - this.x;
+      const dy = ty - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist <= remaining) {
+        // Snap to waypoint and advance
+        this.x = tx;
+        this.y = ty;
+        this.pathIndex++;
+        remaining -= dist;
+      } else {
+        // Move toward waypoint
+        this.x += (dx / dist) * remaining;
+        this.y += (dy / dist) * remaining;
+        remaining = 0;
+      }
+    }
+
+    this.pathProgress = this.pathIndex / (this.path.length - 1);
+
+    // Check if reached end
+    if (this.pathIndex >= this.path.length - 1) {
+      this.reached = true;
+      this.dead = true;
+      lives--;
     }
   }
 
