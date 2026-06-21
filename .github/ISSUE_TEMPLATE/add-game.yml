@@ -1,19 +1,23 @@
 name: "🎮 ゲームを登録する"
 description: "ポータルに新しいゲームを追加します"
-title: ""
+title: "ゲーム名を入力してください"
 labels: ["game"]
 body:
   - type: markdown
     attributes:
       value: |
-        ## ゲームの登録
-        以下のフォームに情報を入力してください。Issueを作成すると、ポータルサイトに自動的にゲームが掲載されます。
+        ## 🎮 ゲームの登録
+
+        以下のフォームに情報を入力して「Submit new issue」をクリックすると、ポータルサイトにゲームが自動掲載されます。
+
+        > **💡 タイトル欄**（上の入力欄）にはゲーム名を入力してください。
+        > 例: `🥦 ブロッコリーシューター`
 
   - type: input
     id: game-url
     attributes:
       label: "ゲームURL"
-      description: "ゲームのURL（GitHub Pages 等）"
+      description: "ブラウザで遊べるゲームのURL（GitHub Pages など）を入力してください。"
       placeholder: "https://example.github.io/my-game/"
     validations:
       required: true
@@ -22,7 +26,9 @@ body:
     id: thumbnail-url
     attributes:
       label: "サムネイル画像URL"
-      description: "サムネイル画像の直リンクURL。GitHub Issue のコメント欄に画像をドラッグ&ドロップしてアップロードし、そのURLをここに貼り付けることもできます。"
+      description: |
+        サムネイル画像の直リンクURLを入力してください。
+        💡 画像のURLがない場合: このIssueを作成した後、コメント欄に画像をドラッグ&ドロップしてアップロードし、生成されたURLでこのIssueを編集してください。
       placeholder: "https://example.com/thumbnail.png"
     validations:
       required: true
@@ -31,8 +37,10 @@ body:
     id: description
     attributes:
       label: "紹介テキスト"
-      description: "ゲームの簡単な説明（1〜3文程度）"
-      placeholder: "迫りくるブロッコリーを撃ち落とせ！ウェーブ制のシューティングゲーム。"
+      description: "ゲームの簡単な説明を書いてください（1〜3文程度）。ポータルのカードに表示されます。"
+      placeholder: |
+        迫りくるブロッコリーを撃ち落とせ！
+        ウェーブ制のシューティングゲーム。コンボを繋いでハイスコアを目指そう。
     validations:
       required: true
 
@@ -40,7 +48,7 @@ body:
     id: category
     attributes:
       label: "カテゴリ"
-      description: "ゲームのジャンルを選択してください"
+      description: "ゲームのジャンルを1つ選択してください。ポータルのフィルターに使われます。"
       options:
         - シューティング
         - ノベル
@@ -54,7 +62,20 @@ body:
     id: tags
     attributes:
       label: "タグ（任意）"
-      description: "カンマ区切りでタグを入力"
-      placeholder: "ランキング対応, マルチエンディング"
+      description: "ポータルのカードに表示される補足タグです。カンマ区切りで入力してください。"
+      placeholder: "ランキング対応, マルチエンディング, 2人プレイ"
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### 📝 登録後の操作
+
+        | やりたいこと | 方法 |
+        |-------------|------|
+        | 内容を修正したい | この Issue を編集する |
+        | ポータルから削除したい | この Issue を Close する |
+
+        詳しくは [ヘルプページ](https://shunichi-takeda.github.io/stock-inc-games/help.html) をご覧ください。
