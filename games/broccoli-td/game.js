@@ -1414,30 +1414,24 @@ function canPlaceTower(col, row) {
   }
   if (currentStage.exit.col === col && currentStage.exit.row === row) return false;
 
-  // Temporarily place and check if all paths still exist
-  towerGrid[row][col] = 'temp';
-
-  let allValid = true;
-  // Check all entrance → exit paths
+  // Can't place on current enemy path
   for (let i = 0; i < currentStage.entrances.length; i++) {
     const path = getPathFromEntrance(i);
-    if (!path) { allValid = false; break; }
-  }
-
-  // Also check paths for all existing ground enemies
-  if (allValid) {
-    for (const e of enemies) {
-      if (e.dead || e.flying) continue;
-      const ec = Math.floor(e.x / CELL);
-      const er = Math.floor(e.y / CELL);
-      if (ec === col && er === row) { allValid = false; break; }
-      const ep = findPath(ec, er, currentStage.exit.col, currentStage.exit.row);
-      if (!ep) { allValid = false; break; }
+    if (!path) continue;
+    for (const p of path) {
+      if (p.col === col && p.row === row) return false;
     }
   }
 
-  towerGrid[row][col] = null;
-  return allValid;
+  // Can't place on tile where a ground enemy currently stands
+  for (const e of enemies) {
+    if (e.dead || e.flying) continue;
+    const ec = Math.floor(e.x / CELL);
+    const er = Math.floor(e.y / CELL);
+    if (ec === col && er === row) return false;
+  }
+
+  return true;
 }
 
 function placeTower(type, col, row) {
@@ -2735,7 +2729,15 @@ function loadRanking() {
         if (!match) continue;
         entries.push({
           score: parseInt(match[1], 10),
-          name: (match[2].trim() === '-' || match[2].trim() === '{{github}}') ? (issue.user ? issue.user.login : '匿名') : match[2].trim(),
+          name: (() => {
+            const parsed = match[2].trim();
+            const githubLogin = issue.user ? issue.user.login : '';
+            // Use GitHub account name if name is placeholder or empty
+            if (parsed === '-' || parsed === '{{github}}' || parsed === '匿名' || !parsed) {
+              return githubLogin || '匿名';
+            }
+            return parsed;
+          })(),
           stage: match[3].trim(),
           stars: parseInt(match[4], 10),
           avatar: issue.user ? issue.user.avatar_url : '',
