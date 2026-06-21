@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════
    Broccoli Tower Defense — Style
-   Phase 2 — v0.2.0
+   Phase 3 — v0.3.0
    ═══════════════════════════════════════ */
 
 /* ── Reset ── */
@@ -630,6 +630,250 @@ body {
 .pause-content h2 {
   font-size: 1.5rem;
   color: #94a3b8;
+}
+
+/* ── Ranking Button ── */
+.btn-ranking {
+  background: linear-gradient(135deg, #b45309, #d97706);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.25);
+}
+
+.btn-ranking:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(217, 119, 6, 0.4);
+}
+
+.btn-ranking.registered {
+  background: linear-gradient(135deg, #166534, #22c55e);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
+  cursor: default;
+}
+
+/* ── Modal Overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(6px);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-box {
+  background: linear-gradient(145deg, #1a1a2e, #16162a);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 16px;
+  padding: 1.8rem;
+  max-width: 380px;
+  width: 90vw;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalSlideIn 0.25s ease-out;
+}
+
+.modal-box.modal-ranking {
+  max-width: 440px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.8rem;
+}
+
+.modal-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.modal-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  text-align: left;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 1rem;
+}
+
+.modal-input:focus {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modal-actions .btn {
+  width: auto;
+  min-width: 130px;
+  font-size: 0.85rem;
+  padding: 0.65rem 1.2rem;
+}
+
+/* ── Ranking Content ── */
+.ranking-content {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0.5rem 0;
+  min-height: 100px;
+}
+
+.ranking-loading {
+  color: #64748b;
+  font-size: 0.85rem;
+  padding: 2rem 0;
+}
+
+.ranking-error {
+  color: #f87171;
+  font-size: 0.8rem;
+  padding: 1.5rem 0;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  margin-bottom: 0.3rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s;
+}
+
+.ranking-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ranking-item.rank-1 {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.ranking-item.rank-2 {
+  background: rgba(156, 163, 175, 0.08);
+  border-color: rgba(156, 163, 175, 0.12);
+}
+
+.ranking-item.rank-3 {
+  background: rgba(217, 119, 6, 0.06);
+  border-color: rgba(217, 119, 6, 0.1);
+}
+
+.ranking-rank {
+  font-size: 0.9rem;
+  font-weight: 900;
+  min-width: 28px;
+  text-align: center;
+  color: #64748b;
+}
+
+.ranking-item.rank-1 .ranking-rank { color: #fbbf24; font-size: 1.2rem; }
+.ranking-item.rank-2 .ranking-rank { color: #9ca3af; font-size: 1.1rem; }
+.ranking-item.rank-3 .ranking-rank { color: #d97706; font-size: 1.1rem; }
+
+.ranking-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ranking-info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+
+.ranking-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-stage {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.ranking-score {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fbbf24;
+  white-space: nowrap;
+}
+
+.ranking-your-best {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.ranking-your-best-title {
+  font-size: 0.72rem;
+  color: #4ade80;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.ranking-your-best-score {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #fbbf24;
 }
 
 /* ── Responsive ── */

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="デイリークエスト ～日常の勇者～ — 日常が冒険に変わる、現代RPG。コンビニ、駅、オフィス…身近な場所でクエストをこなし、日常の勇者になろう！">
+  <title>🏙️ デイリークエスト ～日常の勇者～</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/css/common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="../../" class="back-link" aria-label="ゲーム一覧に戻る">← ゲーム一覧に戻る</a>
+
+  <div id="gameContainer">
+
+    <!-- ========== TITLE SCREEN ========== -->
+    <section id="titleScreen" class="screen active">
+      <div class="title-bg-effects" aria-hidden="true">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+      </div>
+      <div class="title-content">
+        <div class="title-logo" aria-hidden="true">🏙️</div>
+        <h1 class="title-text">
+          <span class="title-main">デイリークエスト</span>
+          <span class="title-sub">～日常の勇者～</span>
+        </h1>
+        <p class="title-tagline">日常が、冒険に変わる。</p>
+        <nav class="title-buttons" aria-label="タイトルメニュー">
+          <button id="btnNewGame" class="btn btn-primary btn-glow" type="button">
+            <span class="btn-icon">▶</span> はじめる
+          </button>
+          <button id="btnContinue" class="btn btn-secondary" type="button">
+            <span class="btn-icon">📂</span> つづきから
+          </button>
+          <button id="btnHowTo" class="btn btn-ghost" type="button">
+            <span class="btn-icon">📖</span> あそびかた
+          </button>
+        </nav>
+        <p class="title-version">ver 1.0.0</p>
+      </div>
+    </section>
+
+    <!-- ========== HOW TO SCREEN ========== -->
+    <section id="howToScreen" class="screen" style="display:none">
+      <div class="howto-container glass-panel">
+        <h2 class="howto-title">📖 あそびかた</h2>
+        <div class="howto-content">
+          <article class="howto-section">
+            <h3>🗺️ マップ探索</h3>
+            <p>矢印キー / スワイプ でキャラクターを移動。<br>NPCや看板に近づくと<strong>「話す/調べる」</strong>ボタンが光ります。</p>
+          </article>
+          <article class="howto-section">
+            <h3>⚔️ バトル</h3>
+            <p>ターン制コマンドバトル。<strong>こうげき・スキル・アイテム</strong>を選んで敵を倒そう！<br>必殺技ゲージが溜まったら<strong>💥必殺技</strong>で大ダメージ！</p>
+          </article>
+          <article class="howto-section">
+            <h3>🛒 ショップ</h3>
+            <p>コンビニや自販機でアイテムを購入。<br>回復アイテムや装備を揃えて冒険に備えよう。</p>
+          </article>
+          <article class="howto-section">
+            <h3>📋 クエスト</h3>
+            <p>NPCから依頼を受けてクエストをクリア。<br>報酬で経験値やお金を獲得できます。</p>
+          </article>
+          <article class="howto-section">
+            <h3>💾 セーブ</h3>
+            <p>メニューからいつでもセーブ可能。<br>ブラウザのローカルストレージに保存されます。</p>
+          </article>
+        </div>
+        <button id="btnBackTitle" class="btn btn-secondary" type="button">
+          <span class="btn-icon">↩</span> もどる
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== MAP SCREEN ========== -->
+    <section id="mapScreen" class="screen" style="display:none">
+      <canvas id="mapCanvas" aria-label="マップ"></canvas>
+
+      <!-- HUD Overlay -->
+      <header id="mapHud" class="map-hud glass-panel-thin">
+        <div class="hud-stats">
+          <span id="hudHp" class="hud-stat hud-hp" title="HP">
+            <span class="hud-label">❤️ HP</span>
+            <span class="hud-value">100/100</span>
+          </span>
+          <span id="hudSp" class="hud-stat hud-sp" title="SP">
+            <span class="hud-label">💎 SP</span>
+            <span class="hud-value">50/50</span>
+          </span>
+          <span id="hudMoney" class="hud-stat hud-money" title="所持金">
+            <span class="hud-label">💰</span>
+            <span class="hud-value">¥0</span>
+          </span>
+        </div>
+        <div id="hudChapter" class="hud-chapter">第1章：はじまりの朝</div>
+      </header>
+
+      <!-- Map Action Buttons -->
+      <button id="btnMenu" class="btn btn-icon-circle map-btn-menu" type="button" title="メニュー" aria-label="メニュー">☰</button>
+      <button id="btnInteract" class="btn btn-interact" type="button">
+        <span class="btn-interact-icon">💬</span>
+        <span class="btn-interact-label">話す</span>
+      </button>
+
+      <!-- Dialog Overlay -->
+      <div id="dialogOverlay" class="dialog-overlay" style="display:none" role="dialog" aria-label="会話">
+        <div class="dialog-box glass-panel">
+          <span id="dialogSpeaker" class="dialog-speaker"></span>
+          <p id="dialogText" class="dialog-text"></p>
+          <div id="dialogChoices" class="dialog-choices"></div>
+          <button id="btnDialogNext" class="btn btn-dialog-next" type="button">▼</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== BATTLE SCREEN ========== -->
+    <section id="battleScreen" class="screen" style="display:none">
+      <!-- Battle Background -->
+      <div id="battleBg" class="battle-bg">
+        <!-- Enemy Area -->
+        <div id="battleEnemies" class="battle-enemies" aria-label="敵"></div>
+      </div>
+
+      <!-- Ultimate Gauge -->
+      <div class="ultimate-gauge" aria-label="必殺技ゲージ">
+        <div id="ultimateGaugeBar" class="ultimate-gauge-bar"></div>
+        <span class="ultimate-gauge-label">ULTIMATE</span>
+      </div>
+
+      <!-- Party Status -->
+      <div id="battleParty" class="battle-party" aria-label="パーティ"></div>
+
+      <!-- Battle Log -->
+      <div id="battleLog" class="battle-log" role="log" aria-label="バトルログ" aria-live="polite"></div>
+
+      <!-- Command Panel -->
+      <nav id="battleCommands" class="battle-commands" aria-label="コマンド">
+        <button id="btnAttack" class="btn btn-battle cmd-attack" type="button">
+          <span class="cmd-icon">⚔️</span><span class="cmd-label">こうげき</span>
+        </button>
+        <button id="btnSkill" class="btn btn-battle cmd-skill" type="button">
+          <span class="cmd-icon">✨</span><span class="cmd-label">スキル</span>
+        </button>
+        <button id="btnItem" class="btn btn-battle cmd-item" type="button">
+          <span class="cmd-icon">🎒</span><span class="cmd-label">アイテム</span>
+        </button>
+        <button id="btnRun" class="btn btn-battle cmd-run" type="button">
+          <span class="cmd-icon">🏃</span><span class="cmd-label">にげる</span>
+        </button>
+        <button id="btnUltimate" class="btn btn-battle cmd-ultimate" type="button" style="display:none">
+          <span class="cmd-icon">💥</span><span class="cmd-label">必殺技</span>
+        </button>
+      </nav>
+
+      <!-- Sub-Panels -->
+      <div id="skillList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="スキル選択"></div>
+      <div id="itemList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="アイテム選択"></div>
+      <div id="targetList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="ターゲット選択"></div>
+
+      <!-- Battle Result Overlay -->
+      <div id="battleResult" class="battle-result-overlay" style="display:none" role="dialog" aria-label="バトル結果">
+        <div class="battle-result glass-panel"></div>
+      </div>
+    </section>
+
+    <!-- ========== SHOP SCREEN ========== -->
+    <section id="shopScreen" class="screen overlay-screen" style="display:none">
+      <div class="shop-container glass-panel">
+        <header class="shop-header">
+          <h2 id="shopTitle" class="shop-title">🏪 コンビニ</h2>
+          <div id="shopMoney" class="shop-money">💰 ¥0</div>
+        </header>
+        <div id="shopKeeper" class="shop-keeper glass-panel-inner">
+          <span class="shopkeeper-emoji">🧑‍💼</span>
+          <p class="shopkeeper-text">いらっしゃいませ！ 何をお探しですか？</p>
+        </div>
+        <div class="shop-body">
+          <div class="shop-column">
+            <h3 class="shop-section-title">商品</h3>
+            <div id="shopItems" class="shop-items"></div>
+          </div>
+          <div class="shop-column">
+            <h3 class="shop-section-title">持ち物</h3>
+            <div id="shopInventory" class="shop-inventory"></div>
+          </div>
+        </div>
+        <button id="btnShopClose" class="btn btn-secondary shop-close" type="button">
+          <span class="btn-icon">✕</span> とじる
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== MENU SCREEN ========== -->
+    <section id="menuScreen" class="screen overlay-screen" style="display:none">
+      <div class="menu-container glass-panel">
+        <nav class="menu-tabs" aria-label="メニュータブ">
+          <button id="tabStatus" class="menu-tab active" type="button" aria-selected="true">📊 ステータス</button>
+          <button id="tabItems" class="menu-tab" type="button" aria-selected="false">🎒 アイテム</button>
+          <button id="tabQuests" class="menu-tab" type="button" aria-selected="false">📋 クエスト</button>
+          <button id="tabSave" class="menu-tab" type="button" aria-selected="false">💾 セーブ</button>
+        </nav>
+        <div id="menuContent" class="menu-content"></div>
+        <button id="btnMenuClose" class="btn btn-icon-circle menu-close" type="button" title="メニューを閉じる" aria-label="メニューを閉じる">✕</button>
+      </div>
+    </section>
+
+    <!-- ========== GAME OVER SCREEN ========== -->
+    <section id="gameOverScreen" class="screen" style="display:none">
+      <div class="gameover-content">
+        <h2 id="gameOverTitle" class="gameover-title">GAME OVER</h2>
+        <p class="gameover-sub">力尽きてしまった…</p>
+        <nav class="gameover-buttons" aria-label="ゲームオーバーメニュー">
+          <button id="btnRetry" class="btn btn-primary btn-glow" type="button">
+            <span class="btn-icon">🔄</span> リトライ
+          </button>
+          <button id="btnBackToTitle" class="btn btn-secondary" type="button">
+            <span class="btn-icon">🏠</span> タイトルへ
+          </button>
+        </nav>
+      </div>
+    </section>
+
+  </div><!-- /#gameContainer -->
+
+  <script src="game.js"></script>
+</body>
+</html>

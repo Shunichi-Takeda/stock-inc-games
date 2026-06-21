@@ -1,9 +1,9 @@
 // ══════════════════════════════════════════════════════
 //  🥦🏰 Broccoli Tower Defense — Game Engine
-//  Version 0.2.0 (Phase 2)
+//  Version 0.3.0 (Phase 3)
 // ══════════════════════════════════════════════════════
 
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 
 // ═══════════════════════════
 //  CONSTANTS
@@ -535,6 +535,21 @@ let inspireTimer = 0; // Global inspire for towers
 // Stage progress (from localStorage)
 let stageProgress = null; // { unlocked: [true, false,...], stars: [0,0,...], scores: [0,0,...] }
 
+// Sound state
+let soundEnabled = false;
+let audioCtx = null;
+let bgmInterval = null;
+
+// Ranking state
+const REPO_OWNER = 'Shunichi-Takeda';
+const REPO_NAME = 'stock-inc-games';
+let rankingCache = null;
+let rankingCacheTime = 0;
+const RANKING_CACHE_TTL = 60000; // 60秒
+let lastResultScore = 0;
+let lastResultStars = 0;
+let lastResultWon = false;
+
 // ═══════════════════════════
 //  STAGE PROGRESS PERSISTENCE
 // ═══════════════════════════
@@ -814,6 +829,7 @@ class Tower {
       // Attack effects
       this.flashTimer = 0.12;
       this.recoilTimer = 0.15;
+      playSE('attack');
 
       // Line effect (carrot = laser-like, others = brief line)
       if (this.type === 'carrot') {
@@ -1018,6 +1034,7 @@ class Enemy {
       this.fadeTimer = 0.5;
       coins += this.reward;
       totalKills++;
+      playSE('kill');
     }
   }
 
@@ -1434,6 +1451,7 @@ function placeTower(type, col, row) {
     particles.push(new Particle(tower.x, tower.y, '#22c55e'));
   }
 
+  playSE('place');
   updateUI();
   return true;
 }
@@ -1463,6 +1481,8 @@ function activateSkill(index) {
 
   const skill = SKILL_DEFS[index];
   skillCooldowns[index] = skill.cooldown;
+
+  playSE('skill');
 
   switch (skill.id) {
     case 'gust':
@@ -1534,6 +1554,7 @@ function startNextWave() {
   waveActive = true;
   const waveData = currentStage.waves[currentWave - 1];
   waveSpawners = waveData.groups.map(g => new WaveSpawner(g));
+  playSE('waveStart');
   updateUI();
 
   // Disable wave button
@@ -2060,6 +2081,7 @@ function hideTowerPopup() {
 
 function showResult(won) {
   state = won ? 'won' : 'lost';
+  lastResultWon = won;
 
   const title = document.getElementById('resultTitle');
   const stars = document.getElementById('resultStars');
@@ -2071,13 +2093,17 @@ function showResult(won) {
     title.style.color = '#4ade80';
     starsCount = lives >= currentStage.lives ? 3 : lives >= currentStage.lives / 2 ? 2 : 1;
     stars.textContent = '⭐'.repeat(starsCount) + '☆'.repeat(3 - starsCount);
+    playSE('clear');
   } else {
     title.textContent = '😢 ゲームオーバー';
     title.style.color = '#f87171';
     stars.textContent = '';
+    playSE('gameover');
   }
 
   const score = (lives * 500) + (totalKills * 10) + (coins * 2);
+  lastResultScore = score;
+  lastResultStars = starsCount;
   stats.innerHTML = `
     ステージ: ${currentStage.name}<br>
     撃破数: ${totalKills}<br>
@@ -2108,6 +2134,16 @@ function showResult(won) {
     }
   }
 
+  // Show/hide score registration button (only on win)
+  const regBtn = document.getElementById('btnRegisterScore');
+  if (regBtn) {
+    regBtn.style.display = won ? '' : 'none';
+    regBtn.textContent = '🏆 ランキング登録';
+    regBtn.classList.remove('registered');
+    regBtn.disabled = false;
+  }
+
+  stopBGM();
   document.getElementById('gameScreen').style.display = 'none';
   document.getElementById('resultScreen').style.display = '';
 }
@@ -2235,6 +2271,7 @@ function startGame() {
   showScreen('gameScreen');
   document.getElementById('btnNextWave').disabled = false;
   lastTime = 0;
+  startBGM();
 }
 
 // ═══════════════════════════
@@ -2354,6 +2391,7 @@ function setup() {
 
   document.getElementById('btnQuit').addEventListener('click', () => {
     state = 'title';
+    stopBGM();
     showScreen('titleScreen');
   });
 
@@ -2386,6 +2424,7 @@ function setup() {
   document.getElementById('btnRetry').addEventListener('click', startGame);
   document.getElementById('btnToTitle').addEventListener('click', () => {
     state = 'title';
+    stopBGM();
     showScreen('titleScreen');
   });
   const btnToStages = document.getElementById('btnToStages');
@@ -2395,9 +2434,34 @@ function setup() {
     });
   }
 
-  // Sound (placeholder)
+  // Sound toggle
   document.getElementById('btnSound').addEventListener('click', function () {
-    this.textContent = this.textContent === '🔇' ? '🔊' : '🔇';
+    initAudioContext();
+    soundEnabled = !soundEnabled;
+    this.textContent = soundEnabled ? '🔊' : '🔇';
+    if (soundEnabled && state === 'playing') {
+      startBGM();
+    } else {
+      stopBGM();
+    }
+  });
+
+  // Ranking buttons
+  document.getElementById('btnRankingTitle').addEventListener('click', () => showRankingModal());
+  document.getElementById('btnRankingResult').addEventListener('click', () => showRankingModal());
+  document.getElementById('btnCloseRanking').addEventListener('click', () => {
+    document.getElementById('rankingModal').style.display = 'none';
+  });
+
+  // Score registration
+  document.getElementById('btnRegisterScore').addEventListener('click', () => {
+    showNameModal();
+  });
+  document.getElementById('btnSubmitScore').addEventListener('click', () => {
+    submitScore();
+  });
+  document.getElementById('btnCancelName').addEventListener('click', () => {
+    document.getElementById('nameModal').style.display = 'none';
   });
 
   // Click outside game area to deselect
@@ -2419,6 +2483,295 @@ function setup() {
 
   // Start game loop
   requestAnimationFrame(gameLoop);
+}
+
+// ═══════════════════════════
+//  SOUND SYSTEM (Web Audio API)
+// ═══════════════════════════
+function initAudioContext() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  } catch (_) {
+    // Web Audio API not supported
+  }
+}
+
+function playTone(freq, duration, type, volume, delay) {
+  if (!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + (delay || 0);
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type || 'square';
+  osc.frequency.setValueAtTime(freq, t);
+  gain.gain.setValueAtTime(volume || 0.08, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(t);
+  osc.stop(t + duration);
+}
+
+function playSE(name) {
+  if (!soundEnabled || !audioCtx) return;
+  switch (name) {
+    case 'place':
+      playTone(523, 0.08, 'square', 0.06);
+      playTone(659, 0.08, 'square', 0.06, 0.06);
+      break;
+    case 'attack':
+      playTone(880 + Math.random() * 200, 0.04, 'sawtooth', 0.03);
+      break;
+    case 'kill':
+      playTone(1047, 0.06, 'square', 0.05);
+      playTone(1319, 0.06, 'square', 0.05, 0.05);
+      playTone(1568, 0.1, 'square', 0.04, 0.1);
+      break;
+    case 'waveStart':
+      playTone(392, 0.1, 'square', 0.07);
+      playTone(523, 0.1, 'square', 0.07, 0.1);
+      playTone(659, 0.15, 'square', 0.06, 0.2);
+      break;
+    case 'skill':
+      playTone(784, 0.08, 'sine', 0.08);
+      playTone(1047, 0.08, 'sine', 0.08, 0.08);
+      playTone(1319, 0.12, 'sine', 0.07, 0.16);
+      playTone(1568, 0.15, 'sine', 0.06, 0.24);
+      break;
+    case 'gameover':
+      playTone(392, 0.2, 'sawtooth', 0.08);
+      playTone(330, 0.2, 'sawtooth', 0.07, 0.2);
+      playTone(262, 0.3, 'sawtooth', 0.06, 0.4);
+      playTone(196, 0.5, 'sawtooth', 0.05, 0.6);
+      break;
+    case 'clear':
+      playTone(523, 0.1, 'square', 0.07);
+      playTone(659, 0.1, 'square', 0.07, 0.1);
+      playTone(784, 0.1, 'square', 0.07, 0.2);
+      playTone(1047, 0.2, 'square', 0.08, 0.3);
+      playTone(1319, 0.3, 'sine', 0.06, 0.45);
+      break;
+  }
+}
+
+// BGM — simple loop melody
+const BGM_NOTES = [
+  { f: 392, d: 0.25 }, // G4
+  { f: 440, d: 0.25 }, // A4
+  { f: 523, d: 0.25 }, // C5
+  { f: 440, d: 0.25 }, // A4
+  { f: 392, d: 0.25 }, // G4
+  { f: 330, d: 0.25 }, // E4
+  { f: 392, d: 0.25 }, // G4
+  { f: 330, d: 0.5 },  // E4
+  { f: 440, d: 0.25 }, // A4
+  { f: 523, d: 0.25 }, // C5
+  { f: 587, d: 0.25 }, // D5
+  { f: 523, d: 0.25 }, // C5
+  { f: 440, d: 0.25 }, // A4
+  { f: 392, d: 0.25 }, // G4
+  { f: 330, d: 0.25 }, // E4
+  { f: 392, d: 0.5 },  // G4
+];
+
+let bgmNoteIndex = 0;
+let bgmNextTime = 0;
+
+function startBGM() {
+  if (!soundEnabled || !audioCtx) return;
+  stopBGM();
+  bgmNoteIndex = 0;
+  bgmNextTime = audioCtx.currentTime + 0.1;
+  scheduleBGMNotes();
+  bgmInterval = setInterval(scheduleBGMNotes, 200);
+}
+
+function scheduleBGMNotes() {
+  if (!soundEnabled || !audioCtx) { stopBGM(); return; }
+  const lookAhead = 0.5;
+  while (bgmNextTime < audioCtx.currentTime + lookAhead) {
+    const note = BGM_NOTES[bgmNoteIndex % BGM_NOTES.length];
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(note.f, bgmNextTime);
+    gain.gain.setValueAtTime(0.03, bgmNextTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, bgmNextTime + note.d * 0.9);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(bgmNextTime);
+    osc.stop(bgmNextTime + note.d);
+    bgmNextTime += note.d;
+    bgmNoteIndex++;
+  }
+}
+
+function stopBGM() {
+  if (bgmInterval) {
+    clearInterval(bgmInterval);
+    bgmInterval = null;
+  }
+}
+
+// ═══════════════════════════
+//  RANKING SYSTEM
+// ═══════════════════════════
+function generateScoreIssueURL(playerName, stageIndex, score, stars, kills) {
+  const stageName = STAGES[stageIndex].name;
+  const displayName = playerName || '匿名';
+  const title = `🏆 ${score} pts | ${displayName} | ${stageName} | ⭐${stars}`;
+  const body = [
+    '<!-- 🥦 ブロッコリーTD スコア登録 -->',
+    '<!-- ⚠️ タイトルを変更しないでください -->',
+    '',
+    '| 項目 | 値 |',
+    '|---|---|',
+    `| 名前 | ${displayName} |`,
+    `| スコア | ${score.toLocaleString()} |`,
+    `| ステージ | ${stageName} |`,
+    `| 星 | ${'⭐'.repeat(stars)} |`,
+    `| 撃破数 | ${kills} |`,
+    `| 日時 | ${new Date().toLocaleString('ja-JP')} |`,
+  ].join('\n');
+
+  const params = new URLSearchParams({
+    labels: 'score',
+    title: title,
+    body: body,
+  });
+
+  return `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?${params.toString()}`;
+}
+
+function showNameModal() {
+  const saved = localStorage.getItem('broccoli-td-playerName') || '';
+  document.getElementById('playerNameInput').value = saved;
+  document.getElementById('nameModal').style.display = '';
+}
+
+function submitScore() {
+  const nameInput = document.getElementById('playerNameInput');
+  const name = nameInput.value.trim();
+  localStorage.setItem('broccoli-td-playerName', name);
+
+  const url = generateScoreIssueURL(
+    name, currentStageIndex, lastResultScore, lastResultStars, totalKills
+  );
+  window.open(url, '_blank');
+
+  document.getElementById('nameModal').style.display = 'none';
+
+  // Mark as registered
+  const regBtn = document.getElementById('btnRegisterScore');
+  if (regBtn) {
+    regBtn.textContent = '✓ 登録済み';
+    regBtn.classList.add('registered');
+    regBtn.disabled = true;
+  }
+}
+
+function showRankingModal() {
+  document.getElementById('rankingModal').style.display = '';
+  loadRanking();
+}
+
+function loadRanking() {
+  const content = document.getElementById('rankingContent');
+
+  // Check cache
+  if (rankingCache && Date.now() - rankingCacheTime < RANKING_CACHE_TTL) {
+    renderRanking(rankingCache);
+    return;
+  }
+
+  content.innerHTML = '<div class="ranking-loading">読み込み中...</div>';
+
+  const apiURL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=score&state=open&per_page=100&sort=created&direction=desc`;
+
+  fetch(apiURL)
+    .then(res => {
+      if (!res.ok) throw new Error('API error');
+      return res.json();
+    })
+    .then(issues => {
+      const entries = [];
+      for (const issue of issues) {
+        const match = issue.title.match(/🏆\s*(\d+)\s*pts\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*⭐(\d+)/);
+        if (!match) continue;
+        entries.push({
+          score: parseInt(match[1], 10),
+          name: match[2].trim(),
+          stage: match[3].trim(),
+          stars: parseInt(match[4], 10),
+          avatar: issue.user ? issue.user.avatar_url : '',
+          login: issue.user ? issue.user.login : '',
+        });
+      }
+      // Sort by score descending
+      entries.sort((a, b) => b.score - a.score);
+      rankingCache = entries;
+      rankingCacheTime = Date.now();
+      renderRanking(entries);
+    })
+    .catch(() => {
+      content.innerHTML = '<div class="ranking-error">ランキングの取得に失敗しました。<br>しばらくしてからお試しください。</div>';
+    });
+}
+
+function renderRanking(entries) {
+  const content = document.getElementById('rankingContent');
+  const top20 = entries.slice(0, 20);
+
+  if (top20.length === 0) {
+    content.innerHTML = '<div class="ranking-loading">まだスコアが登録されていません。<br>最初のランカーになろう！ 🏆</div>';
+    return;
+  }
+
+  const medals = ['🥇', '🥈', '🥉'];
+  let html = '<ul class="ranking-list">';
+
+  for (let i = 0; i < top20.length; i++) {
+    const e = top20[i];
+    const rankClass = i < 3 ? ` rank-${i + 1}` : '';
+    const rankText = i < 3 ? medals[i] : `${i + 1}`;
+    const avatarHtml = e.avatar
+      ? `<img class="ranking-avatar" src="${e.avatar}&s=56" alt="" loading="lazy">`
+      : '';
+
+    html += `
+      <li class="ranking-item${rankClass}">
+        <span class="ranking-rank">${rankText}</span>
+        ${avatarHtml}
+        <div class="ranking-info">
+          <div class="ranking-name">${escapeHtml(e.name)}</div>
+          <div class="ranking-stage">${escapeHtml(e.stage)}</div>
+        </div>
+        <span class="ranking-score">${e.score.toLocaleString()} pts</span>
+      </li>
+    `;
+  }
+
+  html += '</ul>';
+
+  // Your best scores
+  const bestScores = stageProgress.scores.filter(s => s > 0);
+  if (bestScores.length > 0) {
+    const totalBest = Math.max(...bestScores);
+    html += `
+      <div class="ranking-your-best">
+        <div class="ranking-your-best-title">📊 あなたのベスト</div>
+        <div class="ranking-your-best-score">${totalBest.toLocaleString()} pts</div>
+      </div>
+    `;
+  }
+
+  content.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 // Go!

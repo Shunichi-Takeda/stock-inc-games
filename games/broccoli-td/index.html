@@ -22,6 +22,7 @@
         <p class="title-sub">～王を守り抜け！～</p>
         <button id="btnStart" class="btn btn-primary">▶ はじめる</button>
         <button id="btnHowTo" class="btn btn-secondary">📖 あそびかた</button>
+        <button id="btnRankingTitle" class="btn btn-ranking">🏆 RANKING</button>
         <a href="../../" class="back-link">← ゲーム一覧に戻る</a>
       </div>
     </div>
@@ -177,6 +178,8 @@
         <div id="resultStats" class="result-stats"></div>
         <div class="result-actions">
           <button id="btnRetry" class="btn btn-primary">🔄 リトライ</button>
+          <button id="btnRegisterScore" class="btn btn-ranking" style="display:none;">🏆 ランキング登録</button>
+          <button id="btnRankingResult" class="btn btn-ranking">🏆 RANKING</button>
           <button id="btnToStages" class="btn btn-secondary">🗺️ ステージ選択</button>
           <button id="btnToTitle" class="btn btn-secondary">🏠 タイトルへ</button>
         </div>
@@ -192,6 +195,33 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ══ Name Input Modal ══ -->
+  <div id="nameModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3 class="modal-title">🏆 ランキング登録</h3>
+      <p class="modal-desc">スコアをGitHub Issueとして登録します。<br>GitHubアカウントが必要です。</p>
+      <label class="modal-label">プレイヤー名</label>
+      <input id="playerNameInput" type="text" class="modal-input" placeholder="名前を入力（空欄は匿名）" maxlength="20">
+      <div class="modal-actions">
+        <button id="btnSubmitScore" class="btn btn-primary">📝 登録ページを開く</button>
+        <button id="btnCancelName" class="btn btn-secondary">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Ranking Modal ══ -->
+  <div id="rankingModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box modal-ranking">
+      <h3 class="modal-title">🏆 ランキング</h3>
+      <div id="rankingContent" class="ranking-content">
+        <div class="ranking-loading">読み込み中...</div>
+      </div>
+      <div class="modal-actions">
+        <button id="btnCloseRanking" class="btn btn-secondary">閉じる</button>
+      </div>
+    </div>
   </div>
 
   <script src="game.js"></script>
