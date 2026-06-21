@@ -131,17 +131,17 @@ const ENEMY_DEFS = {
   },
   dragon: {
     emoji: '🐉', name: 'ドラゴン',
-    hp: 500, speed: 0.7, reward: 80,
+    hp: 1000, speed: 0.7, reward: 80,
     flying: true // 空を飛ぶ
   },
   gorilla: {
     emoji: '🦍', name: 'ゴリラ将軍',
-    hp: 800, speed: 0.4, reward: 120,
+    hp: 1500, speed: 0.4, reward: 120,
     healAura: 5 // 周囲の敵を毎秒5HP回復
   },
   snake: {
     emoji: '🐍', name: '毒ヘビ',
-    hp: 50, speed: 2.5, reward: 5,
+    hp: 80, speed: 2.5, reward: 5,
     slowImmune: true // 高速・スロー無効
   }
 };
@@ -496,12 +496,14 @@ const STAGES = [
       { col: 8, row: 9 }    // 下
     ],
     exit: { col: 8, row: 5 },
-    startCoins: 800,
-    lives: 8,
+    startCoins: 600,
+    lives: 5,
     blocked: [
       // 中央付近の壁 (出口周囲の防壁)
       { col: 7, row: 4 }, { col: 9, row: 4 },
       { col: 7, row: 6 }, { col: 9, row: 6 },
+      // 中央縦通路を塁ぐ（上下経路延長）
+      { col: 8, row: 3 }, { col: 8, row: 6 },
       // 左側回廊
       { col: 2, row: 1 }, { col: 2, row: 2 }, { col: 3, row: 1 },
       { col: 2, row: 7 }, { col: 2, row: 8 }, { col: 3, row: 8 },
@@ -513,6 +515,13 @@ const STAGES = [
       // 上下通路の障害物
       { col: 6, row: 2 }, { col: 10, row: 2 },
       { col: 6, row: 7 }, { col: 10, row: 7 },
+      // 経路延長用追加壁
+      { col: 7, row: 1 }, { col: 9, row: 8 },
+      // 配置スペース削減用の壁
+      { col: 5, row: 0 }, { col: 10, row: 0 },
+      { col: 5, row: 9 }, { col: 10, row: 9 },
+      { col: 1, row: 3 }, { col: 14, row: 6 },
+      { col: 1, row: 7 }, { col: 14, row: 3 },
       // 四隅
       { col: 0, row: 0 }, { col: 1, row: 0 }, { col: 0, row: 1 },
       { col: 14, row: 0 }, { col: 15, row: 0 }, { col: 15, row: 1 },
