@@ -146,23 +146,26 @@
       <!-- Skill Bar -->
       <div id="skillBar">
         <span class="skill-label">👑 王の力:</span>
-        <button id="skill0" class="skill-btn" title="💨 王の威風 — 全敵を2秒停止 (CD 45秒)">
+        <button id="skill0" class="skill-btn">
           <span class="skill-emoji">💨</span>
           <span class="skill-name">威風</span>
           <div class="skill-cd-overlay"></div>
           <span class="skill-cd-text"></span>
+          <div class="skill-tooltip">💨 王の威風<br>全敵を2秒停止 (CD 45秒)</div>
         </button>
-        <button id="skill1" class="skill-btn" title="☀️ 王の激励 — 全タワー攻撃速度2倍を10秒 (CD 60秒)">
+        <button id="skill1" class="skill-btn">
           <span class="skill-emoji">☀️</span>
           <span class="skill-name">激励</span>
           <div class="skill-cd-overlay"></div>
           <span class="skill-cd-text"></span>
+          <div class="skill-tooltip">☀️ 王の激励<br>全タワー攻撃速度2倍×10秒 (CD 60秒)</div>
         </button>
-        <button id="skill2" class="skill-btn" title="🌧️ 王の恵みの雨 — 全敵に50ダメージ (CD 90秒)">
+        <button id="skill2" class="skill-btn">
           <span class="skill-emoji">🌧️</span>
           <span class="skill-name">恵雨</span>
           <div class="skill-cd-overlay"></div>
           <span class="skill-cd-text"></span>
+          <div class="skill-tooltip">🌧️ 王の恵みの雨<br>全敵に50ダメージ (CD 90秒)</div>
         </button>
       </div>
 
@@ -203,7 +206,7 @@
       <h3 class="modal-title">🏆 ランキング登録</h3>
       <p class="modal-desc">スコアをGitHub Issueとして登録します。<br>GitHubアカウントが必要です。</p>
       <label class="modal-label">プレイヤー名</label>
-      <input id="playerNameInput" type="text" class="modal-input" placeholder="名前を入力（空欄は匿名）" maxlength="20">
+      <input id="playerNameInput" type="text" class="modal-input" placeholder="空欄ならGitHubアカウント名で登録" maxlength="20">
       <div class="modal-actions">
         <button id="btnSubmitScore" class="btn btn-primary">📝 登録ページを開く</button>
         <button id="btnCancelName" class="btn btn-secondary">キャンセル</button>

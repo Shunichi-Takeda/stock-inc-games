@@ -566,6 +566,32 @@ body {
   z-index: 2;
 }
 
+/* Skill Tooltip (instant, no browser delay) */
+.skill-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 25, 0.95);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+  z-index: 30;
+  backdrop-filter: blur(8px);
+  text-align: center;
+  line-height: 1.6;
+  pointer-events: none;
+}
+
+.skill-btn:hover .skill-tooltip {
+  display: block;
+}
+
 /* Version */
 #versionDisplay {
   position: fixed;
