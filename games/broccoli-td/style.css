@@ -520,7 +520,6 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
-  overflow: hidden;
 }
 
 .skill-btn:hover:not(.on-cooldown) {
