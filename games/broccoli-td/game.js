@@ -1674,6 +1674,7 @@ function render() {
 
   renderGrid();
   renderPath();
+  renderKing();
   renderTowers();
   renderEnemies();
   renderProjectiles();
@@ -1738,8 +1739,10 @@ function renderGrid() {
     ctx.textBaseline = 'middle';
     ctx.fillText('🚪', x + CELL / 2, y + CELL / 2);
   }
+}
 
-  // Exit marker (Broccoli King!)
+function renderKing() {
+  // Exit marker (Broccoli King!) — rendered AFTER path so it's not covered
   const ex = currentStage.exit.col * CELL;
   const ey = currentStage.exit.row * CELL;
   const pulse = 0.6 + Math.sin(Date.now() / 400) * 0.4;
