@@ -131,18 +131,18 @@ const ENEMY_DEFS = {
   },
   dragon: {
     emoji: '🐉', name: 'ドラゴン',
-    hp: 800, speed: 0.7, reward: 80,
+    hp: 500, speed: 0.7, reward: 80,
     flying: true // 空を飛ぶ
   },
   gorilla: {
     emoji: '🦍', name: 'ゴリラ将軍',
-    hp: 1500, speed: 0.4, reward: 120,
-    healAura: 10 // 周囲の敵を毎秒10HP回復
+    hp: 800, speed: 0.4, reward: 120,
+    healAura: 5 // 周囲の敵を毎秒5HP回復
   },
   snake: {
     emoji: '🐍', name: '毒ヘビ',
-    hp: 50, speed: 3.5, reward: 5,
-    slowImmune: true // 超高速・スロー無効
+    hp: 50, speed: 2.5, reward: 5,
+    slowImmune: true // 高速・スロー無効
   }
 };
 
@@ -496,8 +496,8 @@ const STAGES = [
       { col: 8, row: 9 }    // 下
     ],
     exit: { col: 8, row: 5 },
-    startCoins: 600,
-    lives: 5,
+    startCoins: 800,
+    lives: 8,
     blocked: [
       // 中央付近の壁 (出口周囲の防壁)
       { col: 7, row: 4 }, { col: 9, row: 4 },
