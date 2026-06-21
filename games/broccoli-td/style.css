@@ -418,7 +418,15 @@ body {
 .tower-emoji { font-size: 1.1rem; }
 .tower-cost { font-size: 0.7rem; }
 
-.palette-spacer { flex: 1; }
+/* Action Bar (Wave button) */
+#actionBar {
+  display: flex;
+  padding: 0.3rem 0.6rem;
+  background: rgba(0,0,0,0.4);
+  border-top: 1px solid rgba(255,255,255,0.04);
+  width: 100%;
+  max-width: 772px;
+}
 
 /* Tower Tooltip */
 .tower-tooltip {
@@ -456,10 +464,11 @@ body {
 }
 
 .btn-wave {
+  flex: 1;
   font-family: inherit;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);

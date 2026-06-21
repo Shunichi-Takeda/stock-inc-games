@@ -1715,22 +1715,38 @@ function renderGrid() {
     ctx.fillText('🚪', x + CELL / 2, y + CELL / 2);
   }
 
-  // Exit marker (Broccoli King!)
+  // Exit marker (Broccoli King!) — BIG and bright!
   const ex = currentStage.exit.col * CELL;
   const ey = currentStage.exit.row * CELL;
-  ctx.fillStyle = 'rgba(34, 197, 94, 0.2)';
-  ctx.fillRect(ex, ey, CELL, CELL);
 
-  // Pulsing glow
-  const pulse = 0.5 + Math.sin(Date.now() / 500) * 0.3;
-  ctx.shadowColor = '#22c55e';
-  ctx.shadowBlur = 15 * pulse;
-  ctx.font = `${CELL * 0.65}px sans-serif`;
+  // Golden background tile
+  ctx.fillStyle = '#2a2a10';
+  ctx.fillRect(ex, ey, CELL, CELL);
+  ctx.fillStyle = '#3a3518';
+  ctx.fillRect(ex + 2, ey + 2, CELL - 4, CELL - 4);
+
+  // Golden pulsing border
+  const pulse = 0.6 + Math.sin(Date.now() / 400) * 0.4;
+  ctx.strokeStyle = `rgba(251, 191, 36, ${0.6 + pulse * 0.4})`;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(ex + 1, ey + 1, CELL - 2, CELL - 2);
+  ctx.lineWidth = 1;
+
+  // Inner glow
+  ctx.fillStyle = `rgba(251, 191, 36, ${0.05 + pulse * 0.08})`;
+  ctx.fillRect(ex + 3, ey + 3, CELL - 6, CELL - 6);
+
+  // King emoji — LARGE with strong glow
+  ctx.save();
+  ctx.shadowColor = '#fbbf24';
+  ctx.shadowBlur = 20 * pulse;
+  ctx.font = `${CELL * 0.45}px sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('👑', ex + CELL / 2, ey + CELL * 0.25);
-  ctx.fillText('🥦', ex + CELL / 2, ey + CELL * 0.7);
-  ctx.shadowBlur = 0;
+  ctx.fillText('👑', ex + CELL / 2, ey + CELL * 0.22);
+  ctx.font = `${CELL * 0.55}px sans-serif`;
+  ctx.fillText('🥦', ex + CELL / 2, ey + CELL * 0.65);
+  ctx.restore();
 }
 
 function renderPath() {
