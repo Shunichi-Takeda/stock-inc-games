@@ -1,7 +1,8 @@
 # 🎮 Stock Inc. Games
 
-**Stock Inc.** が適当に作った HTML ゲームを集めたポータルサイトです。  
-すべてのゲームは GitHub Pages 上で公開されており、ブラウザからすぐに遊べます。
+**Stock Inc.** が AI と一緒に作った HTML ゲームを集めたポータルサイトです。  
+すべてのゲームは GitHub Pages 上で公開されており、ブラウザからすぐに遊べます。  
+誰でもゲームを登録できます（GitHub アカウントが必要です）。
 
 🌐 **ポータルサイト**: [https://shunichi-takeda.github.io/stock-inc-games/](https://shunichi-takeda.github.io/stock-inc-games/)
 
