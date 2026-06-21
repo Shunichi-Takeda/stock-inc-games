@@ -359,6 +359,106 @@
     .card-play .arrow { transition: transform 0.2s; }
     .game-card:hover .card-play .arrow { transform: translateX(4px); }
 
+    /* Card Actions (edit / delete) */
+    .card-actions {
+      display: flex;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-decoration: none !important;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .card-action-edit {
+      background: rgba(99, 102, 241, 0.08);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.15);
+    }
+
+    .card-action-edit:hover {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .card-action-delete {
+      background: rgba(239, 68, 68, 0.06);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.12);
+    }
+
+    .card-action-delete:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sort-select {
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      background: rgba(15, 15, 30, 0.8);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      padding-right: 2rem;
+    }
+
+    .sort-select:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      color: #c4b5fd;
+    }
+
+    .sort-select:focus {
+      outline: none;
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1);
+    }
+
+    .game-count {
+      font-size: 0.8rem;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    .game-count strong {
+      color: #818cf8;
+    }
+
     /* ── States ── */
     .state-message {
       text-align: center;
@@ -462,6 +562,19 @@
 
   <main class="container">
 
+    <!-- Toolbar -->
+    <div class="toolbar" id="toolbar" style="display:none;">
+      <div class="toolbar-left">
+        <select class="sort-select" id="sortSelect">
+          <option value="newest">🕐 新しい順</option>
+          <option value="oldest">🕐 古い順</option>
+          <option value="name-asc">🔤 名前順 (A→Z)</option>
+          <option value="name-desc">🔤 名前順 (Z→A)</option>
+        </select>
+      </div>
+      <span class="game-count" id="gameCount"></span>
+    </div>
+
     <!-- Loading State -->
     <div id="loadingState" class="state-message">
       <div class="spinner"></div>
@@ -504,7 +617,7 @@
     const CONFIG = {
       owner: 'Shunichi-Takeda',
       repo: 'stock-inc-games',
-      cacheKey: 'sig-games-v1',
+      cacheKey: 'sig-games-v2',
       cacheTTL: 5 * 60 * 1000  // 5分
     };
 
@@ -523,6 +636,11 @@
       'learning': '📚 学習',
       'other':    '🎮 その他'
     };
+
+    // 全ゲームデータを保持（フィルタ・ソート用）
+    let allGames = [];
+    let currentFilter = 'all';
+    let currentSort = 'newest';
 
     // ══════════════════════════════════════════
     //  PARSER
@@ -548,7 +666,6 @@
 
       if (!url) return null;
 
-      // サムネイルURL: Markdown画像記法にも対応
       let thumbnail = thumbnailRaw;
       const mdMatch = thumbnailRaw.match(/!\[.*?\]\((.*?)\)/);
       if (mdMatch) thumbnail = mdMatch[1];
@@ -575,7 +692,6 @@
     //  API & CACHE
     // ══════════════════════════════════════════
     async function fetchGames(skipCache) {
-      // キャッシュ確認
       if (!skipCache) {
         try {
           const cached = localStorage.getItem(CONFIG.cacheKey);
@@ -587,7 +703,7 @@
       }
 
       const apiUrl = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues`
-        + `?labels=game&state=open&per_page=100&sort=created&direction=asc`;
+        + `?labels=game&state=open&per_page=100&sort=created&direction=desc`;
 
       const res = await fetch(apiUrl);
       if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
@@ -604,11 +720,11 @@
           author: issue.user ? issue.user.login : '',
           authorAvatar: issue.user ? issue.user.avatar_url : '',
           issueNumber: issue.number,
-          issueUrl: issue.html_url
+          issueUrl: issue.html_url,
+          createdAt: issue.created_at
         });
       }
 
-      // キャッシュ保存
       try {
         localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ data: games, ts: Date.now() }));
       } catch (e) { /* ignore */ }
@@ -617,13 +733,32 @@
     }
 
     // ══════════════════════════════════════════
+    //  SORT
+    // ══════════════════════════════════════════
+    function sortGames(games, sortKey) {
+      const sorted = [...games];
+      switch (sortKey) {
+        case 'newest':
+          sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          break;
+        case 'oldest':
+          sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          break;
+        case 'name-asc':
+          sorted.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+          break;
+        case 'name-desc':
+          sorted.sort((a, b) => b.title.localeCompare(a.title, 'ja'));
+          break;
+      }
+      return sorted;
+    }
+
+    // ══════════════════════════════════════════
     //  RENDER
     // ══════════════════════════════════════════
     function createGameCard(game, index) {
-      const card = document.createElement('a');
-      card.href = game.url;
-      card.target = '_blank';
-      card.rel = 'noopener';
+      const card = document.createElement('div');
       card.className = 'game-card fade-in';
       card.dataset.category = game.category;
       card.style.animationDelay = `${index * 0.06}s`;
@@ -645,12 +780,15 @@
            </span>`
         : '';
 
+      const editUrl = game.issueUrl;
+      const closeUrl = game.issueUrl;
+
       card.innerHTML = `
-        <div class="card-thumb">
+        <a href="${escapeHtml(game.url)}" target="_blank" rel="noopener" class="card-thumb">
           ${thumbHtml}
           <span class="badge badge-status badge--playable">▶ Play</span>
           <span class="badge badge-category">${categoryLabel}</span>
-        </div>
+        </a>
         <div class="card-body">
           <h2>${escapeHtml(game.title)}</h2>
           <p>${escapeHtml(game.description)}</p>
@@ -658,40 +796,69 @@
             <div class="card-tags">${tagsHtml}</div>
             ${authorHtml}
           </div>
-          <span class="card-play">プレイする <span class="arrow">→</span></span>
+          <a href="${escapeHtml(game.url)}" target="_blank" rel="noopener"
+             class="card-play" style="text-decoration:none;">プレイする <span class="arrow">→</span></a>
+          <div class="card-actions">
+            <a href="${escapeHtml(editUrl)}" target="_blank" rel="noopener"
+               class="card-action card-action-edit" title="Issue を編集">✏️ 編集</a>
+            <a href="${escapeHtml(closeUrl)}" target="_blank" rel="noopener"
+               class="card-action card-action-delete" title="Issue を Close して削除">🗑️ 削除</a>
+          </div>
         </div>
       `;
+
+      // カード全体のクリックでゲームを開く（ボタン以外）
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', (e) => {
+        // リンクやボタンがクリックされた場合はスキップ
+        if (e.target.closest('a')) return;
+        window.open(game.url, '_blank', 'noopener');
+      });
 
       return card;
     }
 
-    function renderGames(games) {
+    function applyFilterAndSort() {
+      let filtered = currentFilter === 'all'
+        ? allGames
+        : allGames.filter(g => g.category === currentFilter);
+
+      const sorted = sortGames(filtered, currentSort);
+
       const grid = document.getElementById('gamesGrid');
       grid.innerHTML = '';
-      games.forEach((game, i) => grid.appendChild(createGameCard(game, i)));
+      sorted.forEach((game, i) => grid.appendChild(createGameCard(game, i)));
+
+      // 件数表示
+      const countEl = document.getElementById('gameCount');
+      if (currentFilter === 'all') {
+        countEl.innerHTML = `<strong>${allGames.length}</strong> 件のゲーム`;
+      } else {
+        const label = CATEGORY_LABELS[currentFilter] || currentFilter;
+        countEl.innerHTML = `<strong>${sorted.length}</strong> / ${allGames.length} 件`;
+      }
     }
 
     // ══════════════════════════════════════════
-    //  FILTER
+    //  FILTER & SORT SETUP
     // ══════════════════════════════════════════
-    function setupFilter() {
+    function setupControls() {
+      // カテゴリフィルター
       const btns = document.querySelectorAll('.filter-btn');
       btns.forEach(btn => {
         btn.addEventListener('click', () => {
           btns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-
-          const filter = btn.dataset.filter;
-          const cards = document.querySelectorAll('.game-card');
-          cards.forEach(card => {
-            if (filter === 'all' || card.dataset.category === filter) {
-              card.style.display = '';
-              card.style.animation = 'fadeIn 0.3s ease both';
-            } else {
-              card.style.display = 'none';
-            }
-          });
+          currentFilter = btn.dataset.filter;
+          applyFilterAndSort();
         });
+      });
+
+      // 並べ替え
+      const sortSelect = document.getElementById('sortSelect');
+      sortSelect.addEventListener('change', () => {
+        currentSort = sortSelect.value;
+        applyFilterAndSort();
       });
     }
 
@@ -703,21 +870,24 @@
       const errorEl   = document.getElementById('errorState');
       const emptyEl   = document.getElementById('emptyState');
       const gridEl    = document.getElementById('gamesGrid');
+      const toolbarEl = document.getElementById('toolbar');
 
       loadingEl.style.display = '';
       errorEl.style.display   = 'none';
       emptyEl.style.display   = 'none';
       gridEl.style.display    = 'none';
+      toolbarEl.style.display = 'none';
 
       try {
-        const games = await fetchGames(skipCache);
+        allGames = await fetchGames(skipCache);
         loadingEl.style.display = 'none';
 
-        if (games.length === 0) {
+        if (allGames.length === 0) {
           emptyEl.style.display = '';
         } else {
-          renderGames(games);
+          toolbarEl.style.display = '';
           gridEl.style.display = '';
+          applyFilterAndSort();
         }
       } catch (err) {
         console.error('Failed to load games:', err);
@@ -727,7 +897,7 @@
     }
 
     // Init
-    setupFilter();
+    setupControls();
     loadGames();
   </script>
 
