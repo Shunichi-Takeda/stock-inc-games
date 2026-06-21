@@ -585,15 +585,30 @@ function initGame() {
 //  TOWER PLACEMENT
 // ═══════════════════════════
 function canPlaceTower(col, row) {
-  if (col < 0 || col >= COLS || row < 0 || row >= ROWS) return false;
-  if (grid[row][col] !== EMPTY) return false;
-  if (towerGrid[row][col] !== null) return false;
+  if (col < 0 || col >= COLS || row < 0 || row >= ROWS) {
+    console.log('[canPlace] out of bounds', col, row);
+    return false;
+  }
+  if (grid[row][col] !== EMPTY) {
+    console.log('[canPlace] not empty', col, row, 'grid=', grid[row][col]);
+    return false;
+  }
+  if (towerGrid[row][col] !== null) {
+    console.log('[canPlace] tower exists', col, row);
+    return false;
+  }
 
   // Can't place on entrance or exit
   for (const ent of STAGE.entrances) {
-    if (ent.col === col && ent.row === row) return false;
+    if (ent.col === col && ent.row === row) {
+      console.log('[canPlace] on entrance');
+      return false;
+    }
   }
-  if (STAGE.exit.col === col && STAGE.exit.row === row) return false;
+  if (STAGE.exit.col === col && STAGE.exit.row === row) {
+    console.log('[canPlace] on exit');
+    return false;
+  }
 
   // Temporarily place and check if path still exists
   towerGrid[row][col] = 'temp';
@@ -601,6 +616,9 @@ function canPlaceTower(col, row) {
 
   // Also check paths for all existing enemies
   let allValid = path !== null;
+  if (!allValid) {
+    console.log('[canPlace] no main path with tower at', col, row);
+  }
   if (allValid) {
     for (const e of enemies) {
       if (e.dead) continue;
@@ -613,13 +631,15 @@ function canPlaceTower(col, row) {
   }
 
   towerGrid[row][col] = null;
+  console.log('[canPlace]', col, row, '→', allValid);
   return allValid;
 }
 
 function placeTower(type, col, row) {
   const def = TOWER_DEFS[type];
-  if (coins < def.cost) return false;
-  if (!canPlaceTower(col, row)) return false;
+  console.log('[placeTower]', type, col, row, 'coins=', coins, 'cost=', def.cost);
+  if (coins < def.cost) { console.log('[placeTower] not enough coins'); return false; }
+  if (!canPlaceTower(col, row)) { console.log('[placeTower] canPlaceTower=false'); return false; }
 
   coins -= def.cost;
   const tower = new Tower(type, col, row);
@@ -636,6 +656,7 @@ function placeTower(type, col, row) {
     particles.push(new Particle(tower.x, tower.y, '#22c55e'));
   }
 
+  console.log('[placeTower] SUCCESS at', col, row);
   updateUI();
   return true;
 }
@@ -840,31 +861,46 @@ function renderPath() {
 
 function renderTowers() {
   for (const t of towers) {
-    // Tower base
-    ctx.fillStyle = 'rgba(34,197,94,0.1)';
+    const x = t.col * CELL;
+    const y = t.row * CELL;
+
+    // Tower background tile (bright, distinct from grass)
+    ctx.fillStyle = 'rgba(20, 40, 20, 0.7)';
+    ctx.fillRect(x + 1, y + 1, CELL - 2, CELL - 2);
+
+    // Tower base glow
+    const color = t.type === 'tomato' ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)';
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(t.x, t.y, CELL * 0.35, 0, Math.PI * 2);
+    ctx.arc(t.x, t.y, CELL * 0.4, 0, Math.PI * 2);
     ctx.fill();
 
     // Level indicator
     if (t.level > 1) {
       ctx.fillStyle = t.level === 3 ? '#fbbf24' : '#a3e635';
       ctx.beginPath();
-      ctx.arc(t.x + CELL * 0.3, t.y - CELL * 0.3, 6, 0, Math.PI * 2);
+      ctx.arc(t.x + CELL * 0.35, t.y - CELL * 0.35, 7, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#000';
-      ctx.font = '8px sans-serif';
+      ctx.font = 'bold 9px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(t.level, t.x + CELL * 0.3, t.y - CELL * 0.3);
+      ctx.fillText(t.level, t.x + CELL * 0.35, t.y - CELL * 0.35);
     }
 
-    // Emoji
-    const size = t.level === 3 ? CELL * 0.7 : CELL * 0.6;
+    // Emoji (large and clear)
+    const size = t.level === 3 ? CELL * 0.85 : CELL * 0.75;
     ctx.font = `${size}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(t.emoji, t.x, t.y);
+    ctx.fillText(t.emoji, t.x, t.y + 2);
+
+    // Border to make it stand out
+    const borderColor = t.type === 'tomato' ? 'rgba(239,68,68,0.4)' : 'rgba(34,197,94,0.4)';
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(x + 1, y + 1, CELL - 2, CELL - 2);
+    ctx.lineWidth = 1;
   }
 }
 
@@ -887,35 +923,67 @@ function renderParticles() {
 }
 
 function renderPlacementPreview() {
-  if (!placingTowerType || !hoverCell) return;
+  if (!placingTowerType) return;
 
+  const def = TOWER_DEFS[placingTowerType];
+
+  // Highlight ALL placeable cells when in placement mode
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (grid[r][c] === EMPTY && towerGrid[r][c] === null) {
+        // Skip entrance/exit
+        let isSpecial = false;
+        for (const ent of STAGE.entrances) {
+          if (ent.col === c && ent.row === r) isSpecial = true;
+        }
+        if (STAGE.exit.col === c && STAGE.exit.row === r) isSpecial = true;
+        if (isSpecial) continue;
+
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.08)';
+        ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+        ctx.strokeStyle = 'rgba(34, 197, 94, 0.15)';
+        ctx.strokeRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2);
+      }
+    }
+  }
+
+  // Hover cell preview
+  if (!hoverCell) return;
   const { col, row } = hoverCell;
   const x = col * CELL;
   const y = row * CELL;
-  const def = TOWER_DEFS[placingTowerType];
   const valid = canPlaceTower(col, row) && coins >= def.cost;
 
   // Cell highlight
-  ctx.fillStyle = valid ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)';
+  ctx.fillStyle = valid ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)';
   ctx.fillRect(x, y, CELL, CELL);
 
   // Range preview
   if (valid) {
-    ctx.strokeStyle = 'rgba(34,197,94,0.3)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(34,197,94,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.arc(x + CELL / 2, y + CELL / 2, def.range * CELL, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.setLineDash([]);
     ctx.lineWidth = 1;
-  }
 
-  // Preview emoji
-  ctx.globalAlpha = 0.6;
-  ctx.font = `${CELL * 0.6}px sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(def.emoji, x + CELL / 2, y + CELL / 2);
-  ctx.globalAlpha = 1;
+    // Preview emoji
+    ctx.globalAlpha = 0.7;
+    ctx.font = `${CELL * 0.75}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(def.emoji, x + CELL / 2, y + CELL / 2 + 2);
+    ctx.globalAlpha = 1;
+  } else {
+    // X mark for invalid
+    ctx.font = `${CELL * 0.5}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('✕', x + CELL / 2, y + CELL / 2);
+  }
 }
 
 function renderSelectedRange() {
@@ -946,8 +1014,23 @@ function updateUI() {
   for (const btn of document.querySelectorAll('.tower-btn')) {
     const type = btn.dataset.tower;
     const def = TOWER_DEFS[type];
-    btn.disabled = coins < def.cost || waveActive;
+    btn.disabled = coins < def.cost;
     btn.classList.toggle('selected', placingTowerType === type);
+  }
+
+  // Guide text
+  const guide = document.getElementById('paletteGuide');
+  if (guide) {
+    if (placingTowerType) {
+      const def = TOWER_DEFS[placingTowerType];
+      guide.textContent = `${def.emoji} ${def.name} — マップをクリックで配置`;
+      guide.classList.remove('hidden');
+    } else if (towers.length === 0 && currentWave === 0) {
+      guide.textContent = '← タワーを選んでマップをクリック';
+      guide.classList.remove('hidden');
+    } else {
+      guide.classList.add('hidden');
+    }
   }
 
   // Speed button
@@ -1048,9 +1131,11 @@ function getCanvasCell(clientX, clientY) {
 
 function onCanvasClick(e) {
   e.preventDefault();
+  e.stopPropagation();
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
   const cell = getCanvasCell(clientX, clientY);
+  console.log('[click] cell=', cell, 'placingType=', placingTowerType);
   if (!cell) return;
 
   // If placing a tower
@@ -1145,8 +1230,10 @@ function setup() {
 
   // Tower palette
   for (const btn of document.querySelectorAll('.tower-btn')) {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const type = btn.dataset.tower;
+      console.log('[palette] clicked', type, 'current=', placingTowerType);
       if (placingTowerType === type) {
         placingTowerType = null;
       } else {
@@ -1158,9 +1245,9 @@ function setup() {
   }
 
   // Next wave
-  document.getElementById('btnNextWave').addEventListener('click', () => {
+  document.getElementById('btnNextWave').addEventListener('click', (e) => {
+    e.stopPropagation();
     startNextWave();
-    placingTowerType = null;
     updateUI();
   });
 
@@ -1217,13 +1304,19 @@ function setup() {
     this.textContent = this.textContent === '🔇' ? '🔊' : '🔇';
   });
 
-  // Click outside canvas to deselect
+  // Click outside game area to deselect
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('#canvasWrapper') && !e.target.closest('#towerPalette')) {
-      hideTowerPopup();
-      placingTowerType = null;
-      updateUI();
+    // Don't reset if click was inside game UI
+    if (e.target.closest('#canvasWrapper') ||
+        e.target.closest('#towerPalette') ||
+        e.target.closest('#statusBar') ||
+        e.target.closest('#towerPopup')) {
+      return;
     }
+    console.log('[doc click] resetting, target=', e.target.tagName, e.target.id);
+    hideTowerPopup();
+    placingTowerType = null;
+    updateUI();
   });
 
   // Start game loop
