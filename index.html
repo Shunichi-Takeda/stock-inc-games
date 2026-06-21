@@ -7,158 +7,341 @@
   <title>🎮 Stock Inc. Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', 'Noto Sans JP', sans-serif;
-      background: #0f0f1a;
+      background: #0a0a14;
       color: #e0e0e0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ── Header ── */
+    /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 4rem 1rem 3rem;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 5rem 1.5rem 3.5rem;
       position: relative;
       overflow: hidden;
+      background: linear-gradient(160deg, #0d0d1f 0%, #111130 40%, #0d1b2e 70%, #0a0a14 100%);
     }
 
     .hero::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 30% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-                  radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
-      animation: drift 20s ease-in-out infinite alternate;
+      inset: 0;
+      background:
+        radial-gradient(circle at 25% 40%, rgba(139, 92, 246, 0.07) 0%, transparent 55%),
+        radial-gradient(circle at 75% 60%, rgba(244, 114, 182, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 45%);
+      animation: heroDrift 25s ease-in-out infinite alternate;
     }
 
-    @keyframes drift {
-      0%   { transform: translate(0, 0); }
-      100% { transform: translate(-5%, 3%); }
+    @keyframes heroDrift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-3%, 2%) scale(1.05); }
     }
 
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #a78bfa, #818cf8, #f472b6, #fb923c);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: gradientShift 6s ease-in-out infinite;
       position: relative;
+      letter-spacing: -0.02em;
     }
 
-    .hero p {
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+
+    .hero .subtitle {
       margin-top: 0.75rem;
-      font-size: 1.1rem;
-      color: #94a3b8;
+      font-size: 1.05rem;
+      color: #64748b;
       position: relative;
+      letter-spacing: 0.05em;
     }
 
-    /* ── Games Grid ── */
+    .hero .desc {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #475569;
+      position: relative;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* ── Filter Tabs ── */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0 1.5rem;
+      margin-top: -1.5rem;
+      position: relative;
+      z-index: 5;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      background: rgba(15, 15, 30, 0.8);
+      color: #94a3b8;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.02em;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      color: #c4b5fd;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+      border-color: rgba(139, 92, 246, 0.5);
+      color: #c4b5fd;
+      box-shadow: 0 0 16px rgba(139, 92, 246, 0.15);
+    }
+
+    /* ── Container ── */
     .container {
-      max-width: 960px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 3rem 1.5rem 5rem;
     }
 
     .section-title {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
-      color: #c4b5fd;
+      color: #94a3b8;
+      letter-spacing: 0.03em;
     }
 
+    /* ── Games Grid ── */
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
     }
 
+    /* ── Game Card ── */
     .game-card {
-      background: rgba(30, 30, 50, 0.7);
-      border: 1px solid rgba(99, 102, 241, 0.15);
+      background: rgba(20, 20, 40, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.1);
       border-radius: 16px;
-      padding: 2rem 1.5rem;
+      overflow: hidden;
       text-decoration: none;
       color: inherit;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      position: relative;
     }
 
     .game-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
-      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(99, 102, 241, 0.12), 0 4px 16px rgba(0, 0, 0, 0.3);
+      border-color: rgba(99, 102, 241, 0.3);
     }
 
-    .game-card .emoji {
-      font-size: 2.5rem;
+    .game-card.coming-soon {
+      opacity: 0.7;
     }
 
-    .game-card h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #e2e8f0;
+    .game-card.coming-soon:hover {
+      opacity: 0.85;
     }
 
-    .game-card p {
-      font-size: 0.9rem;
-      color: #94a3b8;
-      line-height: 1.6;
+    /* Thumbnail */
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: #111122;
     }
 
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .game-card:hover .card-thumb img {
+      transform: scale(1.06);
+    }
+
+    .card-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10, 10, 20, 0.7) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Badges */
     .badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 600;
+      position: absolute;
+      top: 12px;
+      font-size: 0.65rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.25em 0.7em;
-      border-radius: 999px;
-      width: fit-content;
+      letter-spacing: 0.06em;
+      padding: 0.3em 0.8em;
+      border-radius: 6px;
+      z-index: 2;
+      backdrop-filter: blur(6px);
     }
 
-    .badge--coming-soon {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
+    .badge-status {
+      right: 12px;
+    }
+
+    .badge-author {
+      left: 12px;
     }
 
     .badge--playable {
-      background: rgba(52, 211, 153, 0.15);
+      background: rgba(52, 211, 153, 0.2);
       color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .badge--coming-soon {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .badge--author {
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .badge--external {
+      background: rgba(244, 114, 182, 0.2);
+      color: #f9a8d4;
+      border: 1px solid rgba(244, 114, 182, 0.3);
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .card-body h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.4;
+    }
+
+    .card-body p {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.2em 0.6em;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.08);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.12);
+      letter-spacing: 0.02em;
+    }
+
+    .card-play {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #818cf8;
+      transition: color 0.2s;
+    }
+
+    .game-card:hover .card-play {
+      color: #a5b4fc;
+    }
+
+    .card-play .arrow {
+      transition: transform 0.2s;
+    }
+
+    .game-card:hover .card-play .arrow {
+      transform: translateX(4px);
     }
 
     /* ── Footer ── */
     .footer {
       text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.85rem;
-      color: #475569;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 2.5rem 1rem;
+      font-size: 0.8rem;
+      color: #334155;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .footer a {
-      color: #818cf8;
+      color: #6366f1;
       text-decoration: none;
+      transition: color 0.2s;
     }
 
     .footer a:hover {
+      color: #818cf8;
       text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 3.5rem 1rem 2.5rem;
+      }
+
+      .filter-bar {
+        margin-top: -1rem;
+      }
     }
   </style>
 </head>
@@ -166,30 +349,135 @@
 
   <header class="hero">
     <h1>🎮 Stock Inc. Games</h1>
-    <p>適当に作った HTML ゲームたち</p>
+    <p class="subtitle">適当に作った HTML ゲームたち</p>
+    <p class="desc">ブラウザからすぐに遊べるカジュアルゲームコレクション。<br>社内メンバーが気まぐれに作ったゲームを公開しています。</p>
   </header>
 
+  <nav class="filter-bar">
+    <button class="filter-btn active" data-filter="all">🎮 すべて</button>
+    <button class="filter-btn" data-filter="shooting">🔫 シューティング</button>
+    <button class="filter-btn" data-filter="novel">📖 ノベル</button>
+    <button class="filter-btn" data-filter="strategy">🏰 ストラテジー</button>
+    <button class="filter-btn" data-filter="learning">📚 学習</button>
+  </nav>
+
   <main class="container">
-    <h2 class="section-title">🕹️ ゲーム一覧</h2>
 
-    <div class="games-grid">
+    <div class="games-grid" id="gamesGrid">
 
-      <!-- ブロッコリーシューター -->
-      <div class="game-card">
-        <span class="emoji">🥦</span>
-        <h2>ブロッコリーシューター</h2>
-        <p>迫りくるブロッコリーを撃ち落とせ！シンプルなシューティングゲーム。</p>
-        <span class="badge badge--coming-soon">Coming Soon</span>
+      <!-- ブロッコリーシューター (外部) -->
+      <a href="https://shunichi-takeda.github.io/narekan-shooting/" target="_blank" rel="noopener"
+         class="game-card" data-category="shooting">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/broccoli-shooter.png" alt="ブロッコリーシューター" loading="lazy">
+          <span class="badge badge-status badge--playable">▶ Play</span>
+        </div>
+        <div class="card-body">
+          <h2>🥦 ブロッコリーシューター</h2>
+          <p>迫りくるブロッコリーを撃ち落とせ！ウェーブ制のシューティングゲーム。コンボを繋いでハイスコアを目指そう。</p>
+          <div class="card-tags">
+            <span class="tag">シューティング</span>
+            <span class="tag">ランキング対応</span>
+          </div>
+          <span class="card-play">プレイする <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- ベジタブルキングダム (外部) -->
+      <a href="https://shunichi-takeda.github.io/narekan-shooting/novel.html" target="_blank" rel="noopener"
+         class="game-card" data-category="novel">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/vegetable-kingdom.png" alt="ベジタブルキングダム" loading="lazy">
+          <span class="badge badge-status badge--playable">▶ Play</span>
+        </div>
+        <div class="card-body">
+          <h2>📖 ベジタブルキングダム ～最後の収穫祭～</h2>
+          <p>野菜たちの王国で繰り広げられる壮大な物語。選択肢によって結末が変わるビジュアルノベル。</p>
+          <div class="card-tags">
+            <span class="tag">ノベル</span>
+            <span class="tag">マルチエンディング</span>
+          </div>
+          <span class="card-play">プレイする <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- Stock Philosophy (外部) -->
+      <a href="https://shunichi-takeda.github.io/stock-philosophy-game/" target="_blank" rel="noopener"
+         class="game-card" data-category="learning">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/stock-philosophy.png" alt="Stock Philosophy" loading="lazy">
+          <span class="badge badge-status badge--playable">▶ Play</span>
+        </div>
+        <div class="card-body">
+          <h2>💼 Stock Philosophy ～ふたつの世界線～</h2>
+          <p>株式会社Stockの10の考え方を、パラレルワールドの探索を通じて学ぶインタラクティブ教材。</p>
+          <div class="card-tags">
+            <span class="tag">学習</span>
+            <span class="tag">企業理念</span>
+          </div>
+          <span class="card-play">プレイする <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- ブロッコリー・タワーディフェンス (内部・Coming Soon) -->
+      <div class="game-card coming-soon" data-category="strategy">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/broccoli-td.png" alt="ブロッコリー・タワーディフェンス" loading="lazy">
+          <span class="badge badge-status badge--coming-soon">Coming Soon</span>
+        </div>
+        <div class="card-body">
+          <h2>🥦🏰 ブロッコリー・タワーディフェンス</h2>
+          <p>ブロッコリー王国を守れ！迫りくる敵野菜たちをタワーで迎撃する本格タワーディフェンス。</p>
+          <div class="card-tags">
+            <span class="tag">タワーディフェンス</span>
+            <span class="tag">ストラテジー</span>
+          </div>
+          <span class="card-play" style="color: #64748b;">開発中…</span>
+        </div>
       </div>
 
-      <!-- 新しいゲームはここに追加 -->
-
     </div>
+
   </main>
 
   <footer class="footer">
-    <p>© 2026 Stock Inc. · <a href="https://github.com/shunichi-takeda/stock-inc-games">GitHub</a></p>
+    <p>© 2026 Stock Inc. · <a href="https://github.com/Shunichi-Takeda/stock-inc-games">GitHub</a></p>
   </footer>
+
+  <script>
+    // ── Filter Logic ──
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.game-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active state
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+
+        cards.forEach(card => {
+          if (filter === 'all' || card.dataset.category === filter) {
+            card.style.display = '';
+            card.style.animation = 'fadeIn 0.35s ease';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Fade-in animation for cards
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 
 </body>
 </html>
