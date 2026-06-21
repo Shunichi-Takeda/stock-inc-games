@@ -106,31 +106,50 @@ const ENEMY_SKILLS = {
 // ENEMIES
 // ============================================================
 const ENEMIES = {
-  // Chapter 1
-  task_pile:      { name: '📋タスクの山',     emoji: '📋', lv: 1, hp: 25,  sp: 10, atk: 8,  def: 5,  spd: 5,  element: 'physical', exp: 15,  money: 50,  skills: ['basic_attack'] },
-  spam_mail:      { name: '✉️迷惑メール',    emoji: '✉️', lv: 2, hp: 30,  sp: 15, atk: 10, def: 4,  spd: 8,  element: 'digital',  exp: 20,  money: 60,  skills: ['basic_attack'] },
-  spilled_coffee: { name: '☕こぼれたコーヒー', emoji: '☕', lv: 2, hp: 28, sp: 10, atk: 9,  def: 6,  spd: 6,  element: 'nature',   exp: 18,  money: 55,  skills: ['basic_attack'] },
+  // Chapter 1 — オフィス・日常
+  task_pile:      { name: '📋タスクの山',       emoji: '📋', lv: 1, hp: 25,  sp: 10, atk: 8,  def: 5,  spd: 5,  element: 'physical', exp: 15,  money: 50,  skills: ['basic_attack'] },
+  spam_mail:      { name: '✉️迷惑メール',      emoji: '✉️', lv: 2, hp: 30,  sp: 15, atk: 10, def: 4,  spd: 8,  element: 'digital',  exp: 20,  money: 60,  skills: ['basic_attack'] },
+  spilled_coffee: { name: '☕こぼれたコーヒー', emoji: '☕', lv: 2, hp: 28,  sp: 10, atk: 9,  def: 6,  spd: 6,  element: 'nature',   exp: 18,  money: 55,  skills: ['basic_attack'] },
+  broken_pen:     { name: '🖊️壊れたボールペン', emoji: '🖊️', lv: 1, hp: 20,  sp: 8,  atk: 7,  def: 3,  spd: 9,  element: 'physical', exp: 12,  money: 40,  skills: ['basic_attack'] },
+  alarm_clock:    { name: '⏰暴走目覚まし',     emoji: '⏰', lv: 2, hp: 32,  sp: 12, atk: 11, def: 5,  spd: 7,  element: 'digital',  exp: 22,  money: 65,  skills: ['basic_attack'] },
+  dust_bunny:     { name: '🐇ホコリうさぎ',     emoji: '🐇', lv: 1, hp: 18,  sp: 8,  atk: 6,  def: 4,  spd: 10, element: 'nature',   exp: 10,  money: 35,  skills: ['basic_attack'] },
   task_list_boss: { name: '📋巨大タスクリスト', emoji: '📋', lv: 5, hp: 150, sp: 30, atk: 18, def: 12, spd: 8,  element: 'physical', exp: 100, money: 500, isBoss: true, skills: ['basic_attack', 'heavy_slam', 'pile_on'], intro: '大量のタスクが襲いかかってきた！' },
-  // Chapter 2
-  crow:           { name: '🐦カラス',         emoji: '🐦', lv: 3, hp: 35,  sp: 15, atk: 12, def: 6,  spd: 12, element: 'nature',   exp: 25,  money: 70,  skills: ['basic_attack'] },
-  hornet:         { name: '🐝スズメバチ',     emoji: '🐝', lv: 4, hp: 40,  sp: 20, atk: 15, def: 5,  spd: 14, element: 'nature',   exp: 30,  money: 80,  skills: ['basic_attack'] },
-  leaf_tornado:   { name: '🍂落ち葉竜巻',     emoji: '🍂', lv: 4, hp: 45,  sp: 15, atk: 13, def: 8,  spd: 10, element: 'nature',   exp: 28,  money: 75,  skills: ['basic_attack'] },
+
+  // Chapter 2 — 公園・自然
+  crow:           { name: '🐦カラス',           emoji: '🐦', lv: 3, hp: 35,  sp: 15, atk: 12, def: 6,  spd: 12, element: 'nature',   exp: 25,  money: 70,  skills: ['basic_attack'] },
+  hornet:         { name: '🐝スズメバチ',       emoji: '🐝', lv: 4, hp: 40,  sp: 20, atk: 15, def: 5,  spd: 14, element: 'nature',   exp: 30,  money: 80,  skills: ['basic_attack'] },
+  leaf_tornado:   { name: '🍂落ち葉竜巻',       emoji: '🍂', lv: 4, hp: 45,  sp: 15, atk: 13, def: 8,  spd: 10, element: 'nature',   exp: 28,  money: 75,  skills: ['basic_attack'] },
+  stray_dog:      { name: '🐕野良犬',           emoji: '🐕', lv: 3, hp: 38,  sp: 12, atk: 14, def: 7,  spd: 11, element: 'physical', exp: 27,  money: 72,  skills: ['basic_attack'] },
+  angry_pigeon:   { name: '🕊️怒りのハト',      emoji: '🕊️', lv: 3, hp: 30,  sp: 18, atk: 11, def: 4,  spd: 15, element: 'nature',   exp: 23,  money: 65,  skills: ['basic_attack'] },
+  mud_golem:      { name: '🪨泥のゴーレム',     emoji: '🪨', lv: 5, hp: 55,  sp: 10, atk: 16, def: 12, spd: 4,  element: 'physical', exp: 35,  money: 90,  skills: ['basic_attack', 'heavy_slam'] },
   nyandam:        { name: '🐱ボスネコ・ニャンダム', emoji: '🐱', lv: 8, hp: 300, sp: 50, atk: 22, def: 15, spd: 12, element: 'nature', exp: 200, money: 800, isBoss: true, skills: ['claw_rush', 'roar', 'cat_storm', 'basic_attack'], intro: 'ニャンダム「ニャーッ！この公園は俺の縄張りだ！」' },
-  // Chapter 3
-  gate_error:     { name: '🎫改札エラー',     emoji: '🎫', lv: 5, hp: 50,  sp: 20, atk: 16, def: 10, spd: 8,  element: 'digital',  exp: 35,  money: 90,  skills: ['basic_attack'] },
-  notif_storm:    { name: '📱通知の嵐',       emoji: '📱', lv: 6, hp: 55,  sp: 25, atk: 18, def: 8,  spd: 13, element: 'digital',  exp: 40,  money: 100, skills: ['basic_attack'] },
-  crowded_train:  { name: '🚃混雑車両',       emoji: '🚃', lv: 6, hp: 65,  sp: 15, atk: 20, def: 14, spd: 6,  element: 'physical', exp: 42,  money: 110, skills: ['basic_attack'] },
-  runaway_train:  { name: '🚇暴走トレイン',   emoji: '🚇', lv: 12, hp: 500, sp: 60, atk: 28, def: 18, spd: 15, element: 'physical', exp: 400, money: 1200, isBoss: true, skills: ['full_throttle', 'electric_brake', 'passenger_rush', 'basic_attack'], intro: '地下鉄が暴走を始めた！止めなければ！' },
-  // Chapter 4
-  malware:        { name: '🦠マルウェア',     emoji: '🦠', lv: 8,  hp: 70,  sp: 30, atk: 22, def: 10, spd: 14, element: 'digital',  exp: 50,  money: 130, skills: ['basic_attack'] },
-  ransomware:     { name: '🔒ランサムウェア', emoji: '🔒', lv: 9,  hp: 80,  sp: 35, atk: 25, def: 12, spd: 11, element: 'digital',  exp: 55,  money: 150, skills: ['basic_attack'] },
-  short_circuit:  { name: '⚡ショートサーキット', emoji: '⚡', lv: 9, hp: 75, sp: 20, atk: 28, def: 8, spd: 16, element: 'physical', exp: 52, money: 140, skills: ['basic_attack'] },
-  virus_king:     { name: '💻ウイルスキング', emoji: '💻', lv: 16, hp: 800, sp: 80, atk: 35, def: 20, spd: 18, element: 'digital', exp: 600, money: 1500, isBoss: true, skills: ['virus_spread', 'encrypt', 'system_overload', 'self_repair', 'basic_attack'], intro: 'ウイルスキング「全てのデータは我のものだ！」' },
-  // Chapter 5
-  chaos_shard:    { name: '🌀カオスの欠片',   emoji: '🌀', lv: 10, hp: 85,  sp: 30, atk: 26, def: 14, spd: 13, element: 'physical', exp: 60,  money: 160, skills: ['basic_attack'] },
-  shadow_self:    { name: '👤影の自分',       emoji: '👤', lv: 11, hp: 90,  sp: 35, atk: 28, def: 15, spd: 14, element: 'physical', exp: 65,  money: 170, skills: ['basic_attack'] },
-  distortion:     { name: '💫歪みの渦',       emoji: '💫', lv: 12, hp: 95,  sp: 40, atk: 30, def: 12, spd: 16, element: 'digital',  exp: 70,  money: 180, skills: ['basic_attack'] },
-  chaos_vortex:   { name: '🌀カオスの渦',     emoji: '🌀', lv: 20, hp: 1200, sp: 100, atk: 42, def: 25, spd: 20, element: 'physical', exp: 1000, money: 2000, isBoss: true, changesType: true, skills: ['chaos_strike', 'type_shift', 'void_wave', 'reality_warp', 'chaos_heal', 'basic_attack'], intro: 'カオスの渦「日常を…混沌に変えてやる！」' }
+
+  // Chapter 3 — 地下鉄
+  gate_error:     { name: '🎫改札エラー',       emoji: '🎫', lv: 5, hp: 50,  sp: 20, atk: 16, def: 10, spd: 8,  element: 'digital',  exp: 35,  money: 90,  skills: ['basic_attack'] },
+  notif_storm:    { name: '📱通知の嵐',         emoji: '📱', lv: 6, hp: 55,  sp: 25, atk: 18, def: 8,  spd: 13, element: 'digital',  exp: 40,  money: 100, skills: ['basic_attack'] },
+  crowded_train:  { name: '🚃混雑車両',         emoji: '🚃', lv: 6, hp: 65,  sp: 15, atk: 20, def: 14, spd: 6,  element: 'physical', exp: 42,  money: 110, skills: ['basic_attack'] },
+  lost_luggage:   { name: '🧳迷子のスーツケース', emoji: '🧳', lv: 5, hp: 48,  sp: 18, atk: 14, def: 11, spd: 9,  element: 'physical', exp: 33,  money: 85,  skills: ['basic_attack'] },
+  broken_sign:    { name: '🚧壊れた案内板',     emoji: '🚧', lv: 6, hp: 58,  sp: 15, atk: 17, def: 13, spd: 5,  element: 'physical', exp: 38,  money: 95,  skills: ['basic_attack', 'heavy_slam'] },
+  phantom_wifi:   { name: '📡幻のWi-Fi',        emoji: '📡', lv: 7, hp: 45,  sp: 30, atk: 20, def: 6,  spd: 15, element: 'digital',  exp: 45,  money: 120, skills: ['basic_attack'] },
+  runaway_train:  { name: '🚇暴走トレイン',     emoji: '🚇', lv: 12, hp: 500, sp: 60, atk: 28, def: 18, spd: 15, element: 'physical', exp: 400, money: 1200, isBoss: true, skills: ['full_throttle', 'electric_brake', 'passenger_rush', 'basic_attack'], intro: '地下鉄が暴走を始めた！止めなければ！' },
+
+  // Chapter 4 — IT・デジタル
+  malware:        { name: '🦠マルウェア',       emoji: '🦠', lv: 8,  hp: 70,  sp: 30, atk: 22, def: 10, spd: 14, element: 'digital',  exp: 50,  money: 130, skills: ['basic_attack'] },
+  ransomware:     { name: '🔒ランサムウェア',   emoji: '🔒', lv: 9,  hp: 80,  sp: 35, atk: 25, def: 12, spd: 11, element: 'digital',  exp: 55,  money: 150, skills: ['basic_attack'] },
+  short_circuit:  { name: '⚡ショートサーキット', emoji: '⚡', lv: 9, hp: 75,  sp: 20, atk: 28, def: 8,  spd: 16, element: 'physical', exp: 52,  money: 140, skills: ['basic_attack'] },
+  spam_bot:       { name: '🤖スパムボット',     emoji: '🤖', lv: 8,  hp: 65,  sp: 25, atk: 20, def: 9,  spd: 13, element: 'digital',  exp: 48,  money: 125, skills: ['basic_attack'] },
+  blue_screen:    { name: '🟦ブルースクリーン', emoji: '🟦', lv: 9,  hp: 85,  sp: 30, atk: 24, def: 14, spd: 8,  element: 'digital',  exp: 58,  money: 155, skills: ['basic_attack', 'heavy_slam'] },
+  tangled_cable:  { name: '🔌絡まったケーブル', emoji: '🔌', lv: 8,  hp: 60,  sp: 20, atk: 19, def: 7,  spd: 12, element: 'physical', exp: 45,  money: 115, skills: ['basic_attack'] },
+  virus_king:     { name: '💻ウイルスキング',   emoji: '💻', lv: 16, hp: 800, sp: 80, atk: 35, def: 20, spd: 18, element: 'digital', exp: 600, money: 1500, isBoss: true, skills: ['virus_spread', 'encrypt', 'system_overload', 'self_repair', 'basic_attack'], intro: 'ウイルスキング「全てのデータは我のものだ！」' },
+
+  // Chapter 5 — カオス
+  chaos_shard:    { name: '🌀カオスの欠片',     emoji: '🌀', lv: 10, hp: 85,  sp: 30, atk: 26, def: 14, spd: 13, element: 'physical', exp: 60,  money: 160, skills: ['basic_attack'] },
+  shadow_self:    { name: '👤影の自分',         emoji: '👤', lv: 11, hp: 90,  sp: 35, atk: 28, def: 15, spd: 14, element: 'physical', exp: 65,  money: 170, skills: ['basic_attack'] },
+  distortion:     { name: '💫歪みの渦',         emoji: '💫', lv: 12, hp: 95,  sp: 40, atk: 30, def: 12, spd: 16, element: 'digital',  exp: 70,  money: 180, skills: ['basic_attack'] },
+  dark_memory:    { name: '🌑闇の記憶',         emoji: '🌑', lv: 11, hp: 88,  sp: 32, atk: 27, def: 13, spd: 15, element: 'digital',  exp: 63,  money: 165, skills: ['basic_attack'] },
+  time_glitch:    { name: '⏳時間のバグ',       emoji: '⏳', lv: 12, hp: 80,  sp: 45, atk: 32, def: 10, spd: 18, element: 'digital',  exp: 72,  money: 185, skills: ['basic_attack'] },
+  broken_dream:   { name: '💭壊れた夢',         emoji: '💭', lv: 10, hp: 92,  sp: 28, atk: 25, def: 16, spd: 11, element: 'nature',   exp: 62,  money: 162, skills: ['basic_attack'] },
+  chaos_vortex:   { name: '🌀カオスの渦',       emoji: '🌀', lv: 20, hp: 1200, sp: 100, atk: 42, def: 25, spd: 20, element: 'physical', exp: 1000, money: 2000, isBoss: true, changesType: true, skills: ['chaos_strike', 'type_shift', 'void_wave', 'reality_warp', 'chaos_heal', 'basic_attack'], intro: 'カオスの渦「日常を…混沌に変えてやる！」' }
 };
 
 // ============================================================
@@ -239,7 +258,7 @@ const MAP_DATA = {
         bossPos: { x: 9, y: 11 }
       }
     ],
-    enemies: ['task_pile', 'spam_mail', 'spilled_coffee'],
+    enemies: ['task_pile', 'spam_mail', 'spilled_coffee', 'broken_pen', 'alarm_clock', 'dust_bunny'],
     encounterAreas: [1, 2],
     boss: 'task_list_boss',
     bossArea: 2
@@ -321,7 +340,7 @@ const MAP_DATA = {
         bossPos: { x: 9, y: 10 }
       }
     ],
-    enemies: ['crow', 'hornet', 'leaf_tornado'],
+    enemies: ['crow', 'hornet', 'leaf_tornado', 'stray_dog', 'angry_pigeon', 'mud_golem'],
     encounterAreas: [0, 1],
     boss: 'nyandam',
     bossArea: 1
@@ -400,7 +419,7 @@ const MAP_DATA = {
         bossPos: { x: 9, y: 11 }
       }
     ],
-    enemies: ['gate_error', 'notif_storm', 'crowded_train'],
+    enemies: ['gate_error', 'notif_storm', 'crowded_train', 'lost_luggage', 'broken_sign', 'phantom_wifi'],
     encounterAreas: [0, 1],
     boss: 'runaway_train',
     bossArea: 1
@@ -475,7 +494,7 @@ const MAP_DATA = {
         bossPos: { x: 9, y: 11 }
       }
     ],
-    enemies: ['malware', 'ransomware', 'short_circuit'],
+    enemies: ['malware', 'ransomware', 'short_circuit', 'spam_bot', 'blue_screen', 'tangled_cable'],
     encounterAreas: [0, 1],
     boss: 'virus_king',
     bossArea: 1
@@ -583,7 +602,7 @@ const MAP_DATA = {
         bossPos: { x: 9, y: 6 }
       }
     ],
-    enemies: ['chaos_shard', 'shadow_self', 'distortion'],
+    enemies: ['chaos_shard', 'shadow_self', 'distortion', 'dark_memory', 'time_glitch', 'broken_dream'],
     encounterAreas: [0, 1],
     boss: 'chaos_vortex',
     bossArea: 2
@@ -638,25 +657,25 @@ const NPC_DATA = {
 // ============================================================
 const QUEST_DATA = [
   // Chapter 1
-  { id: 'q1_1', chapter: 1, name: '🐕迷子のポチ',       giver: 'quest_ch1_1', desc: '近所で迷子の犬を探す', goal: { type: 'auto' }, reward: { money: 100, item: 'onigiri_sake' }, acceptDialog: ['ポチが朝から帰ってこないの！', '通りのどこかにいると思うの…お願い！'], activeDialog: 'ポチは見つかった？', completeDialog: ['ポチが見つかった！ありがとう！', 'お礼にこれをどうぞ！'] },
-  { id: 'q1_2', chapter: 1, name: '📦お隣さんの荷物',   giver: 'quest_ch1_2', desc: 'お隣さんに荷物を届ける', goal: { type: 'auto' }, reward: { money: 100 }, acceptDialog: ['この荷物を通りの向こうの人に届けてくれない？', '重くないから大丈夫だよ！'], activeDialog: '届けてくれた？', completeDialog: ['届けてくれてありがとう！助かったよ！'] },
-  { id: 'q1_3', chapter: 1, name: '🧹散らかった公園',   giver: 'quest_ch1_3', desc: '公園のゴミ拾いを手伝う', goal: { type: 'auto' }, reward: { money: 100, item: 'energy_drink' }, acceptDialog: ['公園にゴミが散らかってるんだ。', '手伝ってくれると助かるなぁ。'], activeDialog: 'まだ終わってない？', completeDialog: ['公園がきれいになった！ありがとう！'] },
+  { id: 'q1_1', chapter: 1, name: '🐕迷子のポチ',       giver: 'quest_ch1_1', desc: '近所で迷子の犬を探す', stepsRequired: 12, reward: { money: 100, item: 'onigiri_sake' }, acceptDialog: ['ポチが朝から帰ってこないの！', '通りのどこかにいると思うの…お願い！'], activeDialog: 'ポチは見つかった？まだ探してるの？', completeDialog: ['ポチが見つかった！ありがとう！', 'お礼にこれをどうぞ！'] },
+  { id: 'q1_2', chapter: 1, name: '📦お隣さんの荷物',   giver: 'quest_ch1_2', desc: 'お隣さんに荷物を届ける', stepsRequired: 10, reward: { money: 100 }, acceptDialog: ['この荷物を通りの向こうの人に届けてくれない？', '重くないから大丈夫だよ！'], activeDialog: '届けてくれた？まだかな？', completeDialog: ['届けてくれてありがとう！助かったよ！'] },
+  { id: 'q1_3', chapter: 1, name: '🧹散らかった公園',   giver: 'quest_ch1_3', desc: '公園のゴミ拾いを手伝う', stepsRequired: 12, reward: { money: 100, item: 'energy_drink' }, acceptDialog: ['公園にゴミが散らかってるんだ。', '手伝ってくれると助かるなぁ。'], activeDialog: 'まだゴミが残ってるかも？もうちょっと探してみて！', completeDialog: ['公園がきれいになった！ありがとう！'] },
   // Chapter 2
-  { id: 'q2_1', chapter: 2, name: '🐱猫の集会',         giver: 'quest_ch2_1', desc: '猫の集会場所を見つける', goal: { type: 'auto' }, reward: { money: 100, item: 'onigiri_mentai' }, acceptDialog: ['猫たちがどこかで集会してるらしいの！', '場所を見つけてくれない？'], activeDialog: '見つかった？', completeDialog: ['見つけてくれたのね！ありがとう！'] },
-  { id: 'q2_2', chapter: 2, name: '🌸花壇の手入れ',     giver: 'quest_ch2_2', desc: '花壇の手入れを手伝う', goal: { type: 'auto' }, reward: { money: 100 }, acceptDialog: ['花壇が荒らされちゃって…', '手入れを手伝ってくれない？'], activeDialog: 'まだかしら？', completeDialog: ['きれいになった！ありがとう！'] },
-  { id: 'q2_3', chapter: 2, name: '🔑落とし物',         giver: 'quest_ch2_3', desc: '落とした鍵を探す', goal: { type: 'auto' }, reward: { money: 100, item: 'bandaid' }, acceptDialog: ['家の鍵を落としちゃったんだ…', 'この辺りで落としたと思うんだけど。'], activeDialog: '見つかった？', completeDialog: ['見つけてくれたの！？ありがとう！！'] },
+  { id: 'q2_1', chapter: 2, name: '🐱猫の集会',         giver: 'quest_ch2_1', desc: '猫の集会場所を見つける', stepsRequired: 12, reward: { money: 100, item: 'onigiri_mentai' }, acceptDialog: ['猫たちがどこかで集会してるらしいの！', '場所を見つけてくれない？'], activeDialog: '見つかった？もうちょっと探してみて！', completeDialog: ['見つけてくれたのね！ありがとう！'] },
+  { id: 'q2_2', chapter: 2, name: '🌸花壇の手入れ',     giver: 'quest_ch2_2', desc: '花壇の手入れを手伝う', stepsRequired: 10, reward: { money: 100 }, acceptDialog: ['花壇が荒らされちゃって…', '手入れを手伝ってくれない？'], activeDialog: 'まだ手入れ中かしら？頑張って！', completeDialog: ['きれいになった！ありがとう！'] },
+  { id: 'q2_3', chapter: 2, name: '🔑落とし物',         giver: 'quest_ch2_3', desc: '落とした鍵を探す', stepsRequired: 12, reward: { money: 100, item: 'bandaid' }, acceptDialog: ['家の鍵を落としちゃったんだ…', 'この辺りで落としたと思うんだけど。'], activeDialog: '見つかった？あちこち探してみて！', completeDialog: ['見つけてくれたの！？ありがとう！！'] },
   // Chapter 3
-  { id: 'q3_1', chapter: 3, name: '👴おじいちゃんの道案内', giver: 'quest_ch3_1', desc: 'おじいちゃんを出口まで案内する', goal: { type: 'auto' }, reward: { money: 100 }, acceptDialog: ['わしは出口がわからなくて困っとるんじゃ。', '案内してくれんかのう？'], activeDialog: 'まだ道に迷っとるよ…', completeDialog: ['おお！出口が見えた！ありがとう！'] },
-  { id: 'q3_2', chapter: 3, name: '📱充電切れ',         giver: 'quest_ch3_2', desc: 'スマホの充電を手配する', goal: { type: 'auto' }, reward: { money: 100, item: 'energy_drink' }, acceptDialog: ['スマホの充電が切れちゃって…', '充電できるところ知らない？'], activeDialog: 'まだ充電できてないの…', completeDialog: ['充電できた！ありがとう！'] },
-  { id: 'q3_3', chapter: 3, name: '🎒忘れ物',           giver: 'quest_ch3_3', desc: '電車に忘れたカバンを探す', goal: { type: 'auto' }, reward: { money: 100, item: 'nutrient' }, acceptDialog: ['カバンを電車に忘れてきちゃったんだ！', '地下通路のどこかにあるかも…'], activeDialog: '見つかった？', completeDialog: ['カバンが見つかった！ありがとう！'] },
+  { id: 'q3_1', chapter: 3, name: '👴おじいちゃんの道案内', giver: 'quest_ch3_1', desc: 'おじいちゃんを出口まで案内する', stepsRequired: 15, reward: { money: 100 }, acceptDialog: ['わしは出口がわからなくて困っとるんじゃ。', '案内してくれんかのう？'], activeDialog: 'まだ道を探しとるよ…頼むぞ。', completeDialog: ['おお！出口が見えた！ありがとう！'] },
+  { id: 'q3_2', chapter: 3, name: '📱充電切れ',         giver: 'quest_ch3_2', desc: 'スマホの充電を手配する', stepsRequired: 12, reward: { money: 100, item: 'energy_drink' }, acceptDialog: ['スマホの充電が切れちゃって…', '充電できるところ知らない？'], activeDialog: 'まだ充電できてないの…探してきて！', completeDialog: ['充電できた！ありがとう！'] },
+  { id: 'q3_3', chapter: 3, name: '🎒忘れ物',           giver: 'quest_ch3_3', desc: '電車に忘れたカバンを探す', stepsRequired: 12, reward: { money: 100, item: 'nutrient' }, acceptDialog: ['カバンを電車に忘れてきちゃったんだ！', '地下通路のどこかにあるかも…'], activeDialog: '見つかった？もう少し奥を探してみて！', completeDialog: ['カバンが見つかった！ありがとう！'] },
   // Chapter 4
-  { id: 'q4_1', chapter: 4, name: '🖨️プリンター故障',   giver: 'quest_ch4_1', desc: 'プリンターを直す', goal: { type: 'auto' }, reward: { money: 100, item: 'cafe_latte' }, acceptDialog: ['プリンターが動かないんだ！', '修理を手伝ってくれない？'], activeDialog: 'まだ直ってない？', completeDialog: ['動いた！ありがとう！'] },
-  { id: 'q4_2', chapter: 4, name: '☕差し入れ',         giver: 'quest_ch4_2', desc: 'みんなに差し入れを配る', goal: { type: 'auto' }, reward: { money: 100, item: 'chocolate' }, acceptDialog: ['みんな徹夜で疲れてるから…', '差し入れを配ってきてほしいな。'], activeDialog: '配ってくれた？', completeDialog: ['みんな喜んでた！ありがとう！'] },
-  { id: 'q4_3', chapter: 4, name: '📊データ復旧',       giver: 'quest_ch4_3', desc: '消えたデータを復旧する', goal: { type: 'auto' }, reward: { money: 100, item: 'icecream' }, acceptDialog: ['大事なデータが消えちゃったんだ！', '復旧を手伝って！'], activeDialog: 'まだ復旧できてない？', completeDialog: ['データが戻った！ありがとう！'] },
+  { id: 'q4_1', chapter: 4, name: '🖨️プリンター故障',   giver: 'quest_ch4_1', desc: 'プリンターを直す', stepsRequired: 10, reward: { money: 100, item: 'cafe_latte' }, acceptDialog: ['プリンターが動かないんだ！', '修理を手伝ってくれない？'], activeDialog: 'まだ直ってない？部品を探してきて！', completeDialog: ['動いた！ありがとう！'] },
+  { id: 'q4_2', chapter: 4, name: '☕差し入れ',         giver: 'quest_ch4_2', desc: 'みんなに差し入れを配る', stepsRequired: 12, reward: { money: 100, item: 'chocolate' }, acceptDialog: ['みんな徹夜で疲れてるから…', '差し入れを配ってきてほしいな。'], activeDialog: '配ってくれた？まだ全員に届けてないかも！', completeDialog: ['みんな喜んでた！ありがとう！'] },
+  { id: 'q4_3', chapter: 4, name: '📊データ復旧',       giver: 'quest_ch4_3', desc: '消えたデータを復旧する', stepsRequired: 15, reward: { money: 100, item: 'icecream' }, acceptDialog: ['大事なデータが消えちゃったんだ！', '復旧を手伝って！'], activeDialog: 'まだ復旧できてない？サーバーを調べてみて！', completeDialog: ['データが戻った！ありがとう！'] },
   // Chapter 5
-  { id: 'q5_1', chapter: 5, name: '👶迷子の案内',       giver: 'quest_ch5_1', desc: '迷子の子供を親のもとへ', goal: { type: 'auto' }, reward: { money: 100 }, acceptDialog: ['うちの子がいなくなって…', 'お願い、探してきて！'], activeDialog: '見つかった？', completeDialog: ['見つけてくれてありがとう！本当に助かった！'] },
-  { id: 'q5_2', chapter: 5, name: '🛒おつかい',         giver: 'quest_ch5_2', desc: 'おばあちゃんの買い物を手伝う', goal: { type: 'auto' }, reward: { money: 100, item: 'bento' }, acceptDialog: ['足が悪くて買い物に行けないの。', '代わりに行ってくれない？'], activeDialog: 'まだかしら？', completeDialog: ['ありがとうねぇ。助かったわ。'] },
-  { id: 'q5_3', chapter: 5, name: '🎁最後のお礼',       giver: 'quest_ch5_3', desc: '町内会からのお礼を受け取る', goal: { type: 'auto' }, reward: { money: 100, item: 'nutrient' }, acceptDialog: ['きみにはいつも助けられてるよ。', 'これはみんなからの感謝の気持ちだ。'], activeDialog: 'また来てくれ！', completeDialog: ['ありがとう、ヒーローくん！', 'これからもこの街をよろしくな！'] }
+  { id: 'q5_1', chapter: 5, name: '👶迷子の案内',       giver: 'quest_ch5_1', desc: '迷子の子供を親のもとへ', stepsRequired: 12, reward: { money: 100 }, acceptDialog: ['うちの子がいなくなって…', 'お願い、探してきて！'], activeDialog: '見つかった？まだ探してるの？お願い！', completeDialog: ['見つけてくれてありがとう！本当に助かった！'] },
+  { id: 'q5_2', chapter: 5, name: '🛒おつかい',         giver: 'quest_ch5_2', desc: 'おばあちゃんの買い物を手伝う', stepsRequired: 12, reward: { money: 100, item: 'bento' }, acceptDialog: ['足が悪くて買い物に行けないの。', '代わりに行ってくれない？'], activeDialog: 'まだ買い物中かしら？ゆっくりでいいからね。', completeDialog: ['ありがとうねぇ。助かったわ。'] },
+  { id: 'q5_3', chapter: 5, name: '🎁最後のお礼',       giver: 'quest_ch5_3', desc: '町内会からのお礼を受け取る', stepsRequired: 10, reward: { money: 100, item: 'nutrient' }, acceptDialog: ['きみにはいつも助けられてるよ。', 'これはみんなからの感謝の気持ちだ。'], activeDialog: 'また来てくれ！もうちょっとしたら準備できるよ。', completeDialog: ['ありがとう、ヒーローくん！', 'これからもこの街をよろしくな！'] }
 ];
 
 // ============================================================
@@ -1092,18 +1111,30 @@ class PartyManager {
 // QUEST MANAGER
 // ============================================================
 class QuestManager {
-  constructor() { this.active = []; this.completed = []; this.progress = {}; }
+  constructor() { this.active = []; this.completed = []; this.stepsSinceAccept = {}; }
   accept(questId) {
     if (!this.active.includes(questId) && !this.completed.includes(questId)) {
       this.active.push(questId);
-      this.progress[questId] = { count: 0 };
+      this.stepsSinceAccept[questId] = 0;
     }
   }
   isActive(questId) { return this.active.includes(questId); }
   isCompleted(questId) { return this.completed.includes(questId); }
+  isReady(questId) {
+    const quest = QUEST_DATA.find(q => q.id === questId);
+    if (!quest) return false;
+    const steps = this.stepsSinceAccept[questId] || 0;
+    return steps >= (quest.stepsRequired || 20);
+  }
+  addStep() {
+    this.active.forEach(qid => {
+      if (this.stepsSinceAccept[qid] !== undefined) this.stepsSinceAccept[qid]++;
+    });
+  }
   complete(questId) {
     this.active = this.active.filter(q => q !== questId);
     if (!this.completed.includes(questId)) this.completed.push(questId);
+    delete this.stepsSinceAccept[questId];
   }
   allComplete() { return this.completed.length >= 15; }
   getActiveQuests() { return this.active.map(id => QUEST_DATA.find(q => q.id === id)).filter(Boolean); }
@@ -1244,6 +1275,7 @@ class MapEngine {
   }
   onStep() {
     this.steps++;
+    this.game.quests.addStep();
     this.updateHud();
     this.checkTileEvent();
     if (MAP_DATA[this.chapter].encounterAreas.includes(this.area)) {
@@ -1570,7 +1602,7 @@ class BattleSystem {
     this.selectedCommand = 'skill';
     const actor = this.currentActor.actor;
     const panel = $('skillList');
-    panel.style.display = 'block';
+    panel.style.display = 'flex';
     panel.innerHTML = '';
     const available = actor.skills.filter(sid => {
       const s = SKILLS[sid];
@@ -1623,7 +1655,7 @@ class BattleSystem {
     if (!this.isPlayerTurn) return;
     this.selectedCommand = 'item';
     const panel = $('itemList');
-    panel.style.display = 'block';
+    panel.style.display = 'flex';
     panel.innerHTML = '';
     const items = this.game.inventory.getAll();
     if (items.length === 0) {
@@ -1681,7 +1713,7 @@ class BattleSystem {
   }
   showTargetList(targets, type) {
     const panel = $('targetList');
-    panel.style.display = 'block';
+    panel.style.display = 'flex';
     panel.innerHTML = '';
     targets.forEach(target => {
       const btn = document.createElement('button');
@@ -1957,7 +1989,7 @@ class BattleSystem {
     this.game.party.money += totalMoney;
     const lvUps = this.game.party.gainExp(totalExp);
     const panel = $('battleResult');
-    panel.style.display = 'block';
+    panel.style.display = 'flex';
     panel.innerHTML = `
       <h3>🎉 勝利！</h3>
       <p>獲得EXP: ${totalExp}</p>
@@ -2126,6 +2158,7 @@ class GameManager {
     this.quests = new QuestManager();
     this.quests.active = save.questsActive || [];
     this.quests.completed = save.questsCompleted || [];
+    this.quests.stepsSinceAccept = save.questSteps || {};
     this.battle = new BattleSystem(this);
     this.screen.show('mapScreen');
     this.map.loadMap(save.chapter || 1, save.area || 0, save.playerX, save.playerY);
@@ -2208,6 +2241,7 @@ class GameManager {
           } else {
             if (!this.clearedChapters.includes(this.chapter)) this.clearedChapters.push(this.chapter);
             this.autoSave();
+            this.startChapter(this.chapter + 1);
           }
         });
       } else {
@@ -2215,6 +2249,7 @@ class GameManager {
         else {
           if (!this.clearedChapters.includes(this.chapter)) this.clearedChapters.push(this.chapter);
           this.autoSave();
+          this.startChapter(this.chapter + 1);
         }
       }
     } else {
@@ -2263,25 +2298,36 @@ class GameManager {
     if (this.quests.isCompleted(questId)) {
       this.dialog.show([{ speaker: giverName, text: 'ありがとう！本当に助かったよ！😊' }]);
     } else if (this.quests.isActive(questId)) {
-      // Auto-complete quests on second visit
-      this.quests.complete(questId);
-      this.party.money += quest.reward.money || 0;
-      if (quest.reward.item) this.inventory.add(quest.reward.item, quest.reward.qty || 1);
-      Sound.play('questComplete');
-      const msgs = quest.completeDialog.map(t => ({ speaker: giverName, text: t }));
-      msgs.push({ speaker: '', text: `🎉 クエスト「${quest.name}」完了！¥${quest.reward.money || 0}獲得！` });
-      if (this.quests.allComplete()) {
-        msgs.push({ speaker: '', text: '🏆 全サブクエスト完了！「ご近所ヒーローのあかし」獲得！' });
-        this.party.members.forEach(m => {
-          m.atk += 5; m.def += 5; m.spd += 5;
-          m.maxHp += 5; m.maxSp += 5;
-          m.hp = Math.min(m.hp + 5, m.maxHp);
-          m.sp = Math.min(m.sp + 5, m.maxSp);
-          m.hasHidden = true;
-        });
+      if (this.quests.isReady(questId)) {
+        // Quest complete — enough steps taken
+        this.quests.complete(questId);
+        this.party.money += quest.reward.money || 0;
+        if (quest.reward.item) this.inventory.add(quest.reward.item, quest.reward.qty || 1);
+        Sound.play('questComplete');
+        const msgs = quest.completeDialog.map(t => ({ speaker: giverName, text: t }));
+        msgs.push({ speaker: '', text: `🎉 クエスト「${quest.name}」完了！¥${quest.reward.money || 0}獲得！` });
+        if (this.quests.allComplete()) {
+          msgs.push({ speaker: '', text: '🏆 全サブクエスト完了！「ご近所ヒーローのあかし」獲得！' });
+          this.party.members.forEach(m => {
+            m.atk += 5; m.def += 5; m.spd += 5;
+            m.maxHp += 5; m.maxSp += 5;
+            m.hp = Math.min(m.hp + 5, m.maxHp);
+            m.sp = Math.min(m.sp + 5, m.maxSp);
+            m.hasHidden = true;
+          });
+        }
+        this.dialog.show(msgs);
+        this.map.updateHud();
+      } else {
+        // Quest still in progress — not enough steps
+        const currentSteps = this.quests.stepsSinceAccept[questId] || 0;
+        const needed = quest.stepsRequired || 10;
+        const remaining = Math.max(0, needed - currentSteps);
+        this.dialog.show([
+          { speaker: giverName, text: quest.activeDialog },
+          { speaker: '', text: `📋 あと${remaining}歩くらい探索してから戻ってきてね！` }
+        ]);
       }
-      this.dialog.show(msgs);
-      this.map.updateHud();
     } else {
       // Accept quest
       this.quests.accept(questId);
@@ -2376,6 +2422,7 @@ class GameManager {
       party: this.party.members, money: this.party.money,
       inventory: this.inventory.items,
       questsActive: this.quests.active, questsCompleted: this.quests.completed,
+      questSteps: this.quests.stepsSinceAccept,
       completedEvents: this.completedEvents, openedChests: this.openedChests,
       clearedBosses: this.clearedBosses, clearedChapters: this.clearedChapters,
       gameCleared: this.gameCleared

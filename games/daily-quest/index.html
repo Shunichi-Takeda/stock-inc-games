@@ -52,7 +52,7 @@
     </section>
 
     <!-- ========== HOW TO SCREEN ========== -->
-    <section id="howToScreen" class="screen" style="display:none">
+    <section id="howToScreen" class="screen">
       <div class="howto-container glass-panel">
         <h2 class="howto-title">📖 あそびかた</h2>
         <div class="howto-content">
@@ -84,7 +84,7 @@
     </section>
 
     <!-- ========== MAP SCREEN ========== -->
-    <section id="mapScreen" class="screen" style="display:none">
+    <section id="mapScreen" class="screen">
       <canvas id="mapCanvas" aria-label="マップ"></canvas>
 
       <!-- HUD Overlay -->
@@ -114,7 +114,7 @@
       </button>
 
       <!-- Dialog Overlay -->
-      <div id="dialogOverlay" class="dialog-overlay" style="display:none" role="dialog" aria-label="会話">
+      <div id="dialogOverlay" class="dialog-overlay" role="dialog" aria-label="会話">
         <div class="dialog-box glass-panel">
           <span id="dialogSpeaker" class="dialog-speaker"></span>
           <p id="dialogText" class="dialog-text"></p>
@@ -125,7 +125,7 @@
     </section>
 
     <!-- ========== BATTLE SCREEN ========== -->
-    <section id="battleScreen" class="screen" style="display:none">
+    <section id="battleScreen" class="screen">
       <!-- Battle Background -->
       <div id="battleBg" class="battle-bg">
         <!-- Enemy Area -->
@@ -158,24 +158,24 @@
         <button id="btnRun" class="btn btn-battle cmd-run" type="button">
           <span class="cmd-icon">🏃</span><span class="cmd-label">にげる</span>
         </button>
-        <button id="btnUltimate" class="btn btn-battle cmd-ultimate" type="button" style="display:none">
+        <button id="btnUltimate" class="btn btn-battle cmd-ultimate" type="button">
           <span class="cmd-icon">💥</span><span class="cmd-label">必殺技</span>
         </button>
       </nav>
 
       <!-- Sub-Panels -->
-      <div id="skillList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="スキル選択"></div>
-      <div id="itemList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="アイテム選択"></div>
-      <div id="targetList" class="battle-sub-panel" style="display:none" role="listbox" aria-label="ターゲット選択"></div>
+      <div id="skillList" class="battle-sub-panel" role="listbox" aria-label="スキル選択"></div>
+      <div id="itemList" class="battle-sub-panel" role="listbox" aria-label="アイテム選択"></div>
+      <div id="targetList" class="battle-sub-panel" role="listbox" aria-label="ターゲット選択"></div>
 
       <!-- Battle Result Overlay -->
-      <div id="battleResult" class="battle-result-overlay" style="display:none" role="dialog" aria-label="バトル結果">
+      <div id="battleResult" class="battle-result-overlay" role="dialog" aria-label="バトル結果">
         <div class="battle-result glass-panel"></div>
       </div>
     </section>
 
     <!-- ========== SHOP SCREEN ========== -->
-    <section id="shopScreen" class="screen overlay-screen" style="display:none">
+    <section id="shopScreen" class="screen overlay-screen">
       <div class="shop-container glass-panel">
         <header class="shop-header">
           <h2 id="shopTitle" class="shop-title">🏪 コンビニ</h2>
@@ -202,7 +202,7 @@
     </section>
 
     <!-- ========== MENU SCREEN ========== -->
-    <section id="menuScreen" class="screen overlay-screen" style="display:none">
+    <section id="menuScreen" class="screen overlay-screen">
       <div class="menu-container glass-panel">
         <nav class="menu-tabs" aria-label="メニュータブ">
           <button id="tabStatus" class="menu-tab active" type="button" aria-selected="true">📊 ステータス</button>
@@ -216,7 +216,7 @@
     </section>
 
     <!-- ========== GAME OVER SCREEN ========== -->
-    <section id="gameOverScreen" class="screen" style="display:none">
+    <section id="gameOverScreen" class="screen">
       <div class="gameover-content">
         <h2 id="gameOverTitle" class="gameover-title">GAME OVER</h2>
         <p class="gameover-sub">力尽きてしまった…</p>
