@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ナレッジ・ミリオネア | ナレッジマネジメントクイズ</title>
+  <meta name="description" content="スーファミ風デザインのナレッジマネジメント4択クイズゲーム。楽しく学んで、組織の知識共有力をアップ！">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       CSS CUSTOM PROPERTIES
+       ======================================== */
+    :root {
+      --bg-deep: #0a0a2e;
+      --bg-board: #1a5c3a;
+      --bg-panel: #1e2d4a;
+      --bg-dark-panel: #111833;
+
+      --color-gold: #ffd700;
+      --color-gold-dark: #b8960f;
+      --color-red: #e63946;
+      --color-blue: #4895ef;
+      --color-green: #06d6a0;
+      --color-orange: #f4a261;
+      --color-pink: #e84393;
+      --color-purple: #a855f7;
+      --color-cyan: #00d2ff;
+      --color-white: #f8f9fa;
+      --color-cream: #fff8e7;
+      --color-text: #e8e8e8;
+
+      /* Monopoly property colors */
+      --prop-brown: #8B4513;
+      --prop-lightblue: #87CEEB;
+      --prop-pink: #FF69B4;
+      --prop-orange: #FF8C00;
+      --prop-red: #DC143C;
+      --prop-yellow: #FFD700;
+      --prop-green: #228B22;
+      --prop-darkblue: #00008B;
+
+      --font-pixel: 'DotGothic16', 'Press Start 2P', monospace;
+      --border-width: 4px;
+      --radius: 4px;
+    }
+
+    /* ========================================
+       BASE & RESET
+       ======================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-pixel);
+      background: var(--bg-deep);
+      color: var(--color-text);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      image-rendering: pixelated;
+    }
+
+    /* ========================================
+       SCANLINE OVERLAY
+       ======================================== */
+    #scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 0, 0, 0.06) 3px,
+        rgba(0, 0, 0, 0.06) 6px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ========================================
+       PIXEL BORDER MIXIN (via classes)
+       ======================================== */
+    .pixel-border {
+      border: var(--border-width) solid #000;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.2),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        5px 5px 0 rgba(0,0,0,0.4);
+    }
+
+    .pixel-border-light {
+      border: 3px solid #000;
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.15),
+        inset -2px -2px 0 rgba(0,0,0,0.2),
+        3px 3px 0 rgba(0,0,0,0.3);
+    }
+
+    /* ========================================
+       SCREEN SYSTEM
+       ======================================== */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ========================================
+       TITLE SCREEN
+       ======================================== */
+    #screen-title {
+      background: linear-gradient(180deg, #0a1628 0%, #1a3a5c 40%, #0a5c3a 100%);
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .title-frame {
+      background: linear-gradient(135deg, #1a2a4a, #0d1b30);
+      padding: 40px 60px;
+      position: relative;
+      border: 6px solid #000;
+      box-shadow:
+        inset 4px 4px 0 rgba(255,255,255,0.15),
+        inset -4px -4px 0 rgba(0,0,0,0.3),
+        8px 8px 0 rgba(0,0,0,0.5),
+        0 0 60px rgba(255, 215, 0, 0.15);
+      max-width: 700px;
+      width: 90%;
+    }
+
+    .title-deco {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      font-size: 28px;
+      margin-bottom: 8px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .title-main {
+      font-size: clamp(24px, 5vw, 42px);
+      color: var(--color-gold);
+      text-shadow:
+        2px 2px 0 #000,
+        4px 4px 0 rgba(0,0,0,0.5),
+        0 0 30px rgba(255, 215, 0, 0.4);
+      margin-bottom: 8px;
+      letter-spacing: 4px;
+      line-height: 1.4;
+    }
+
+    .title-sub {
+      font-size: clamp(11px, 2vw, 15px);
+      color: var(--color-cyan);
+      text-shadow: 1px 1px 0 #000;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .title-desc {
+      font-size: clamp(10px, 1.5vw, 13px);
+      color: #aab;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .title-board {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .title-tile {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+      animation: tileFloat 4s ease-in-out infinite;
+    }
+
+    .title-tile:nth-child(odd) { animation-delay: -0.5s; }
+    .title-tile:nth-child(3n) { animation-delay: -1s; }
+
+    .start-btn {
+      background: linear-gradient(180deg, #e63946, #b71c2c);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: clamp(14px, 2.5vw, 20px);
+      padding: 16px 48px;
+      border: 4px solid #000;
+      cursor: pointer;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.25),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        5px 5px 0 #000;
+      transition: transform 0.1s, box-shadow 0.1s;
+      letter-spacing: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .start-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: skewX(-20deg);
+      animation: btnShine 3s ease-in-out infinite;
+    }
+
+    .start-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.3),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        7px 7px 0 #000;
+    }
+
+    .start-btn:active {
+      transform: translate(3px, 3px);
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.25),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        2px 2px 0 #000;
+    }
+
+    /* ========================================
+       GAME SCREEN
+       ======================================== */
+    #screen-game {
+      background: linear-gradient(180deg, #0a1628 0%, #122040 100%);
+      padding: 12px;
+    }
+
+    .game-container {
+      display: grid;
+      grid-template-columns: 220px 1fr 200px;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 1200px;
+      height: 100%;
+      max-height: 700px;
+    }
+
+    /* --- Header Bar --- */
+    .game-header {
+      grid-column: 1 / -1;
+      background: linear-gradient(90deg, #1a2744, #0d1b30);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.1), 3px 3px 0 rgba(0,0,0,0.4);
+    }
+
+    .header-title {
+      font-size: 14px;
+      color: var(--color-gold);
+      text-shadow: 1px 1px 0 #000;
+      letter-spacing: 2px;
+    }
+
+    .header-question-num {
+      font-size: 13px;
+      color: var(--color-cyan);
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    /* --- Prize Ladder (Left Panel) --- */
+    .prize-ladder {
+      background: linear-gradient(180deg, #0d1b30, #0a1425);
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.08), 4px 4px 0 rgba(0,0,0,0.4);
+      padding: 8px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .ladder-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .ladder-num {
+      color: #667;
+      min-width: 22px;
+      text-align: right;
+    }
+
+    .ladder-amount {
+      color: #889;
+    }
+
+    .ladder-item.current {
+      background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
+      border: 2px solid var(--color-gold);
+      box-shadow: 0 0 10px rgba(255,215,0,0.3), inset 0 0 10px rgba(255,215,0,0.1);
+    }
+
+    .ladder-item.current .ladder-num,
+    .ladder-item.current .ladder-amount {
+      color: var(--color-gold);
+      text-shadow: 0 0 8px rgba(255,215,0,0.5);
+    }
+
+    .ladder-item.cleared .ladder-num,
+    .ladder-item.cleared .ladder-amount {
+      color: var(--color-green);
+    }
+
+    .ladder-item.guaranteed {
+      border-left: 3px solid var(--color-orange);
+    }
+
+    .ladder-item.guaranteed .ladder-amount {
+      color: var(--color-orange);
+    }
+
+    .ladder-item.guaranteed.cleared .ladder-amount {
+      color: var(--color-green);
+    }
+
+    /* --- Question Panel (Center) --- */
+    .question-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question-card {
+      background: linear-gradient(180deg, #1a2d4a, #122040);
+      border: 4px solid #000;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.1),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        5px 5px 0 rgba(0,0,0,0.4);
+      padding: 24px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-gold), var(--color-orange), var(--color-gold));
+    }
+
+    .question-text {
+      font-size: clamp(13px, 1.8vw, 17px);
+      line-height: 1.8;
+      color: var(--color-cream);
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .answer-btn {
+      background: linear-gradient(180deg, #2a3f5f, #1a2844);
+      border: 3px solid #333;
+      color: var(--color-text);
+      font-family: var(--font-pixel);
+      font-size: clamp(11px, 1.4vw, 14px);
+      padding: 16px 14px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.08),
+        inset -2px -2px 0 rgba(0,0,0,0.2),
+        3px 3px 0 rgba(0,0,0,0.3);
+      line-height: 1.6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-btn:hover:not(.disabled):not(.selected) {
+      background: linear-gradient(180deg, #3a5580, #2a3f5f);
+      border-color: var(--color-blue);
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.12),
+        inset -2px -2px 0 rgba(0,0,0,0.2),
+        3px 3px 0 rgba(0,0,0,0.3),
+        0 0 12px rgba(72, 149, 239, 0.2);
+      transform: translate(-1px, -1px);
+    }
+
+    .answer-btn:active:not(.disabled) {
+      transform: translate(2px, 2px);
+      box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.08),
+        inset -2px -2px 0 rgba(0,0,0,0.2),
+        1px 1px 0 rgba(0,0,0,0.3);
+    }
+
+    .answer-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.15);
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .answer-btn.selected {
+      background: linear-gradient(180deg, #3a5580, #2a4068);
+      border-color: var(--color-orange);
+      box-shadow: 0 0 15px rgba(244, 162, 97, 0.3);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .answer-btn.correct {
+      background: linear-gradient(180deg, #1a6b3a, #0d4a28) !important;
+      border-color: var(--color-green) !important;
+      box-shadow: 0 0 20px rgba(6, 214, 160, 0.4) !important;
+      animation: correctFlash 0.6s ease-out !important;
+    }
+
+    .answer-btn.wrong {
+      background: linear-gradient(180deg, #6b1a1a, #4a0d0d) !important;
+      border-color: var(--color-red) !important;
+      box-shadow: 0 0 20px rgba(230, 57, 70, 0.4) !important;
+      animation: wrongShake 0.5s ease-out !important;
+    }
+
+    .answer-btn.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .answer-btn.fifty-hidden {
+      opacity: 0.15;
+      pointer-events: none;
+      transform: scale(0.97);
+    }
+
+    /* --- Player Info Panel (Right) --- */
+    .info-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .player-card {
+      background: linear-gradient(180deg, #1a2d4a, #0d1b30);
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.08), 3px 3px 0 rgba(0,0,0,0.4);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .player-avatar {
+      font-size: 48px;
+      margin-bottom: 8px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .player-label {
+      font-size: 10px;
+      color: #778;
+      margin-bottom: 4px;
+    }
+
+    .player-prize {
+      font-size: 16px;
+      color: var(--color-gold);
+      text-shadow: 0 0 10px rgba(255,215,0,0.3);
+      margin-top: 4px;
+    }
+
+    .guaranteed-label {
+      font-size: 9px;
+      color: var(--color-orange);
+      margin-top: 8px;
+    }
+
+    .guaranteed-amount {
+      font-size: 12px;
+      color: var(--color-orange);
+      text-shadow: 0 0 6px rgba(244, 162, 97, 0.3);
+    }
+
+    /* --- Lifelines --- */
+    .lifelines-card {
+      background: linear-gradient(180deg, #1a2d4a, #0d1b30);
+      border: 3px solid #000;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.08), 3px 3px 0 rgba(0,0,0,0.4);
+      padding: 12px;
+    }
+
+    .lifelines-title {
+      font-size: 10px;
+      color: var(--color-gold);
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .lifeline-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .lifeline-btn {
+      background: linear-gradient(180deg, #2a3f5f, #1a2844);
+      border: 2px solid #444;
+      color: var(--color-text);
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      padding: 10px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,0.08), 2px 2px 0 rgba(0,0,0,0.3);
+    }
+
+    .lifeline-btn:hover:not(.used) {
+      background: linear-gradient(180deg, #3a5580, #2a3f5f);
+      border-color: var(--color-cyan);
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+    }
+
+    .lifeline-btn.used {
+      opacity: 0.25;
+      cursor: not-allowed;
+      pointer-events: none;
+      text-decoration: line-through;
+    }
+
+    .lifeline-icon {
+      font-size: 18px;
+    }
+
+    /* --- Explanation Overlay --- */
+    .explanation-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .explanation-overlay.show {
+      display: flex;
+    }
+
+    .explanation-box {
+      background: linear-gradient(180deg, #1a2d4a, #0d1b30);
+      border: 4px solid #000;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.1),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        8px 8px 0 rgba(0,0,0,0.5),
+        0 0 40px rgba(0, 0, 0, 0.5);
+      padding: 32px;
+      max-width: 550px;
+      width: 90%;
+      text-align: center;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .explanation-result {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .explanation-result-text {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .explanation-result-text.correct-text {
+      color: var(--color-green);
+      text-shadow: 0 0 10px rgba(6, 214, 160, 0.3);
+    }
+
+    .explanation-result-text.wrong-text {
+      color: var(--color-red);
+      text-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
+    }
+
+    .explanation-detail {
+      font-size: 12px;
+      color: #aab;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: left;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--color-gold);
+    }
+
+    .explanation-prize {
+      font-size: 14px;
+      color: var(--color-gold);
+      margin-bottom: 20px;
+    }
+
+    .explanation-next-btn {
+      background: linear-gradient(180deg, #4895ef, #3a7bd5);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: 14px;
+      padding: 12px 36px;
+      border: 3px solid #000;
+      cursor: pointer;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), 3px 3px 0 #000;
+      transition: transform 0.1s;
+      letter-spacing: 2px;
+    }
+
+    .explanation-next-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .explanation-next-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), 1px 1px 0 #000;
+    }
+
+    /* --- Audience Overlay --- */
+    .audience-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      padding: 20px;
+    }
+
+    .audience-overlay.show {
+      display: flex;
+    }
+
+    .audience-box {
+      background: linear-gradient(180deg, #1a2d4a, #0d1b30);
+      border: 4px solid #000;
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,0.1),
+        inset -3px -3px 0 rgba(0,0,0,0.3),
+        8px 8px 0 rgba(0,0,0,0.5);
+      padding: 28px;
+      max-width: 450px;
+      width: 90%;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .audience-title {
+      font-size: 14px;
+      color: var(--color-gold);
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .audience-bars {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 16px;
+      height: 160px;
+      margin-bottom: 16px;
+      padding: 0 10px;
+    }
+
+    .audience-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .audience-bar-container {
+      width: 100%;
+      height: 120px;
+      background: rgba(0,0,0,0.3);
+      border: 2px solid #333;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .audience-bar {
+      width: 100%;
+      background: linear-gradient(180deg, var(--color-cyan), var(--color-blue));
+      transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .audience-bar-pct {
+      font-size: 10px;
+      color: var(--color-gold);
+      text-shadow: 1px 1px 0 #000;
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .audience-bar-label {
+      font-size: 12px;
+      color: var(--color-gold);
+    }
+
+    .audience-close-btn {
+      display: block;
+      margin: 12px auto 0;
+      background: linear-gradient(180deg, #555, #333);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      padding: 10px 28px;
+      border: 2px solid #000;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    /* ========================================
+       RESULT SCREEN
+       ======================================== */
+    #screen-result {
+      background: linear-gradient(180deg, #0a1628 0%, #1a2d4a 50%, #0a3a2a 100%);
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .result-frame {
+      background: linear-gradient(180deg, #1a2d4a, #0d1b30);
+      border: 6px solid #000;
+      box-shadow:
+        inset 4px 4px 0 rgba(255,255,255,0.1),
+        inset -4px -4px 0 rgba(0,0,0,0.3),
+        8px 8px 0 rgba(0,0,0,0.5),
+        0 0 60px rgba(255, 215, 0, 0.1);
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .result-emoji {
+      font-size: 64px;
+      margin-bottom: 12px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .result-rank {
+      font-size: clamp(16px, 3vw, 24px);
+      color: var(--color-gold);
+      text-shadow: 2px 2px 0 #000, 0 0 20px rgba(255,215,0,0.3);
+      margin-bottom: 8px;
+    }
+
+    .result-prize {
+      font-size: clamp(20px, 4vw, 32px);
+      color: var(--color-green);
+      text-shadow: 2px 2px 0 #000, 0 0 20px rgba(6,214,160,0.3);
+      margin-bottom: 8px;
+    }
+
+    .result-correct {
+      font-size: 14px;
+      color: #aab;
+      margin-bottom: 24px;
+    }
+
+    .result-message {
+      font-size: 12px;
+      color: var(--color-cream);
+      line-height: 2;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: rgba(0,0,0,0.3);
+      border: 2px solid #333;
+      text-align: left;
+    }
+
+    .result-cta {
+      background: linear-gradient(135deg, rgba(72,149,239,0.15), rgba(6,214,160,0.15));
+      border: 2px solid var(--color-cyan);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .cta-title {
+      font-size: 14px;
+      color: var(--color-cyan);
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(0,210,255,0.3);
+    }
+
+    .cta-text {
+      font-size: 11px;
+      color: #bbc;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .cta-btn {
+      background: linear-gradient(180deg, var(--color-green), #04a87e);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      padding: 14px 32px;
+      border: 3px solid #000;
+      cursor: pointer;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), 4px 4px 0 #000;
+      transition: transform 0.1s;
+      letter-spacing: 2px;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .result-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .retry-btn {
+      background: linear-gradient(180deg, #e63946, #b71c2c);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      padding: 12px 28px;
+      border: 3px solid #000;
+      cursor: pointer;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), 3px 3px 0 #000;
+      transition: transform 0.1s;
+      letter-spacing: 2px;
+    }
+
+    .retry-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .share-btn {
+      background: linear-gradient(180deg, var(--color-blue), #3070c0);
+      color: white;
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      padding: 12px 28px;
+      border: 3px solid #000;
+      cursor: pointer;
+      box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2), 3px 3px 0 #000;
+      transition: transform 0.1s;
+      letter-spacing: 2px;
+    }
+
+    .share-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    /* ========================================
+       CONFETTI
+       ======================================== */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 200;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -20px;
+      animation: confettiFall linear forwards;
+    }
+
+    /* ========================================
+       ANIMATIONS
+       ======================================== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes tileFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(2deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(244, 162, 97, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(244, 162, 97, 0.5); }
+    }
+
+    @keyframes correctFlash {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.03); }
+      60% { transform: scale(0.99); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-6px); }
+      30% { transform: translateX(6px); }
+      45% { transform: translateX(-4px); }
+      60% { transform: translateX(4px); }
+      75% { transform: translateX(-2px); }
+      90% { transform: translateX(2px); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes btnShine {
+      0% { left: -60%; }
+      50% { left: 120%; }
+      100% { left: 120%; }
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    @keyframes moneyFloat {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
+    }
+
+    .money-float {
+      position: absolute;
+      font-size: 24px;
+      pointer-events: none;
+      animation: moneyFloat 1.2s ease-out forwards;
+      z-index: 50;
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 900px) {
+      .game-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto;
+        max-height: none;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .prize-ladder {
+        order: 4;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-height: 120px;
+        overflow-y: auto;
+      }
+
+      .ladder-item {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .info-panel {
+        order: 2;
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .player-card, .lifelines-card {
+        flex: 1;
+      }
+
+      .player-avatar {
+        font-size: 32px;
+      }
+
+      .lifeline-btns {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .lifeline-btn {
+        flex: 1;
+        min-width: 80px;
+        font-size: 10px;
+        padding: 8px 6px;
+      }
+
+      .question-panel {
+        order: 3;
+      }
+
+      .question-card {
+        min-height: 80px;
+        padding: 16px;
+      }
+
+      .answers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-btn {
+        padding: 12px 10px;
+      }
+
+      .game-header {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .title-frame {
+        padding: 24px 16px;
+      }
+      .title-main {
+        letter-spacing: 1px;
+      }
+      .result-frame {
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SCANLINE OVERLAY -->
+  <div id="scanlines"></div>
+
+  <!-- ==========================================
+       TITLE SCREEN
+       ========================================== -->
+  <div id="screen-title" class="screen active">
+    <div class="title-frame">
+      <div class="title-deco">🎩💰🎲🏠💎🎯</div>
+      <h1 class="title-main">ナレッジ<br>ミリオネア</h1>
+      <p class="title-sub">〜 知識共有クイズバトル 〜</p>
+      <div class="title-board">
+        <div class="title-tile" style="background: var(--prop-brown);">📋</div>
+        <div class="title-tile" style="background: var(--prop-lightblue);">💡</div>
+        <div class="title-tile" style="background: var(--prop-pink);">📝</div>
+        <div class="title-tile" style="background: var(--prop-orange);">🗂️</div>
+        <div class="title-tile" style="background: var(--prop-red);">🏆</div>
+        <div class="title-tile" style="background: var(--prop-yellow);">⭐</div>
+        <div class="title-tile" style="background: var(--prop-green);">📊</div>
+        <div class="title-tile" style="background: var(--prop-darkblue); color: #fff;">👑</div>
+      </div>
+      <p class="title-desc">
+        全15問のナレッジマネジメントクイズに挑戦！<br>
+        目指せ賞金1億円！<br>
+        あなたの「知識共有力」が試される！
+      </p>
+      <button class="start-btn" id="btn-start" onclick="startGame()">
+        ▶ ゲームスタート
+      </button>
+      <a href="../../" class="back-link" style="display:inline-block;margin-top:20px;font-size:13px;color:#aab;text-decoration:none;text-shadow:1px 1px 0 #000;">← ゲーム一覧に戻る</a>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       GAME SCREEN
+       ========================================== -->
+  <div id="screen-game" class="screen">
+    <div class="game-container">
+      <!-- Header -->
+      <div class="game-header">
+        <span class="header-title">🎩 ナレッジ・ミリオネア</span>
+        <span class="header-question-num" id="question-counter">Q1 / 15</span>
+      </div>
+
+      <!-- Prize Ladder (Left) -->
+      <div class="prize-ladder" id="prize-ladder">
+        <!-- Generated by JS -->
+      </div>
+
+      <!-- Question Panel (Center) -->
+      <div class="question-panel">
+        <div class="question-card">
+          <p class="question-text" id="question-text">問題文がここに表示されます</p>
+        </div>
+        <div class="answers-grid" id="answers-grid">
+          <button class="answer-btn" onclick="selectAnswer(0)">
+            <span class="answer-label">A</span>
+            <span class="answer-text" id="answer-0">選択肢A</span>
+          </button>
+          <button class="answer-btn" onclick="selectAnswer(1)">
+            <span class="answer-label">B</span>
+            <span class="answer-text" id="answer-1">選択肢B</span>
+          </button>
+          <button class="answer-btn" onclick="selectAnswer(2)">
+            <span class="answer-label">C</span>
+            <span class="answer-text" id="answer-2">選択肢C</span>
+          </button>
+          <button class="answer-btn" onclick="selectAnswer(3)">
+            <span class="answer-label">D</span>
+            <span class="answer-text" id="answer-3">選択肢D</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Info Panel (Right) -->
+      <div class="info-panel">
+        <div class="player-card">
+          <div class="player-avatar">🎩</div>
+          <div class="player-label">現在の獲得賞金</div>
+          <div class="player-prize" id="current-prize">¥0</div>
+          <div class="guaranteed-label" id="guaranteed-label">保証額</div>
+          <div class="guaranteed-amount" id="guaranteed-amount">¥0</div>
+        </div>
+        <div class="lifelines-card">
+          <div class="lifelines-title">🎯 ライフライン</div>
+          <div class="lifeline-btns">
+            <button class="lifeline-btn" id="ll-fifty" onclick="useLifeline('fifty')">
+              <span class="lifeline-icon">✂️</span>
+              <span>50:50</span>
+            </button>
+            <button class="lifeline-btn" id="ll-audience" onclick="useLifeline('audience')">
+              <span class="lifeline-icon">👥</span>
+              <span>オーディエンス</span>
+            </button>
+            <button class="lifeline-btn" id="ll-hint" onclick="useLifeline('hint')">
+              <span class="lifeline-icon">💡</span>
+              <span>ヒント</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       RESULT SCREEN
+       ========================================== -->
+  <div id="screen-result" class="screen">
+    <div class="result-frame" id="result-frame">
+      <div class="result-emoji" id="result-emoji">🎩</div>
+      <div class="result-rank" id="result-rank">ランク</div>
+      <div class="result-prize" id="result-prize">¥0</div>
+      <div class="result-correct" id="result-correct">正解数: 0 / 15</div>
+      <div class="result-message" id="result-message">メッセージ</div>
+      <div class="result-cta">
+        <div class="cta-title">💡 ナレッジマネジメント、始めてみませんか？</div>
+        <p class="cta-text">
+          クイズで学んだ知識を、実際の業務に活かしましょう！<br>
+          ナレッジ管理ツールを使えば、組織の知識共有が<br>
+          もっと簡単に、もっと効果的になります。
+        </p>
+        <a class="cta-btn" href="#" onclick="alert('ここにツールのURLを設定してください')">
+          📖 詳しく見る
+        </a>
+      </div>
+      <div class="result-btns">
+        <button class="retry-btn" onclick="restartGame()">🔄 もう一度挑戦</button>
+        <button class="share-btn" onclick="shareResult()">📤 結果をシェア</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       EXPLANATION OVERLAY
+       ========================================== -->
+  <div class="explanation-overlay" id="explanation-overlay">
+    <div class="explanation-box">
+      <div class="explanation-result" id="explanation-result-icon">✅</div>
+      <div class="explanation-result-text" id="explanation-result-text">正解！</div>
+      <div class="explanation-detail" id="explanation-detail">解説文</div>
+      <div class="explanation-prize" id="explanation-prize-info">獲得賞金: ¥0</div>
+      <button class="explanation-next-btn" id="explanation-next-btn" onclick="nextQuestion()">
+        次の問題へ ▶
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       AUDIENCE OVERLAY
+       ========================================== -->
+  <div class="audience-overlay" id="audience-overlay">
+    <div class="audience-box">
+      <div class="audience-title">👥 オーディエンスの回答</div>
+      <div class="audience-bars" id="audience-bars">
+        <div class="audience-bar-wrap">
+          <div class="audience-bar-container">
+            <div class="audience-bar" id="aud-bar-0" style="height: 0%;"><span class="audience-bar-pct" id="aud-pct-0">0%</span></div>
+          </div>
+          <span class="audience-bar-label">A</span>
+        </div>
+        <div class="audience-bar-wrap">
+          <div class="audience-bar-container">
+            <div class="audience-bar" id="aud-bar-1" style="height: 0%;"><span class="audience-bar-pct" id="aud-pct-1">0%</span></div>
+          </div>
+          <span class="audience-bar-label">B</span>
+        </div>
+        <div class="audience-bar-wrap">
+          <div class="audience-bar-container">
+            <div class="audience-bar" id="aud-bar-2" style="height: 0%;"><span class="audience-bar-pct" id="aud-pct-2">0%</span></div>
+          </div>
+          <span class="audience-bar-label">C</span>
+        </div>
+        <div class="audience-bar-wrap">
+          <div class="audience-bar-container">
+            <div class="audience-bar" id="aud-bar-3" style="height: 0%;"><span class="audience-bar-pct" id="aud-pct-3">0%</span></div>
+          </div>
+          <span class="audience-bar-label">D</span>
+        </div>
+      </div>
+      <button class="audience-close-btn" onclick="closeAudience()">閉じる</button>
+    </div>
+  </div>
+
+  <!-- CONFETTI CONTAINER -->
+  <div class="confetti-container" id="confetti-container"></div>
+
+  <!-- ==========================================
+       JAVASCRIPT
+       ========================================== -->
+  <script>
+    /* ========================================
+       SOUND MANAGER (Web Audio API)
+       ======================================== */
+    class SoundManager {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          } catch (e) {
+            this.enabled = false;
+          }
+        }
+      }
+
+      playTone(freq, duration, type = 'square', volume = 0.15) {
+        if (!this.enabled || !this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      }
+
+      playSelect() {
+        this.playTone(880, 0.08, 'square', 0.1);
+      }
+
+      playCorrect() {
+        const t = this.ctx ? this.ctx.currentTime : 0;
+        [523, 659, 784, 1047].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 0.2, 'square', 0.12), i * 100);
+        });
+      }
+
+      playWrong() {
+        this.playTone(200, 0.15, 'sawtooth', 0.1);
+        setTimeout(() => this.playTone(150, 0.3, 'sawtooth', 0.1), 150);
+      }
+
+      playLevelUp() {
+        [523, 659, 784, 1047, 1319].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 0.15, 'square', 0.1), i * 80);
+        });
+      }
+
+      playFanfare() {
+        const notes = [523, 659, 784, 1047, 784, 1047, 1319, 1568];
+        notes.forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 0.25, 'square', 0.1), i * 120);
+        });
+      }
+
+      playLifeline() {
+        [440, 554, 659].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 0.12, 'triangle', 0.12), i * 80);
+        });
+      }
+    }
+
+    const sound = new SoundManager();
+
+    /* ========================================
+       GAME DATA
+       ======================================== */
+    const PRIZES = [
+      '¥1,000', '¥2,000', '¥5,000', '¥10,000', '¥20,000',
+      '¥50,000', '¥100,000', '¥200,000', '¥500,000', '¥1,000,000',
+      '¥2,000,000', '¥5,000,000', '¥10,000,000', '¥50,000,000', '¥100,000,000'
+    ];
+
+    const PRIZE_VALUES = [
+      1000, 2000, 5000, 10000, 20000,
+      50000, 100000, 200000, 500000, 1000000,
+      2000000, 5000000, 10000000, 50000000, 100000000
+    ];
+
+    const GUARANTEED = [4, 9]; // Q5=¥20,000, Q10=¥1,000,000
+
+    const PROP_COLORS = [
+      '#8B4513', '#8B4513',           // Brown (Q1-2)
+      '#87CEEB', '#87CEEB',           // Light Blue (Q3-4)
+      '#FF69B4',                       // Pink (Q5 - guaranteed)
+      '#FF8C00', '#FF8C00',           // Orange (Q6-7)
+      '#DC143C', '#DC143C',           // Red (Q8-9)
+      '#FFD700',                       // Yellow (Q10 - guaranteed)
+      '#228B22', '#228B22',           // Green (Q11-12)
+      '#4169E1', '#4169E1',           // Royal Blue (Q13-14)
+      '#8B008B'                        // Purple (Q15 - final)
+    ];
+
+    const QUESTIONS = [
+      {
+        q: '新入社員が「前任者のやり方がわからない」と困る主な原因は？',
+        a: ['やる気の問題', '引き継ぎ資料や情報共有がない', '才能の差', '星座の相性が悪い'],
+        correct: 1,
+        hint: '個人の問題ではなく、組織の仕組みに原因があります。',
+        explanation: '引き継ぎ資料や業務マニュアルがないと、新しい担当者はゼロから手探りで仕事を覚えることになります。ナレッジの共有は最初の一歩です。'
+      },
+      {
+        q: '「ナレッジマネジメント」を一言でいうと？',
+        a: ['知識を独り占めすること', '暗記力を鍛えるトレーニング', '組織の知識を共有・活用する仕組み', 'テストで100点を取る勉強法'],
+        correct: 2,
+        hint: '「個人」ではなく「組織」がキーワードです。',
+        explanation: 'ナレッジマネジメントとは、個人が持つ知識やノウハウを組織全体で共有し、業務に活かす仕組みのことです。'
+      },
+      {
+        q: '社内でよくある「情報共有の問題」はどれ？',
+        a: ['同じ質問が何度も繰り返される', '情報が多すぎて宇宙に届く', 'みんな暇すぎて困る', '会議室の椅子が硬すぎる'],
+        correct: 0,
+        hint: '「またその質問？」と思ったことはありませんか？',
+        explanation: 'ナレッジが共有されていないと、同じ問い合わせが何度も発生し、答える側の時間も奪われます。FAQやナレッジベースで解決できます。'
+      },
+      {
+        q: 'ベテラン社員が退職するとき、会社が最も困ることは？',
+        a: ['送別会の幹事を決めること', 'デスクの片付け', 'その人しか知らない経験やノウハウが失われる', 'お菓子を配ってくれる人がいなくなる'],
+        correct: 2,
+        hint: '長年の経験で培われたものは、目に見えない財産です。',
+        explanation: '「属人化」された知識は、その人がいなくなると一緒に消えてしまいます。日頃からの知識の文書化・共有が重要です。'
+      },
+      {
+        q: '「暗黙知」の具体例として最も適切なものは？',
+        a: ['会社の電話番号', '営業先での商談の切り出し方やコツ', '就業規則の内容', '社員食堂の今日のメニュー'],
+        correct: 1,
+        hint: 'マニュアルには書かれていない、経験から得た知恵のことです。',
+        explanation: '暗黙知とは、マニュアルには書かれていない、経験から得たコツやノウハウのことです。言葉にしにくいけど、とても価値のある知識です。'
+      },
+      {
+        q: '社内のFAQやマニュアルが使われなくなる最大の原因は？',
+        a: ['フォントサイズが小さい', 'URLが長すぎる', '名前がダサい', '内容が更新されず情報が古くなる'],
+        correct: 3,
+        hint: '情報には「鮮度」があります。',
+        explanation: 'FAQやマニュアルは「生き物」。更新し続けないと、古い情報が信用されず、誰も見なくなります。定期的な見直しが必要です。'
+      },
+      {
+        q: '情報の「サイロ化」とはどういう状態？',
+        a: ['情報を農業用サイロに保管している', '部署や個人ごとに情報が孤立している状態', '情報がすべて暗号化されている', '「サイロ」という名前のフォルダに入れている'],
+        correct: 1,
+        hint: '穀物を保存するサイロのように、外から見えない状態を指します。',
+        explanation: '各部署が独自に情報を管理し、横の連携がない状態を「サイロ化」と呼びます。情報の壁を壊すことがナレッジ共有の第一歩です。'
+      },
+      {
+        q: '社内でナレッジ共有が進まない理由として最も多いのは？',
+        a: ['共有する仕組みがない、または手間がかかる', '社員にやる気がない', '共有するほどの知識がない', 'オフィスが広すぎて声が届かない'],
+        correct: 0,
+        hint: '人の問題ではなく、環境や仕組みの問題であることが多いです。',
+        explanation: '「共有したいけど手段がない」「忙しくて手間がかかる」が最も多い理由。使いやすいツールの導入で大きく改善できます。'
+      },
+      {
+        q: 'ある調査では、社員が情報を探す時間は1日の労働時間の約何%？',
+        a: ['約5%', '約10%', '約20%', '約50%'],
+        correct: 2,
+        hint: '思っている以上に多くの時間が「探しもの」に消えています。',
+        explanation: 'McKinseyの調査では、社員は労働時間の約19.8%を情報検索に費やしているとされています。1日8時間なら約1.6時間が「探しもの」の時間です！'
+      },
+      {
+        q: '業務の「属人化」を防ぐために最も効果的な方法は？',
+        a: ['社員を全員同じ部署に配属する', '残業時間を増やす', '全員に同じ仕事をさせる', '業務プロセスを文書化して共有する'],
+        correct: 3,
+        hint: '「誰がやっても同じ品質で」がキーワードです。',
+        explanation: '誰がやっても同じ品質で業務ができるよう、プロセスを文書化して共有することが鍵です。ナレッジベースの活用が効果的です。'
+      },
+      {
+        q: 'ナレッジベース（社内Wiki）の運用で最も重要なことは？',
+        a: ['定期的な情報の更新とメンテナンス', 'ページ数を1万以上にする', 'デザインを豪華にする', 'パスワードを毎日変更する'],
+        correct: 0,
+        hint: '量よりも質。「使える情報」であることが大切です。',
+        explanation: '情報は鮮度が命。古い情報は「ない」よりも有害な場合があります。定期的な棚卸しと更新のルールを作りましょう。'
+      },
+      {
+        q: 'ナレッジマネジメントツールを導入する際の最大の課題は？',
+        a: ['最新の高性能PCを全員に配ること', '現場のメンバーに定着させること', 'ツールのアイコンの色を決めること', '社長の挨拶文を載せること'],
+        correct: 1,
+        hint: 'ツールは「入れる」だけでは意味がありません。',
+        explanation: 'ツールを導入しただけでは効果は出ません。現場が実際に使い続ける仕組みづくり（簡単な操作性、成功体験の共有など）が最も重要です。'
+      },
+      {
+        q: 'ベテランの「暗黙知」を「形式知」に変える最も効果的な方法は？',
+        a: ['テレパシーで伝える', '飲み会で後輩に語る', 'インタビューして手順やコツを文書化する', '念力で共有フォルダに送る'],
+        correct: 2,
+        hint: '「聞いて」「書く」というシンプルな行動が鍵です。',
+        explanation: 'ベテランの頭の中にある知識を、インタビューや業務観察を通じて言語化・文書化することが効果的です。動画撮影も有効な手段です。'
+      },
+      {
+        q: 'ナレッジマネジメントが成功している企業の共通点は？',
+        a: ['オフィスがおしゃれ', '社員が全員理系出身', '創業100年以上の歴史がある', '経営層がナレッジ共有に率先して取り組んでいる'],
+        correct: 3,
+        hint: '組織文化は「上」から変わります。',
+        explanation: 'トップダウンでナレッジ共有の文化を推進している企業は、取り組みが定着しやすい傾向があります。経営層の理解と支援が不可欠です。'
+      },
+      {
+        q: 'ナレッジマネジメントの最終的なゴールは何？',
+        a: ['社内文書を大量に作ること', '組織全体の学習能力と競争力を高めること', '会議の回数を減らすこと', '紙の使用量をゼロにすること'],
+        correct: 1,
+        hint: '文書を作ることはあくまで「手段」であり「目的」ではありません。',
+        explanation: '最終的には、組織全体が過去の経験から学び、より良い判断ができるようになること。それが企業の競争力向上に直結します。'
+      }
+    ];
+
+    const RANKS = [
+      { min: 0, emoji: '🔰', title: 'ナレッジ見習い', message: 'まだまだこれから！ナレッジマネジメントの基礎から学んでみましょう。知識共有の大切さに気づくことが、最初の一歩です。' },
+      { min: 3, emoji: '👔', title: 'ナレッジ一般社員', message: '基本的な知識はバッチリ！日々の業務の中で、少しずつ知識を共有する習慣をつけてみましょう。' },
+      { min: 6, emoji: '📋', title: 'ナレッジ主任', message: 'なかなかの実力者！ナレッジマネジメントの重要性をしっかり理解しています。チームの知識共有をリードしてみましょう！' },
+      { min: 9, emoji: '💼', title: 'ナレッジ課長', message: '素晴らしい知識量！組織のナレッジ活用を推進するリーダーとして活躍できるポテンシャルがあります。' },
+      { min: 12, emoji: '🏆', title: 'ナレッジ部長', message: 'ほぼ完璧！ナレッジマネジメントのエキスパートです。あなたの知見を組織全体に広めて、変革を起こしましょう！' },
+      { min: 15, emoji: '👑', title: 'ナレッジ王', message: '全問正解！パーフェクト！あなたはナレッジマネジメントの達人です。この知識を活かして、組織の知識共有文化を築いてください！' }
+    ];
+
+    /* ========================================
+       GAME STATE
+       ======================================== */
+    let state = {
+      currentQuestion: 0,
+      correctCount: 0,
+      lifelines: { fifty: true, audience: true, hint: true },
+      gameOver: false,
+      isLocked: false,
+      hiddenAnswers: [],
+      finalPrize: 0,
+      guaranteedPrize: 0
+    };
+
+    /* ========================================
+       SCREEN MANAGEMENT
+       ======================================== */
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    /* ========================================
+       PRIZE LADDER
+       ======================================== */
+    function buildLadder() {
+      const ladder = document.getElementById('prize-ladder');
+      ladder.innerHTML = '';
+      for (let i = 0; i < 15; i++) {
+        const item = document.createElement('div');
+        item.className = 'ladder-item';
+        item.id = `ladder-${i}`;
+        if (GUARANTEED.includes(i)) {
+          item.classList.add('guaranteed');
+        }
+        item.innerHTML = `
+          <span class="ladder-num">${i + 1}</span>
+          <span class="ladder-amount">${PRIZES[i]}</span>
+        `;
+        item.style.borderLeftColor = PROP_COLORS[i];
+        item.style.borderLeftWidth = '3px';
+        item.style.borderLeftStyle = 'solid';
+        ladder.appendChild(item);
+      }
+    }
+
+    function updateLadder() {
+      for (let i = 0; i < 15; i++) {
+        const item = document.getElementById(`ladder-${i}`);
+        item.classList.remove('current', 'cleared');
+        if (i < state.currentQuestion) {
+          item.classList.add('cleared');
+        } else if (i === state.currentQuestion) {
+          item.classList.add('current');
+        }
+      }
+      // Scroll current into view
+      const current = document.getElementById(`ladder-${state.currentQuestion}`);
+      if (current) {
+        current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    /* ========================================
+       GAME LOGIC
+       ======================================== */
+    function startGame() {
+      sound.init();
+      sound.playLevelUp();
+
+      state = {
+        currentQuestion: 0,
+        correctCount: 0,
+        lifelines: { fifty: true, audience: true, hint: true },
+        gameOver: false,
+        isLocked: false,
+        hiddenAnswers: [],
+        finalPrize: 0,
+        guaranteedPrize: 0
+      };
+
+      // Reset lifeline buttons
+      ['ll-fifty', 'll-audience', 'll-hint'].forEach(id => {
+        document.getElementById(id).classList.remove('used');
+      });
+
+      buildLadder();
+      showScreen('screen-game');
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = QUESTIONS[state.currentQuestion];
+      const idx = state.currentQuestion;
+
+      // Update header
+      document.getElementById('question-counter').textContent = `Q${idx + 1} / 15`;
+
+      // Update question text
+      document.getElementById('question-text').textContent = q.q;
+
+      // Update answers
+      const btns = document.querySelectorAll('.answer-btn');
+      const labels = ['A', 'B', 'C', 'D'];
+      btns.forEach((btn, i) => {
+        btn.className = 'answer-btn';
+        btn.style.display = '';
+        document.getElementById(`answer-${i}`).textContent = q.a[i];
+      });
+
+      // Reset hidden answers
+      state.hiddenAnswers = [];
+      state.isLocked = false;
+
+      // Update prize info
+      document.getElementById('current-prize').textContent =
+        idx > 0 ? PRIZES[idx - 1] : '¥0';
+
+      // Update guaranteed
+      let gp = '¥0';
+      if (idx > GUARANTEED[1]) gp = PRIZES[GUARANTEED[1]];
+      else if (idx > GUARANTEED[0]) gp = PRIZES[GUARANTEED[0]];
+      document.getElementById('guaranteed-amount').textContent = gp;
+
+      updateLadder();
+    }
+
+    function selectAnswer(index) {
+      if (state.isLocked || state.gameOver) return;
+      if (state.hiddenAnswers.includes(index)) return;
+
+      sound.init();
+      sound.playSelect();
+      state.isLocked = true;
+
+      const q = QUESTIONS[state.currentQuestion];
+      const btns = document.querySelectorAll('.answer-btn');
+
+      // Highlight selected
+      btns[index].classList.add('selected');
+
+      // Dramatic pause
+      setTimeout(() => {
+        if (index === q.correct) {
+          // CORRECT!
+          btns[index].classList.remove('selected');
+          btns[index].classList.add('correct');
+          sound.playCorrect();
+          state.correctCount++;
+          state.finalPrize = PRIZE_VALUES[state.currentQuestion];
+
+          // Update guaranteed prize
+          if (GUARANTEED.includes(state.currentQuestion)) {
+            state.guaranteedPrize = PRIZE_VALUES[state.currentQuestion];
+          }
+
+          // Show floating money
+          showMoneyFloat(btns[index]);
+
+          setTimeout(() => {
+            showExplanation(true);
+          }, 800);
+        } else {
+          // WRONG!
+          btns[index].classList.remove('selected');
+          btns[index].classList.add('wrong');
+          btns[q.correct].classList.add('correct');
+          sound.playWrong();
+
+          // Calculate final prize (drop to guaranteed)
+          state.finalPrize = state.guaranteedPrize;
+          state.gameOver = true;
+
+          setTimeout(() => {
+            showExplanation(false);
+          }, 1000);
+        }
+      }, 1500);
+    }
+
+    function showMoneyFloat(targetEl) {
+      const rect = targetEl.getBoundingClientRect();
+      const money = document.createElement('div');
+      money.className = 'money-float';
+      money.textContent = '💰';
+      money.style.left = (rect.left + rect.width / 2) + 'px';
+      money.style.top = (rect.top) + 'px';
+      document.body.appendChild(money);
+      setTimeout(() => money.remove(), 1200);
+    }
+
+    function showExplanation(isCorrect) {
+      const q = QUESTIONS[state.currentQuestion];
+      const overlay = document.getElementById('explanation-overlay');
+
+      document.getElementById('explanation-result-icon').textContent =
+        isCorrect ? '✅' : '❌';
+
+      const resultText = document.getElementById('explanation-result-text');
+      if (isCorrect) {
+        resultText.textContent = '正解！';
+        resultText.className = 'explanation-result-text correct-text';
+      } else {
+        resultText.textContent = `不正解… 正解は「${q.a[q.correct]}」`;
+        resultText.className = 'explanation-result-text wrong-text';
+      }
+
+      document.getElementById('explanation-detail').textContent = q.explanation;
+
+      if (isCorrect) {
+        document.getElementById('explanation-prize-info').textContent =
+          `獲得賞金: ${PRIZES[state.currentQuestion]}`;
+        document.getElementById('explanation-next-btn').textContent =
+          state.currentQuestion < 14 ? '次の問題へ ▶' : '結果を見る 🎉';
+      } else {
+        const prizeText = state.guaranteedPrize > 0
+          ? `保証額 ¥${state.guaranteedPrize.toLocaleString()} を獲得！`
+          : '獲得賞金: ¥0';
+        document.getElementById('explanation-prize-info').textContent = prizeText;
+        document.getElementById('explanation-next-btn').textContent = '結果を見る';
+      }
+
+      overlay.classList.add('show');
+    }
+
+    function nextQuestion() {
+      document.getElementById('explanation-overlay').classList.remove('show');
+
+      if (state.gameOver || state.currentQuestion >= 14) {
+        // Game over - show results
+        showResult();
+        return;
+      }
+
+      state.currentQuestion++;
+      state.isLocked = false;
+
+      if (GUARANTEED.includes(state.currentQuestion)) {
+        sound.playLevelUp();
+      }
+
+      showQuestion();
+    }
+
+    /* ========================================
+       LIFELINES
+       ======================================== */
+    function useLifeline(type) {
+      if (state.isLocked || state.gameOver) return;
+      if (!state.lifelines[type]) return;
+
+      sound.init();
+      sound.playLifeline();
+      state.lifelines[type] = false;
+      document.getElementById(`ll-${type}`).classList.add('used');
+
+      const q = QUESTIONS[state.currentQuestion];
+
+      switch (type) {
+        case 'fifty':
+          useFiftyFifty(q);
+          break;
+        case 'audience':
+          useAudience(q);
+          break;
+        case 'hint':
+          useHint(q);
+          break;
+      }
+    }
+
+    function useFiftyFifty(q) {
+      // Remove 2 wrong answers
+      const wrongIndices = [0, 1, 2, 3].filter(i => i !== q.correct);
+      // Shuffle and pick 2
+      for (let i = wrongIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [wrongIndices[i], wrongIndices[j]] = [wrongIndices[j], wrongIndices[i]];
+      }
+      const toHide = wrongIndices.slice(0, 2);
+      state.hiddenAnswers = toHide;
+
+      const btns = document.querySelectorAll('.answer-btn');
+      toHide.forEach(i => {
+        btns[i].classList.add('fifty-hidden');
+      });
+    }
+
+    function useAudience(q) {
+      const overlay = document.getElementById('audience-overlay');
+
+      // Generate simulated audience percentages
+      const difficulty = state.currentQuestion; // 0-14
+      // Correct answer gets more votes for easier questions
+      const correctPct = Math.max(30, 70 - difficulty * 3) + Math.floor(Math.random() * 10);
+      const remaining = 100 - correctPct;
+      const wrongPcts = distributeRemaining(remaining, q.correct);
+
+      // Show overlay
+      overlay.classList.add('show');
+
+      // Animate bars after short delay
+      setTimeout(() => {
+        [0, 1, 2, 3].forEach(i => {
+          const pct = i === q.correct ? correctPct : wrongPcts[i];
+          const bar = document.getElementById(`aud-bar-${i}`);
+          const pctLabel = document.getElementById(`aud-pct-${i}`);
+          bar.style.height = pct + '%';
+          pctLabel.textContent = pct + '%';
+        });
+      }, 200);
+    }
+
+    function distributeRemaining(total, correctIdx) {
+      const result = [0, 0, 0, 0];
+      let remaining = total;
+      const wrongIndices = [0, 1, 2, 3].filter(i => i !== correctIdx);
+
+      wrongIndices.forEach((idx, i) => {
+        if (i === wrongIndices.length - 1) {
+          result[idx] = remaining;
+        } else {
+          const val = Math.floor(Math.random() * (remaining * 0.6)) + 1;
+          result[idx] = val;
+          remaining -= val;
+        }
+      });
+
+      return result;
+    }
+
+    function closeAudience() {
+      const overlay = document.getElementById('audience-overlay');
+      overlay.classList.remove('show');
+
+      // Reset bars
+      [0, 1, 2, 3].forEach(i => {
+        document.getElementById(`aud-bar-${i}`).style.height = '0%';
+      });
+    }
+
+    function useHint(q) {
+      // Show hint as a temporary tooltip on the question card
+      const questionCard = document.querySelector('.question-card');
+      const hintEl = document.createElement('div');
+      hintEl.style.cssText = `
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        right: 8px;
+        background: rgba(255, 215, 0, 0.15);
+        border: 2px solid var(--color-gold);
+        padding: 10px 14px;
+        font-size: 11px;
+        color: var(--color-gold);
+        text-align: left;
+        animation: popIn 0.3s ease-out;
+        line-height: 1.6;
+      `;
+      hintEl.textContent = '💡 ' + q.hint;
+      questionCard.appendChild(hintEl);
+    }
+
+    /* ========================================
+       RESULT SCREEN
+       ======================================== */
+    function showResult() {
+      sound.init();
+
+      const count = state.correctCount;
+      const rank = [...RANKS].reverse().find(r => count >= r.min);
+
+      document.getElementById('result-emoji').textContent = rank.emoji;
+      document.getElementById('result-rank').textContent = rank.title;
+
+      const prizeToShow = state.gameOver
+        ? state.guaranteedPrize
+        : state.finalPrize;
+      document.getElementById('result-prize').textContent =
+        '獲得賞金: ¥' + prizeToShow.toLocaleString();
+      document.getElementById('result-correct').textContent =
+        `正解数: ${count} / 15`;
+      document.getElementById('result-message').textContent = rank.message;
+
+      showScreen('screen-result');
+
+      if (count >= 10) {
+        sound.playFanfare();
+        spawnConfetti();
+      } else if (count >= 5) {
+        sound.playLevelUp();
+      }
+    }
+
+    function restartGame() {
+      sound.init();
+      sound.playSelect();
+      startGame();
+    }
+
+    function shareResult() {
+      const count = state.correctCount;
+      const rank = [...RANKS].reverse().find(r => count >= r.min);
+      const prizeToShow = state.gameOver
+        ? state.guaranteedPrize
+        : state.finalPrize;
+
+      const text = `🎩 ナレッジ・ミリオネアで「${rank.title}」になりました！\n正解数: ${count}/15\n獲得賞金: ¥${prizeToShow.toLocaleString()}\n\nあなたもナレッジマネジメントクイズに挑戦しよう！`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'ナレッジ・ミリオネア 結果',
+          text: text,
+        }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('結果をクリップボードにコピーしました！');
+        }).catch(() => {
+          prompt('以下をコピーしてシェアしてください:', text);
+        });
+      } else {
+        prompt('以下をコピーしてシェアしてください:', text);
+      }
+    }
+
+    /* ========================================
+       CONFETTI
+       ======================================== */
+    function spawnConfetti() {
+      const container = document.getElementById('confetti-container');
+      container.innerHTML = '';
+      const colors = ['#FFD700', '#E63946', '#4895EF', '#06D6A0', '#F4A261', '#E84393', '#A855F7'];
+
+      for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = (Math.random() * 8 + 5) + 'px';
+        piece.style.height = (Math.random() * 8 + 5) + 'px';
+        piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        piece.style.animationDelay = (Math.random() * 2) + 's';
+        if (Math.random() > 0.5) {
+          piece.style.borderRadius = '50%';
+        }
+        container.appendChild(piece);
+      }
+
+      setTimeout(() => { container.innerHTML = ''; }, 5000);
+    }
+
+    /* ========================================
+       KEYBOARD SUPPORT
+       ======================================== */
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toUpperCase();
+      if (['A', '1'].includes(key)) selectAnswer(0);
+      else if (['B', '2'].includes(key)) selectAnswer(1);
+      else if (['C', '3'].includes(key)) selectAnswer(2);
+      else if (['D', '4'].includes(key)) selectAnswer(3);
+      else if (key === 'ENTER') {
+        const overlay = document.getElementById('explanation-overlay');
+        if (overlay.classList.contains('show')) nextQuestion();
+        const audOverlay = document.getElementById('audience-overlay');
+        if (audOverlay.classList.contains('show')) closeAudience();
+        const titleScreen = document.getElementById('screen-title');
+        if (titleScreen.classList.contains('active')) startGame();
+      }
+    });
+  </script>
+</body>
+</html>
