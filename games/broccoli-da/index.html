@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="ブロッコリー回転マルシェでタイピング修行！野菜カゴが流れる前にタイプしてお買い得を目指そう">
+  <title>🥦⌨️ ブロッコリ打</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=010">
+</head>
+<body>
+
+  <div id="gameContainer">
+
+    <!-- ══ Title Screen ══ -->
+    <div id="titleScreen" class="screen active">
+      <div class="title-content">
+        <div class="title-logo">🥦⌨️</div>
+        <h1 class="title-text">ブロッコリ打</h1>
+        <p class="title-sub">～回転マルシェでタイピング修行！～</p>
+        <button id="btnPlay" class="btn btn-primary">▶ はじめる</button>
+        <button id="btnHowTo" class="btn btn-secondary">📖 あそびかた</button>
+        <button id="btnRankingTitle" class="btn btn-ranking">🏆 RANKING</button>
+        <a href="../../" class="back-link">← ゲーム一覧に戻る</a>
+      </div>
+    </div>
+
+    <!-- ══ Course Select Screen ══ -->
+    <div id="courseScreen" class="screen">
+      <div class="select-content">
+        <h2 class="select-title">🛒 コースを選ぼう</h2>
+        <p class="select-desc">先にお支払い。タイプした分だけお野菜ゲット！</p>
+        <div class="course-grid">
+          <button class="course-card" data-course="easy">
+            <div class="course-icon">🟢</div>
+            <div class="course-name">お手軽コース</div>
+            <div class="course-price">💰 3,000円</div>
+            <div class="course-detail">制限時間 60秒 ／ 短いお題</div>
+          </button>
+          <button class="course-card" data-course="normal">
+            <div class="course-icon">🟡</div>
+            <div class="course-name">おすすめコース</div>
+            <div class="course-price">💰 5,000円</div>
+            <div class="course-detail">制限時間 90秒 ／ 普通のお題</div>
+          </button>
+          <button class="course-card" data-course="hard">
+            <div class="course-icon">🔴</div>
+            <div class="course-name">高級コース</div>
+            <div class="course-price">💰 10,000円</div>
+            <div class="course-detail">制限時間 120秒 ／ 長いお題</div>
+          </button>
+        </div>
+        <button id="btnBackFromCourse" class="btn btn-secondary">← もどる</button>
+      </div>
+    </div>
+
+    <!-- ══ Mode Select Screen ══ -->
+    <div id="modeScreen" class="screen">
+      <div class="select-content">
+        <h2 class="select-title">🎮 モードを選ぼう</h2>
+        <div class="mode-grid">
+          <button class="mode-card" data-mode="practice">
+            <div class="mode-icon">🐢</div>
+            <div class="mode-name">練習</div>
+            <div class="mode-detail">カゴがゆっくり流れる</div>
+          </button>
+          <button class="mode-card" data-mode="normal">
+            <div class="mode-icon">▶️</div>
+            <div class="mode-name">普通</div>
+            <div class="mode-detail">標準ルール</div>
+          </button>
+          <button class="mode-card" data-mode="accuracy">
+            <div class="mode-icon">🎯</div>
+            <div class="mode-name">正確重視</div>
+            <div class="mode-detail">ミス → カゴリセット</div>
+          </button>
+          <button class="mode-card" data-mode="speed">
+            <div class="mode-icon">⚡</div>
+            <div class="mode-name">速度必須</div>
+            <div class="mode-detail">カゴスルー → ゲーム終了</div>
+          </button>
+          <button class="mode-card" data-mode="oneshot">
+            <div class="mode-icon">💀</div>
+            <div class="mode-name">一発勝負</div>
+            <div class="mode-detail">ミス or スルー → 即終了</div>
+          </button>
+        </div>
+        <button id="btnBackFromMode" class="btn btn-secondary">← もどる</button>
+      </div>
+    </div>
+
+    <!-- ══ Countdown Overlay ══ -->
+    <div id="countdownOverlay" class="screen">
+      <div class="countdown-content">
+        <div id="countdownNumber" class="countdown-number">3</div>
+        <div class="countdown-info">
+          <span id="countdownCourse"></span> ／ <span id="countdownMode"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Game Screen ══ -->
+    <div id="gameScreen" class="screen">
+      <!-- Status Bar -->
+      <div id="statusBar">
+        <div class="status-left">
+          <span id="timeDisplay">⏱️ 60.0</span>
+        </div>
+        <div class="status-center">
+          <span id="scoreDisplay">💰 0円</span>
+        </div>
+        <div class="status-right">
+          <button id="btnSound" class="btn-icon" title="サウンド">🔇</button>
+          <button id="btnPause" class="btn-icon" title="一時停止">⏸</button>
+        </div>
+      </div>
+
+      <!-- Combo Meter -->
+      <div id="comboArea">
+        <div id="comboMeter">
+          <div id="comboFill"></div>
+        </div>
+        <span id="comboCount">🔥 0連打</span>
+      </div>
+
+      <!-- Conveyor Lane -->
+      <div id="conveyorLane">
+        <div id="conveyorBelt"></div>
+        <div id="basketArea">
+          <!-- Basket elements created by JS -->
+        </div>
+      </div>
+
+      <!-- Typing Area -->
+      <div id="typingArea">
+        <div id="wordDisplay" class="word-display"></div>
+        <div id="readingDisplay" class="reading-display"></div>
+        <div id="romajiDisplay" class="romaji-display"></div>
+      </div>
+
+      <!-- Time Bonus Popup -->
+      <div id="timeBonusPopup" class="time-bonus-popup"></div>
+
+      <!-- Version -->
+      <div id="versionDisplay"></div>
+    </div>
+
+    <!-- ══ Result Screen ══ -->
+    <div id="resultScreen" class="screen">
+      <div class="result-content">
+        <h2 id="resultTitle"></h2>
+        <div id="resultEmoji" class="result-emoji"></div>
+        <div id="resultSummary" class="result-summary"></div>
+        <div id="resultStats" class="result-stats"></div>
+        <div class="result-actions">
+          <button id="btnRetry" class="btn btn-primary">🔄 もういちど</button>
+          <button id="btnRegisterScore" class="btn btn-ranking">🏆 ランキング登録</button>
+          <button id="btnRankingResult" class="btn btn-ranking">🏆 RANKING</button>
+          <button id="btnToTitle" class="btn btn-secondary">🏠 タイトルへ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ How To Play ══ -->
+    <div id="howToScreen" class="screen">
+      <div class="howto-content">
+        <h2>📖 あそびかた</h2>
+        <div class="howto-section">
+          <h3>🛒 回転マルシェとは</h3>
+          <p>野菜カゴがベルトコンベアで流れてきます。<br>
+             カゴが通り過ぎる前に、お題をタイピングしましょう！<br>
+             タイプ成功でカゴの中身をゲット。失敗すると流れていきます。</p>
+        </div>
+        <div class="howto-section">
+          <h3>💰 スコアのしくみ（先払い制）</h3>
+          <p>コース開始時にお金を先払い。<br>
+             タイプ成功したカゴの合計金額が戻ってきます。<br>
+             <strong>先払い額を超えれば「🎉 お買い得！」</strong><br>
+             下回ると「😢 お買い損…」</p>
+        </div>
+        <div class="howto-section">
+          <h3>🔥 連打メーター</h3>
+          <p>連続で正しくタイプするとメーターが上昇！<br>
+             メーターMAXでタイムボーナス（+1〜3秒）獲得。<br>
+             ミスするとメーターがリセットされます。</p>
+        </div>
+        <div class="howto-section">
+          <h3>🎮 5つのモード</h3>
+          <p>🐢 <strong>練習</strong>: カゴがゆっくり流れる<br>
+             ▶️ <strong>普通</strong>: 標準ルール<br>
+             🎯 <strong>正確重視</strong>: ミスするとカゴがリセット<br>
+             ⚡ <strong>速度必須</strong>: カゴが流れたら即終了<br>
+             💀 <strong>一発勝負</strong>: ミスでもスルーでも即終了</p>
+        </div>
+        <button id="btnBackFromHowTo" class="btn btn-secondary">← もどる</button>
+      </div>
+    </div>
+
+    <!-- ══ Pause Overlay ══ -->
+    <div id="pauseOverlay" class="screen">
+      <div class="pause-content">
+        <h2>⏸ 一時停止</h2>
+        <button id="btnResume" class="btn btn-primary">▶ つづける</button>
+        <button id="btnQuit" class="btn btn-secondary">🏠 タイトルへ</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ Name Input Modal ══ -->
+  <div id="nameModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">🏆 ランキング登録</h3>
+      <p class="modal-desc">スコアをGitHub Issueとして登録します。<br>GitHubアカウントが必要です。</p>
+      <label class="modal-label">プレイヤー名</label>
+      <input id="playerNameInput" type="text" class="modal-input" placeholder="空欄ならGitHubアカウント名で登録" maxlength="20">
+      <div class="modal-actions">
+        <button id="btnSubmitScore" class="btn btn-primary">📝 登録ページを開く</button>
+        <button id="btnCancelName" class="btn btn-secondary">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Ranking Modal ══ -->
+  <div id="rankingModal" class="modal-overlay">
+    <div class="modal-box modal-ranking">
+      <h3 class="modal-title">🏆 ランキング</h3>
+      <div id="rankingTabs" class="ranking-tabs">
+        <button class="ranking-tab" data-tab="practice">🐢 練習</button>
+        <button class="ranking-tab active" data-tab="normal">▶️ 普通</button>
+        <button class="ranking-tab" data-tab="accuracy">🎯 正確重視</button>
+        <button class="ranking-tab" data-tab="speed">⚡ 速度必須</button>
+        <button class="ranking-tab" data-tab="oneshot">💀 一発勝負</button>
+      </div>
+      <div id="rankingContent" class="ranking-content">
+        <div class="ranking-loading">読み込み中...</div>
+      </div>
+      <div class="modal-actions">
+        <button id="btnCloseRanking" class="btn btn-secondary">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js?v=010"></script>
+</body>
+</html>

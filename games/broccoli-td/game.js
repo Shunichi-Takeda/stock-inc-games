@@ -2911,13 +2911,11 @@ function generateScoreIssueURL(playerName, stageIndex, score, stars, kills) {
     `| 日時 | ${new Date().toLocaleString('ja-JP')} |`,
   ].join('\n');
 
-  const params = new URLSearchParams({
-    labels: `score,${GAME_LABEL}`,
-    title: title,
-    body: body,
-  });
-
-  return `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?${params.toString()}`;
+  // Note: URLSearchParams encodes commas in labels, which GitHub may not parse correctly.
+  // Build URL manually to keep labels comma-separated without encoding.
+  const encodedTitle = encodeURIComponent(title);
+  const encodedBody = encodeURIComponent(body);
+  return `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?labels=score,${GAME_LABEL}&title=${encodedTitle}&body=${encodedBody}`;
 }
 
 function showNameModal() {
