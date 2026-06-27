@@ -839,7 +839,9 @@ function endGame() {
 // ══════════════════════════════════
 
 function updateHUD() {
-  $('timeDisplay').textContent = `⏱️ ${state.timeLeft.toFixed(1)}`;
+  // Time display: 残り060秒 format (integer, zero-padded)
+  const secs = Math.ceil(state.timeLeft);
+  $('timeValue').textContent = String(secs).padStart(3, '0');
   $('scoreDisplay').textContent = `💰 ${state.score.toLocaleString()}円`;
 
   // Time warning
@@ -853,7 +855,14 @@ function updateHUD() {
   // Glow when close to next threshold
   const nextThreshold = COMBO_CYCLE_THRESHOLDS[state.comboBonusIndex] || COMBO_CYCLE_TOTAL;
   $('comboFill').classList.toggle('max', cyclePos >= nextThreshold * 0.85);
-  $('comboCount').textContent = `🔥 ${state.comboStreak}打`;
+
+  // Update milestone labels
+  for (let i = 0; i < COMBO_CYCLE_THRESHOLDS.length; i++) {
+    const el = $('ms' + i);
+    if (el) {
+      el.classList.toggle('reached', cyclePos >= COMBO_CYCLE_THRESHOLDS[i]);
+    }
+  }
 }
 
 function updateWordDisplay() {

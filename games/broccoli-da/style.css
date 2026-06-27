@@ -303,9 +303,18 @@ body {
 }
 
 #timeDisplay {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+#timeValue {
+  font-size: 1.8rem;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  margin: 0 2px;
 }
 
 #scoreDisplay {
@@ -320,18 +329,28 @@ body {
   top: 52px;
   left: 16px;
   right: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   z-index: 10;
 }
 
+#comboLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 2px;
+  letter-spacing: 2px;
+}
+
+#comboMeterWrap {
+  position: relative;
+}
+
 #comboMeter {
-  flex: 1;
-  height: 10px;
+  position: relative;
+  height: 14px;
   background: var(--bg-surface);
-  border-radius: 5px;
-  overflow: hidden;
+  border-radius: 7px;
+  overflow: visible;
   border: 1px solid var(--border);
 }
 
@@ -339,7 +358,7 @@ body {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--accent-dark), var(--accent), #80ffaa);
-  border-radius: 5px;
+  border-radius: 7px;
   transition: width 0.15s ease;
 }
 
@@ -353,12 +372,34 @@ body {
   to { box-shadow: 0 0 16px var(--gold); }
 }
 
-#comboCount {
-  font-size: 0.85rem;
+.combo-milestone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.3);
+  transform: translateX(-1px);
+}
+
+#comboMilestones {
+  position: relative;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.milestone-label {
+  position: absolute;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-dim);
+  transform: translateX(-50%);
   white-space: nowrap;
-  min-width: 70px;
+  transition: color 0.3s;
+}
+
+.milestone-label.reached {
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(255, 193, 7, 0.5);
 }
 
 /* ── Conveyor Lane ── */
@@ -841,6 +882,10 @@ body {
 .time-warning #timeDisplay {
   color: var(--danger);
   animation: timeFlash 0.5s ease infinite alternate;
+}
+
+.time-warning #timeValue {
+  color: var(--danger);
 }
 
 @keyframes timeFlash {

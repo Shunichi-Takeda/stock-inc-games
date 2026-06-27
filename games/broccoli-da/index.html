@@ -106,7 +106,7 @@
       <!-- Status Bar -->
       <div id="statusBar">
         <div class="status-left">
-          <span id="timeDisplay">⏱️ 60.0</span>
+          <span id="timeDisplay">残り<span id="timeValue">060</span>秒</span>
         </div>
         <div class="status-center">
           <span id="scoreDisplay">💰 0円</span>
@@ -119,10 +119,21 @@
 
       <!-- Combo Meter -->
       <div id="comboArea">
-        <div id="comboMeter">
-          <div id="comboFill"></div>
+        <div id="comboLabel">連打メーター</div>
+        <div id="comboMeterWrap">
+          <div id="comboMeter">
+            <div id="comboFill"></div>
+            <div class="combo-milestone" style="left:21.5%"></div>
+            <div class="combo-milestone" style="left:45.4%"></div>
+            <div class="combo-milestone" style="left:71.5%"></div>
+          </div>
+          <div id="comboMilestones">
+            <span class="milestone-label" style="left:21.5%" id="ms0">1秒追加↑</span>
+            <span class="milestone-label" style="left:45.4%" id="ms1">1秒追加↑</span>
+            <span class="milestone-label" style="left:71.5%" id="ms2">2秒追加↑</span>
+            <span class="milestone-label" style="left:100%" id="ms3">3秒追加↑</span>
+          </div>
         </div>
-        <span id="comboCount">🔥 0連打</span>
       </div>
 
       <!-- Conveyor Lane -->
