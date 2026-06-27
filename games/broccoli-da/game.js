@@ -934,9 +934,8 @@ function animateBasketEnter() {
 function updateBasketPosition() {
   const basket = $('currentBasket');
   if (!basket) return;
-  // progress 0 → right side (90%), progress 1 → left side (5%)
-  // Use 90%-5% range to keep basket fully visible within container
-  const pct = 5 + (1 - state.basketProgress) * 85;
+  // progress 0 → right edge (96%), progress 1 → left edge (4%)
+  const pct = 4 + (1 - state.basketProgress) * 92;
   basket.style.left = `${pct}%`;
   basket.style.transform = 'translateX(-50%)';
 }
