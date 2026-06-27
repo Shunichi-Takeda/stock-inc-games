@@ -669,7 +669,7 @@ function onWordComplete() {
 
   sound.play('success');
   animateBasketSuccess();
-  setTimeout(() => loadNextWord(), 400);
+  loadNextWord(); // immediately show next word (no delay)
 }
 
 /**
@@ -902,7 +902,13 @@ function updateWordDisplay() {
 
 function animateBasketEnter() {
   const area = $('basketArea');
-  area.innerHTML = '';
+  // Move any existing baskets to fading state instead of clearing
+  const oldBaskets = area.querySelectorAll('.basket');
+  oldBaskets.forEach(ob => {
+    ob.id = ''; // remove currentBasket id
+    ob.classList.add('fading-out');
+    setTimeout(() => ob.remove(), 600);
+  });
   const basket = document.createElement('div');
   basket.className = 'basket';
   basket.id = 'currentBasket';
