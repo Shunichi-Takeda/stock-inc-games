@@ -505,9 +505,8 @@ body {
 }
 
 @keyframes basketSlideOff {
-  0% { opacity: 1; }
-  70% { opacity: 0.6; }
-  100% { transform: translateX(-120px); opacity: 0; }
+  0% { transform: translateX(-50%); opacity: 1; }
+  100% { transform: translateX(-200%); opacity: 0; }
 }
 
 /* ── Typing Area ── */
