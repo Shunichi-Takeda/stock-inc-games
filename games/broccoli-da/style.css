@@ -486,11 +486,21 @@ body {
 }
 
 .basket.success {
-  animation: basketSlideOff 0.5s ease-in forwards;
+  animation: basketSuccess 0.4s ease-out forwards;
+}
+
+@keyframes basketSuccess {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3) translateY(-20px); }
+  100% { transform: scale(0) translateY(-40px); opacity: 0; }
 }
 
 .basket.fading-out {
   pointer-events: none;
+  animation: basketSuccess 0.3s ease-out forwards;
+}
+
+.basket.leaving {
   animation: basketSlideOff 0.5s ease-in forwards;
 }
 
