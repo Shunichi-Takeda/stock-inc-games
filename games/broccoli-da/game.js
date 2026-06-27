@@ -934,8 +934,8 @@ function animateBasketEnter() {
 function updateBasketPosition() {
   const basket = $('currentBasket');
   if (!basket) return;
-  // progress 0 → right edge (96%), progress 1 → left edge (4%)
-  const pct = 4 + (1 - state.basketProgress) * 92;
+  // progress 0 → right edge (99%), progress 1 → left edge (1%)
+  const pct = 1 + (1 - state.basketProgress) * 98;
   basket.style.left = `${pct}%`;
   basket.style.transform = 'translateX(-50%)';
 }
