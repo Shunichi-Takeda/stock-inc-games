@@ -405,7 +405,7 @@ body {
 /* ── Conveyor Lane ── */
 #conveyorLane {
   position: absolute;
-  top: 76px;
+  top: 100px;
   left: 0;
   right: 0;
   height: 140px;

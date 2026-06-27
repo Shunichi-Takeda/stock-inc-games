@@ -841,7 +841,12 @@ function endGame() {
 function updateHUD() {
   // Time display: 残り060秒 format (integer, zero-padded)
   const secs = Math.ceil(state.timeLeft);
-  $('timeValue').textContent = String(secs).padStart(3, '0');
+  const tv = $('timeValue');
+  if (tv) {
+    tv.textContent = String(secs).padStart(3, '0');
+  } else {
+    $('timeDisplay').textContent = `残り${String(secs).padStart(3, '0')}秒`;
+  }
   $('scoreDisplay').textContent = `💰 ${state.score.toLocaleString()}円`;
 
   // Time warning
