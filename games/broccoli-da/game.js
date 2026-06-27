@@ -560,6 +560,16 @@ async function startGame() {
 
   showScreen('game');
   sound.init();
+  // Sync belt animation speed with basket speed
+  // Belt pattern repeats every 64px. Calculate belt speed from basket travel.
+  const belt = $('conveyorBelt');
+  if (belt) {
+    // basketDuration is time to cross full lane (ms). Belt segment is 64px.
+    // Lane width ~ container width. Belt speed = 64px / (basketDuration * 64 / laneWidth)
+    const laneWidth = belt.parentElement.offsetWidth || 600;
+    const beltCycleDuration = (state.basketDuration / laneWidth) * 64;
+    belt.style.animationDuration = (beltCycleDuration / 1000) + 's';
+  }
   loadNextWord();
   updateHUD();
   startTimer();
@@ -924,8 +934,9 @@ function animateBasketEnter() {
 function updateBasketPosition() {
   const basket = $('currentBasket');
   if (!basket) return;
-  // progress 0 → right edge (100%), progress 1 → left edge (0%)
-  const pct = (1 - state.basketProgress) * 100;
+  // progress 0 → right side (90%), progress 1 → left side (5%)
+  // Use 90%-5% range to keep basket fully visible within container
+  const pct = 5 + (1 - state.basketProgress) * 85;
   basket.style.left = `${pct}%`;
   basket.style.transform = 'translateX(-50%)';
 }
