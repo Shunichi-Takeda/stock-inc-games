@@ -72,6 +72,13 @@ const ROMAJI_MAP = {
   // 特殊
   'ー':'-',
   'っ':'xtu', // placeholder, handled specially
+  // 小書きかな（外来語音）
+  'ふぁ':'fa','ふぃ':'fi','ふぅ':'fu','ふぇ':'fe','ふぉ':'fo',
+  'てぃ':'thi','でぃ':'dhi','でゅ':'dhu',
+  'うぃ':'wi','うぇ':'we','うぉ':'who',
+  'しぇ':'sye','ちぇ':'tye','じぇ':'zye',
+  'ぁ':'xa','ぃ':'xi','ぅ':'xu','ぇ':'xe','ぉ':'xo',
+  'ゃ':'xya','ゅ':'xyu','ょ':'xyo',
 };
 
 // Alternative romaji inputs
@@ -91,6 +98,17 @@ const ROMAJI_ALTS = {
   'じゅ': ['ju','zyu','jyu'],
   'じょ': ['jo','zyo','jyo'],
   'を': ['wo'],
+  // 小書きかな代替入力
+  'ふぁ': ['hwa'],
+  'ふぃ': ['hwi'],
+  'ふぇ': ['hwe'],
+  'ふぉ': ['hwo'],
+  'てぃ': ['texi'],
+  'でぃ': ['dexi'],
+  'でゅ': ['dexyu'],
+  'うぃ': ['uxi'],
+  'うぇ': ['uxe'],
+  'うぉ': ['uxo'],
 };
 
 /**
@@ -777,7 +795,9 @@ function handleKeyPress(key) {
 
     // Check if word complete
     if (state.segmentIndex >= state.segments.length) {
+      updateWordDisplay(); // Show all chars as typed before transitioning
       onWordComplete();
+      return; // skip the updateWordDisplay below (currentWord is now null)
     }
 
     updateWordDisplay();
