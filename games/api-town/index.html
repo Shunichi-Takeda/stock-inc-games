@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="API TOWN ～おとなのWeb API職業体験～ — 街の会社で働きながら、Web API を基礎知識ゼロから実践まで学べるハンズオンゲーム。">
+  <title>🏙️ API TOWN ～おとなのWeb API職業体験～</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/css/common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="../../" class="back-link" aria-label="ゲーム一覧に戻る">← ゲーム一覧に戻る</a>
+
+  <div id="gameContainer">
+
+    <!-- ========== ヘッダー ========== -->
+    <header id="gameHeader" class="hidden">
+      <div class="header-brand">🏙️ API TOWN</div>
+      <div class="header-status">
+        <span id="rankChip" class="chip">💼 研修生</span>
+        <span class="chip coin-chip">🪙 <span id="coinCount">0</span></span>
+      </div>
+      <nav class="header-nav">
+        <button id="btnHeaderMap" class="header-btn" type="button" title="マップ">🗺️ マップ</button>
+        <button id="btnZukan" class="header-btn" type="button" title="ステータスコード図鑑">📕 図鑑</button>
+        <button id="btnAlbum" class="header-btn" type="button" title="トリビアカードアルバム">🎴 カード</button>
+        <button id="btnGlossary" class="header-btn" type="button" title="用語辞典">📖 用語</button>
+      </nav>
+    </header>
+
+    <!-- ========== タイトル画面 ========== -->
+    <section id="titleScreen" class="screen active">
+      <div class="title-content">
+        <div class="title-logo" aria-hidden="true">🏙️</div>
+        <h1 class="title-text">
+          <span class="title-main">API TOWN</span>
+          <span class="title-sub">～おとなのWeb API職業体験～</span>
+        </h1>
+        <p class="title-tagline">街の会社で働きながら、Web API を学ぼう。<br>お客様の「API連携できますか？」に、自信を持ってうなずけるようになる職業体験。<br>セールスも、CSも、企画職も。プログラミングの知識はいりません。</p>
+        <nav class="title-buttons" aria-label="タイトルメニュー">
+          <button id="btnContinue" class="btn btn-primary hidden" type="button">▶ つづきから</button>
+          <button id="btnNew" class="btn btn-primary" type="button">🏙️ 街に入る</button>
+        </nav>
+        <p class="title-note">このゲームに本物のサーバーは登場しません。すべてブラウザの中の仮想世界で安全に体験できます。</p>
+      </div>
+    </section>
+
+    <!-- ========== 街マップ ========== -->
+    <section id="mapScreen" class="screen">
+      <div class="map-head">
+        <h2>🗺️ API TOWN マップ</h2>
+        <p>働きたい会社を選ぼう。仕事をこなすと給料とバッジがもらえて、次の会社がオープンする。</p>
+      </div>
+      <div id="buildingGrid" class="building-grid"></div>
+    </section>
+
+    <!-- ========== ワーク画面（職場） ========== -->
+    <section id="workScreen" class="screen">
+      <div class="work-head">
+        <button id="btnBackMap" class="header-btn" type="button">← マップ</button>
+        <div class="work-title">
+          <span id="workCompany" class="work-company">📦 ハトポスト便</span>
+          <span id="workTagline" class="work-tagline"></span>
+        </div>
+      </div>
+
+      <nav class="work-tabs" aria-label="ペイン切り替え">
+        <button class="work-tab active" data-pane="chat" type="button">💬 仕事</button>
+        <button class="work-tab" data-pane="client" type="button">📮 クライアント</button>
+        <button class="work-tab" data-pane="docs" type="button">📖 ドキュメント</button>
+      </nav>
+
+      <div id="workPanes" data-pane="chat">
+
+        <!-- 左: チャット＋ミッション -->
+        <aside class="pane pane-chat">
+          <div id="chatMessages" class="chat-messages"></div>
+          <div id="missionBox" class="mission-box hidden"></div>
+        </aside>
+
+        <!-- 中央: レッスン or APIクライアント -->
+        <main class="pane pane-center">
+          <div id="lessonPane" class="lesson-pane hidden">
+            <div class="lesson-pane-icon">👩‍🏫</div>
+            <h3 id="lessonPaneTitle">レッスン</h3>
+            <p>チャットの依頼を読んだら、レッスンを始めよう。</p>
+            <button id="btnLessonStart" class="btn btn-primary" type="button">レッスンを始める</button>
+          </div>
+
+          <div id="mcpPane" class="mcp-pane hidden">
+            <div class="client-title">🤖 AIアシスタント・シミュレーター <span class="client-note">AIが「道具＝ツール」を使う様子を見てみよう</span></div>
+            <div id="mcpChat" class="mcp-chat"></div>
+            <div id="mcpActions" class="mcp-actions"></div>
+          </div>
+
+          <div id="clientPane" class="client-pane">
+            <div class="client-title">📮 APIクライアント <span class="client-note">リクエスト（注文）を組み立てて送る道具</span></div>
+            <div class="request-row">
+              <select id="reqMethod" class="method-select" aria-label="HTTPメソッド">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+              <div class="url-box">
+                <span id="baseUrlChip" class="base-url">https://api.example</span>
+                <input id="reqPath" type="text" class="path-input" placeholder="/welcome" autocomplete="off" spellcheck="false" aria-label="リクエストパス">
+              </div>
+              <button id="btnSend" class="btn btn-send" type="button">🚀 送信</button>
+            </div>
+            <details id="headersEditor" class="headers-editor">
+              <summary>🔧 リクエストヘッダー <span class="headers-note">認証キーなどの「欄外メモ」を添える場所</span></summary>
+              <div id="headerRows"></div>
+              <button id="btnAddHeader" class="btn-add-header" type="button">＋ ヘッダーを追加</button>
+            </details>
+            <details id="bodyEditor" class="headers-editor body-editor">
+              <summary>📦 リクエストボディ（JSON） <span class="headers-note">POST / PUT / PATCH で送る「伝票の中身」</span></summary>
+              <textarea id="reqBody" class="body-input" rows="4" placeholder='{ "item": "latte" }' spellcheck="false" aria-label="リクエストボディ"></textarea>
+            </details>
+            <p id="clientError" class="client-error hidden"></p>
+            <div id="responseArea" class="response-area"></div>
+          </div>
+        </main>
+
+        <!-- 右: APIドキュメント -->
+        <aside class="pane pane-docs">
+          <div class="docs-title">📖 APIドキュメント</div>
+          <div id="docsList"></div>
+        </aside>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ========== レッスンモーダル ========== -->
+  <div id="lessonModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content lesson-modal">
+      <div id="lessonTitle" class="lesson-title">👩‍🏫 レッスン</div>
+      <div id="lessonDots" class="lesson-dots"></div>
+      <div id="lessonScene" class="lesson-scene">🏙️</div>
+      <p id="lessonText" class="lesson-text"></p>
+      <div id="lessonChoices" class="lesson-choices hidden"></div>
+      <p id="lessonExplain" class="lesson-explain hidden"></p>
+      <button id="lessonNext" class="btn btn-primary lesson-next" type="button">つぎへ ▸</button>
+    </div>
+  </div>
+
+  <!-- ========== 給料明細モーダル ========== -->
+  <div id="rewardModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content reward-modal">
+      <div class="reward-head">💰 給料明細</div>
+      <div id="rewardQuest" class="reward-quest"></div>
+      <table class="reward-table"><tbody id="rewardRows"></tbody></table>
+      <div id="rewardBadge" class="reward-badge hidden"></div>
+      <button id="btnRewardOk" class="btn btn-primary" type="button">受け取る</button>
+    </div>
+  </div>
+
+  <!-- ========== 図鑑モーダル ========== -->
+  <div id="zukanModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content wide-modal">
+      <button class="modal-close" type="button" aria-label="閉じる">✕</button>
+      <h3 class="modal-title">📕 ステータスコード図鑑 <span id="zukanCount" class="zukan-count"></span></h3>
+      <p class="modal-sub">レスポンスで受け取った「結果番号」のコレクション。全部集められるかな？</p>
+      <div id="zukanGrid" class="zukan-grid"></div>
+    </div>
+  </div>
+
+  <!-- ========== カードアルバムモーダル ========== -->
+  <div id="albumModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content wide-modal">
+      <button class="modal-close" type="button" aria-label="閉じる">✕</button>
+      <h3 class="modal-title">🎴 トリビアカードアルバム <span id="albumCount" class="zukan-count"></span></h3>
+      <p class="modal-sub">カプセルAPI（🎰）で集めたWebトリビアのコレクション。<span id="albumTickets"></span></p>
+      <div id="albumGrid" class="album-grid"></div>
+    </div>
+  </div>
+
+  <!-- ========== 用語辞典モーダル ========== -->
+  <div id="glossaryModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content wide-modal">
+      <button class="modal-close" type="button" aria-label="閉じる">✕</button>
+      <h3 class="modal-title">📖 用語辞典</h3>
+      <p class="modal-sub">ゲームに出てくる言葉は、ぜんぶここで確認できます。</p>
+      <div id="glossaryList"></div>
+    </div>
+  </div>
+
+  <div id="toastBox" class="toast-box" aria-live="polite"></div>
+
+  <!-- コア -->
+  <script src="js/save.js"></script>
+  <script src="js/data/status-codes.js"></script>
+  <script src="js/data/glossary.js"></script>
+  <script src="js/data/trivia-cards.js"></script>
+  <script src="js/server/db.js"></script>
+  <script src="js/server/virtual-server.js"></script>
+  <script src="js/server/apis/annaijo.js"></script>
+  <script src="js/server/apis/hatopost.js"></script>
+  <script src="js/server/apis/cafe201.js"></script>
+  <script src="js/server/apis/library.js"></script>
+  <script src="js/server/apis/apibank.js"></script>
+  <script src="js/server/apis/pecker.js"></script>
+  <script src="js/server/apis/stormworks.js"></script>
+  <script src="js/server/apis/guardian.js"></script>
+  <script src="js/server/apis/graduation.js"></script>
+  <script src="js/server/apis/gacha.js"></script>
+  <script src="js/server/apis/mcplab.js"></script>
+  <script src="js/quests/lessons.js"></script>
+  <script src="js/quests/stages.js"></script>
+  <script src="js/validator.js"></script>
+  <!-- UI -->
+  <script src="js/ui/chat.js"></script>
+  <script src="js/ui/client.js"></script>
+  <script src="js/ui/docs.js"></script>
+  <script src="js/ui/map.js"></script>
+  <script src="js/ui/lesson.js"></script>
+  <script src="js/ui/mcp.js"></script>
+  <script src="js/ui/glossary.js"></script>
+  <script src="js/ui/zukan.js"></script>
+  <script src="js/ui/album.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
